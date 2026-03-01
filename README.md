@@ -1,1 +1,1 @@
-# technavyug-frontend
+# Technavyug Frontend
