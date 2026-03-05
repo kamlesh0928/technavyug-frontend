@@ -1,7 +1,7 @@
 function Footer() {
   return (
     <footer className="footer">
-      © 2024 LMS & Co. All Rights Reserved
+      © 2026  All Rights Reserved
     </footer>
   );
 }
