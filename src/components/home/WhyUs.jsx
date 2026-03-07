@@ -4,20 +4,19 @@ export default function WhyUs() {
   return (
     <section className="py-24 px-6">
 
-      <h2 className="text-4xl font-bold text-center text-[#1f3a8a] mb-16">
+      <h2 className="text-4xl font-bold text-center text-[#163b6d] mb-16">
         Why Learn With Technavyug
       </h2>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
-        {/* CARD 1 */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
+        <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
 
-          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#1f3a8a] text-2xl">
+          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#163b6d] text-2xl">
             <FaChalkboardTeacher />
           </div>
 
-          <h3 className="text-xl font-semibold text-[#1f3a8a]">
+          <h3 className="text-xl font-semibold text-[#163b6d]">
             Expert Instructors
           </h3>
 
@@ -27,14 +26,13 @@ export default function WhyUs() {
 
         </div>
 
-        {/* CARD 2 */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
+        <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
 
-          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#1f3a8a] text-2xl">
+          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#163b6d] text-2xl">
             <FaBriefcase />
           </div>
 
-          <h3 className="text-xl font-semibold text-[#1f3a8a]">
+          <h3 className="text-xl font-semibold text-[#163b6d]">
             Career Focused
           </h3>
 
@@ -44,14 +42,13 @@ export default function WhyUs() {
 
         </div>
 
-        {/* CARD 3 */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
+        <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
 
-          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#1f3a8a] text-2xl">
+          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#163b6d] text-2xl">
             <FaBookOpen />
           </div>
 
-          <h3 className="text-xl font-semibold text-[#1f3a8a]">
+          <h3 className="text-xl font-semibold text-[#163b6d]">
             Lifetime Access
           </h3>
 
@@ -61,14 +58,13 @@ export default function WhyUs() {
 
         </div>
 
-        {/* CARD 4 */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
+        <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition duration-300 text-center">
 
-          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#1f3a8a] text-2xl">
+          <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-100 text-[#163b6d] text-2xl">
             <FaUsers />
           </div>
 
-          <h3 className="text-xl font-semibold text-[#1f3a8a]">
+          <h3 className="text-xl font-semibold text-[#163b6d]">
             Community Support
           </h3>
 
