@@ -3,6 +3,8 @@ import LoginPage from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import {Bounce, ToastContainer } from "react-toastify";
 import Home from "./pages/public/Home";
+import ResetPassword from "./pages/auth/ResetPassword";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </div>
   );
