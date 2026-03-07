@@ -1,11 +1,100 @@
-/* ================= GLOBAL ================= */
+/* ================= IMPORTS ================= */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* ================= TAILWIND CONFIG ================= */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary: #1f3a8a;
+  --color-secondary: #22d3ee;
+
+  --color-success: #22c55e;
+  --color-warning: #f97316;
+  --color-error: #ef4444;
+
+  --color-background: #f8fafc;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* ================= ROOT VARIABLES ================= */
 
 :root {
-  --primary: #163b6d;
-  --secondary: #1d4e89;
-  --accent: #00c2ff;
+
+  /* Tailwind / shadcn variables */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* Original Website Theme (Code 1) */
+
+  --primary-site: #163b6d;
+  --secondary-site: #1d4e89;
+  --accent-site: #00c2ff;
   --text-dark: #1c1c1c;
 }
+
+/* ================= DARK MODE ================= */
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+}
+
+/* ================= TAILWIND BASE ================= */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ================= GLOBAL DESIGN ================= */
 
 body {
   margin: 0;
@@ -16,6 +105,7 @@ body {
 }
 
 /* Decorative Blur Background */
+
 body::before {
   content: "";
   position: absolute;
@@ -59,7 +149,7 @@ body::before {
 }
 
 .nav-links li:hover {
-  color: var(--accent);
+  color: var(--accent-site);
 }
 
 .nav-buttons button {
@@ -73,11 +163,11 @@ body::before {
 
 .login-btn {
   background: white;
-  color: var(--secondary);
+  color: var(--secondary-site);
 }
 
 .signup-btn {
-  background: var(--accent);
+  background: var(--accent-site);
   color: white;
 }
 
@@ -99,7 +189,7 @@ body::before {
   font-size: 60px;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--primary);
+  color: var(--primary-site);
 }
 
 .hero p {
@@ -108,7 +198,6 @@ body::before {
   color: #5a5a5a;
 }
 
-/* Glow Effect Right Side */
 .hero-right {
   width: 450px;
   height: 450px;
@@ -118,14 +207,14 @@ body::before {
   opacity: 0.6;
 }
 
-/* Buttons */
+/* ================= BUTTONS ================= */
 
 .hero-buttons {
   margin-top: 30px;
 }
 
 .primary-btn {
-  background: var(--primary);
+  background: var(--primary-site);
   color: white;
   padding: 14px 32px;
   border-radius: 35px;
@@ -141,15 +230,15 @@ body::before {
 
 .secondary-btn {
   background: transparent;
-  border: 2px solid var(--primary);
+  border: 2px solid var(--primary-site);
   padding: 12px 30px;
   border-radius: 35px;
   margin-left: 20px;
   cursor: pointer;
-  color: var(--primary);
+  color: var(--primary-site);
 }
 
-/* ================= FEATURED SECTION ================= */
+/* ================= COURSES ================= */
 
 .courses {
   margin: 100px auto;
@@ -164,7 +253,7 @@ body::before {
 .courses h2 {
   font-size: 36px;
   margin-bottom: 50px;
-  color: var(--primary);
+  color: var(--primary-site);
 }
 
 .course-grid {
@@ -189,7 +278,7 @@ body::before {
 
 .course-card h3 {
   margin-bottom: 10px;
-  color: var(--primary);
+  color: var(--primary-site);
 }
 
 .course-card p {
@@ -201,7 +290,7 @@ body::before {
   padding: 10px 22px;
   border-radius: 25px;
   border: none;
-  background: var(--primary);
+  background: var(--primary-site);
   color: white;
   cursor: pointer;
 }
@@ -215,4 +304,11 @@ body::before {
   color: white;
   text-align: center;
   border-radius: 25px 25px 0 0;
+}
+
+/* ================= INPUT FIX ================= */
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset;
+  -webkit-text-fill-color: black;
 }
