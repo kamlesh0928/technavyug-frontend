@@ -23,13 +23,13 @@ const Input = forwardRef(
           </label>
         )}
         <input
-          ref={ref} //  forward the ref to the actual <input>
+          ref={ref} // ✅ forward the ref to the actual <input>
           id={name}
           type={type}
           placeholder={placeholder}
           {...(register ? register(name) : {})} // React Hook Form support
           className={`border rounded-md p-2 focus:outline-none focus:ring-2  ${
-            error ? "border-red-500 focus:ring-red-600" : "border-blue-500 focus:ring-blue-500"
+            error ? "border-red-500 focus:ring-red-600" : "border-blue-300 focus:ring-blue-500"
           } ${className}`}
           {...rest}
         />
