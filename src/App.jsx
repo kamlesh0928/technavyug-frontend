@@ -2,7 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import {Bounce, ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import Home from "./pages/public/Home";
 
 function App() {
