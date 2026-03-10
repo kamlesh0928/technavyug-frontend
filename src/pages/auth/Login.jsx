@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "@/utils/validation/loginSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 import { useNavigate, Link } from "react-router-dom";
-import { useLogin } from "@/hooks/useLogin";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import { useLogin } from "@/hooks/useLogin";
+import { loginSchema } from "@/utils/validation/loginSchema";
+
+const VITE_API_BACKEND_URL = import.meta.env.VITE_API_BACKEND_URL;
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -25,28 +29,38 @@ const LoginPage = () => {
 
   const { mutate, isPending } = useLogin();
 
-  const onSubmit = (data) => {
-    mutate(data, {
-      onSuccess: () => {
-        navigate("/");
-        reset();
-      },
-      onError: (err) => {
-        toast.error(err?.data?.message || "Login failed");
-      },
-    });
+  const onSubmit = async (data) => {
+    try {
+      const userData = {
+        email: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe,
+      };
+
+      const response = await axios.post(
+        `${VITE_API_BACKEND_URL}/auth/login`,
+        userData,
+      );
+
+      toast.success("Login successful!");
+      reset();
+      navigate("/");
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Login failed. Please try again.",
+      );
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-white">
       {/* --- LEFT SIDE: Professional Tech Image Section --- */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f2c59]">
-        
         {/* Real High-Quality Image with Professional Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop" 
-            alt="Digital Learning Tech" 
+          <img
+            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
+            alt="Digital Learning Tech"
             className="w-full h-full object-cover opacity-40 shadow-2xl scale-105"
           />
           {/* Gradient Overlay for Text Readability */}
@@ -63,11 +77,12 @@ const LoginPage = () => {
         {/* Content */}
         <div className="relative z-10 max-w-lg">
           <h2 className="text-5xl font-extrabold leading-[1.1] tracking-tight mb-6">
-            Unlock Your <br /> 
+            Unlock Your <br />
             <span className="text-cyan-400">Tech Potential.</span>
           </h2>
           <p className="text-lg text-gray-200 font-medium leading-relaxed opacity-90">
-            Join the community of modern learners. Access industry-grade courses and build your dream career today.
+            Join the community of modern learners. Access industry-grade courses
+            and build your dream career today.
           </p>
         </div>
 
@@ -80,23 +95,28 @@ const LoginPage = () => {
       {/* --- RIGHT SIDE: Clean Form (No Box, Directly on Page) --- */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
         <div className="w-full max-w-md">
-          
           {/* Mobile Logo Only */}
           <div className="lg:hidden mb-10">
-             <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
+            <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
               Tech<span className="text-cyan-400">navyug</span>
             </h1>
           </div>
 
           <div className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Welcome Back</h1>
-            <p className="text-gray-500 mt-3 text-lg">Enter your credentials to continue.</p>
+            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+              Welcome Back
+            </h1>
+            <p className="text-gray-500 mt-3 text-lg">
+              Enter your credentials to continue.
+            </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Input */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Email or Username</label>
+              <label className="text-sm font-bold text-gray-700 ml-1">
+                Email or Username
+              </label>
               <Input
                 placeholder="you@example.com"
                 name="email"
@@ -109,9 +129,11 @@ const LoginPage = () => {
             {/* Password Input */}
             <div className="space-y-2">
               <div className="flex justify-between items-center px-1">
-                <label className="text-sm font-bold text-gray-700">Password</label>
-                <button 
-                  type="button" 
+                <label className="text-sm font-bold text-gray-700">
+                  Password
+                </label>
+                <button
+                  type="button"
                   onClick={() => navigate("/forgot-password")}
                   className="text-xs font-bold text-cyan-600 hover:text-cyan-700"
                 >
