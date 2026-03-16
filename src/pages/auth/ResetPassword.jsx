@@ -1,119 +1,108 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { resetPasswordSchema } from "@/utils/validation/resetPasswordSchema";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useResetPassword } from "@/hooks/useResetPassword";
+import { useState } from "react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { resetPassword } from "@/api/authApi";
 
-const ResetPassword = () => {
-  const navigate = useNavigate();
+export default function ResetPassword() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const token = searchParams.get("token");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-
-  const { mutate, isPending } = useResetPassword();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(resetPasswordSchema),
-  });
-
-  const onSubmit = (data) => {
-    if (!token) {
-      toast.error("Invalid reset link");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirm) {
+      toast.error("Passwords do not match.");
       return;
     }
-
-    mutate(
-      { token, password: data.password },
-      {
-        onSuccess: () => {
-          toast.success("Password reset successfully! Please login.");
-          navigate("/login");
-        },
-        onError: (err) => {
-          toast.error(err?.response?.data?.message || "Something went wrong");
-        },
-      }
-    );
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await resetPassword(token, password);
+      toast.success("Password reset successfully! Please login.");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error?.userMessage || "Failed to reset password.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!token) {
-    return <div className="min-h-screen flex items-center justify-center">Invalid or expired link</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+        <div className="text-center">
+          <p className="text-gray-500 mb-4">Invalid or missing reset token.</p>
+          <Link
+            to="/forgot-password"
+            className="text-cyan-600 font-bold hover:underline"
+          >
+            Request a new link
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-105">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+      <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-[32px] font-bold tracking-tight mb-6">
-            Reset Your Password
-          </h1>
+          <Link to="/" className="text-3xl font-bold text-[#0f2c59]">
+            Tech<span className="text-cyan-400">navyug</span>
+          </Link>
         </div>
 
-        <div className="bg-white shadow-2xl rounded-3xl p-8 sm:p-10 border border-gray-100">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
-            {/* Password */}
-            <div className="relative">
-              <Input
-                label="New Password"
-                placeholder="Enter new password"
-                name="password"
-                type={showPass ? "text" : "password"}
-                register={register}
-                error={errors.password?.message}
-                className="text-primary text-base py-3 font-medium bg-gray-100 pr-12"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-4 top-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPass ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-              </button>
-            </div>
+        <div className="bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Reset Password
+          </h1>
+          <p className="text-gray-500 text-sm mb-8">
+            Enter your new password below.
+          </p>
 
-            {/* Confirm Password */}
-            <div className="relative">
-              <Input
-                label="Confirm New Password"
-                placeholder="Confirm new password"
-                name="confirmPassword"
-                type={showConfirmPass ? "text" : "password"}
-                register={register}
-                error={errors.confirmPassword?.message}
-                className="text-primary text-base py-3 font-medium bg-gray-100 pr-12"
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="text-sm font-bold text-gray-700 mb-2 block">
+                New Password
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 outline-none text-sm"
+                placeholder="••••••••"
               />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPass(!showConfirmPass)}
-                className="absolute right-4 top-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showConfirmPass ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-              </button>
             </div>
-
-            <Button
+            <div>
+              <label className="text-sm font-bold text-gray-700 mb-2 block">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                required
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 outline-none text-sm"
+                placeholder="••••••••"
+              />
+            </div>
+            <button
               type="submit"
-              disabled={isPending}
-              className="bg-blue-900 hover:bg-blue-950 font-semibold py-3 text-base shadow-lg active:scale-[0.985] transition-all"
+              disabled={loading}
+              className="w-full bg-[#0f2c59] text-white font-bold py-3.5 rounded-2xl hover:bg-[#1a4073] transition-all disabled:opacity-70"
             >
-              {isPending ? "Resetting..." : "Reset Password"}
-            </Button>
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
           </form>
         </div>
       </div>
     </div>
   );
-};
-
-export default ResetPassword;
+}
