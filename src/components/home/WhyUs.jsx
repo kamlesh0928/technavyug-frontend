@@ -1,6 +1,7 @@
 import React from "react";
 import { FaLaptopCode, FaChalkboardTeacher, FaDiscord, FaGithub } from "react-icons/fa";
 import { HiLightningBolt, HiCheckCircle, HiArrowSmRight } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 export default function BentoGrid() {
   return (
@@ -95,9 +96,9 @@ export default function BentoGrid() {
                     Pre-launch: <span className="text-[#0f2c59]">Join 2,400+ students already on the waitlist</span>
                 </span>
              </div>
-             <button className="h-10 px-6 bg-[#0f2c59] text-white rounded-full font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95">
+             <Link to="/register" className="h-10 px-6 bg-[#0f2c59] text-white rounded-full font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95 flex items-center">
                 Join Now
-             </button>
+             </Link>
           </div>
 
         </div>

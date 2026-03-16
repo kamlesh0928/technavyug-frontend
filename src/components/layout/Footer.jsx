@@ -1,58 +1,86 @@
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { LuGithub, LuTwitter, LuLinkedin, LuInstagram, LuMail } from "react-icons/lu";
+import logo from "@/assets/image/Technavyug Logo.png";
 
-export default function Footer() {
+const footerLinks = {
+  Platform: [
+    { label: "Courses", to: "/courses" },
+    { label: "Blog", to: "/blog" },
+    { label: "About Us", to: "/about" },
+    { label: "Contact", to: "/contact" },
+  ],
+  Support: [
+    { label: "Help Center", to: "/contact" },
+    { label: "FAQ", to: "/#faq" },
+    { label: "Terms of Service", to: "/about" },
+    { label: "Privacy Policy", to: "/about" },
+  ],
+};
+
+const socials = [
+  { icon: LuGithub, href: "#" },
+  { icon: LuTwitter, href: "#" },
+  { icon: LuLinkedin, href: "#" },
+  { icon: LuInstagram, href: "#" },
+];
+
+const Footer = () => {
   return (
-    <footer className="bg-[#0f172a] text-white pt-16 pb-8 mt-20 border-t border-white/5">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-        
-        {/* Brand */}
-        <div className="col-span-2 md:col-span-1">
-          <h2 className="text-xl font-bold italic mb-4">Tech<span className="text-cyan-400">navyug</span></h2>
-          <p className="text-gray-400 text-xs leading-relaxed max-w-xs">
-            Empowering tech leaders with industry-vetted skills.
-          </p>
-          <div className="flex gap-4 mt-5 text-gray-400 text-lg">
-            <FaFacebook className="hover:text-cyan-400 cursor-pointer" />
-            <FaLinkedin className="hover:text-cyan-400 cursor-pointer" />
-            <FaInstagram className="hover:text-cyan-400 cursor-pointer" />
+    <footer className="bg-gray-950 text-gray-400">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 py-16">
+        <div className="grid md:grid-cols-4 gap-12">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <Link to="/" className="flex items-center gap-2.5 mb-5">
+              <img src={logo} alt="Technavyug" className="h-8 w-auto brightness-200" />
+              <span className="text-xl font-extrabold text-white tracking-tight">
+                Tech<span className="text-cyan-400">navyug</span>
+              </span>
+            </Link>
+            <p className="text-sm leading-relaxed mb-6 max-w-sm text-gray-500">
+              Building the future of tech education. Learn from industry experts and launch
+              your career in technology.
+            </p>
+            <div className="flex items-center gap-2">
+              {socials.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center hover:bg-cyan-600 hover:text-white transition-all text-gray-500"
+                >
+                  <s.icon size={16} />
+                </a>
+              ))}
+            </div>
           </div>
+
+          {/* Link Columns */}
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-5">{title}</h4>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.label}>
+                    <Link to={link.to} className="text-sm text-gray-500 hover:text-cyan-400 transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 text-cyan-400">Learn</h3>
-          <ul className="space-y-2 text-gray-400 text-sm">
-            {["Web Dev", "Data Science", "UI/UX", "Marketing"].map(item => (
-              <li key={item} className="hover:text-white cursor-pointer transition">{item}</li>
-            ))}
-          </ul>
+        {/* Bottom */}
+        <div className="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-600">&copy; {new Date().getFullYear()} Technavyug. All rights reserved.</p>
+          <a href="mailto:support@technavyug.com" className="flex items-center gap-2 text-xs text-gray-500 hover:text-cyan-400 transition-colors">
+            <LuMail size={14} /> support@technavyug.com
+          </a>
         </div>
-
-        {/* Company */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 text-cyan-400">Support</h3>
-          <ul className="space-y-2 text-gray-400 text-sm">
-            {["About", "FAQ", "Privacy", "Contact"].map(item => (
-              <li key={item} className="hover:text-white cursor-pointer transition">{item}</li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact info instead of big newsletter */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 text-cyan-400">Connect</h3>
-          <p className="text-gray-400 text-sm mt-1">technavyug@gmail.com</p>
-          <div className="mt-4 flex">
-             <input type="text" placeholder="Email" className="bg-gray-800 text-xs px-3 py-2 rounded-l-md w-full outline-none focus:ring-1 focus:ring-cyan-500" />
-             <button className="bg-cyan-500 text-xs px-3 py-2 rounded-r-md font-bold">Go</button>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 border-t border-white/10 mt-12 pt-6 text-center text-gray-500 text-[10px] uppercase tracking-widest">
-        © 2026 Technavyug Education. All Rights Reserved.
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

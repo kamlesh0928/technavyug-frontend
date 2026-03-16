@@ -1,17 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import axios from "axios";
 
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
 import { useLogin } from "@/hooks/useLogin";
 import { loginSchema } from "@/utils/validation/loginSchema";
-
-const VITE_API_BACKEND_URL = import.meta.env.VITE_API_BACKEND_URL;
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,7 +15,6 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: { rememberMe: false },
@@ -29,52 +22,31 @@ const LoginPage = () => {
 
   const { mutate, isPending } = useLogin();
 
-  const onSubmit = async (data) => {
-    try {
-      const userData = {
-        email: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe,
-      };
-
-      const response = await axios.post(
-        `${VITE_API_BACKEND_URL}/auth/login`,
-        userData,
-      );
-
-      toast.success("Login successful!");
-      reset();
-      navigate("/");
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Login failed. Please try again.",
-      );
-    }
+  const onSubmit = (data) => {
+    mutate({
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe,
+    });
   };
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* --- LEFT SIDE: Professional Tech Image Section --- */}
+      {/* Left Side */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f2c59]">
-        {/* Real High-Quality Image with Professional Overlay */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
-            alt="Digital Learning Tech"
-            className="w-full h-full object-cover opacity-40 shadow-2xl scale-105"
+            alt="Digital Learning"
+            className="w-full h-full object-cover opacity-40"
           />
-          {/* Gradient Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f2c59] via-[#0f2c59]/60 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0f2c59] via-[#0f2c59]/60 to-transparent" />
         </div>
-
-        {/* Logo */}
         <div className="relative z-10">
           <Link to="/" className="text-3xl font-bold tracking-tight">
             Tech<span className="text-cyan-400">navyug</span>
           </Link>
         </div>
-
-        {/* Content */}
         <div className="relative z-10 max-w-lg">
           <h2 className="text-5xl font-extrabold leading-[1.1] tracking-tight mb-6">
             Unlock Your <br />
@@ -85,17 +57,14 @@ const LoginPage = () => {
             and build your dream career today.
           </p>
         </div>
-
-        {/* Footer info on left */}
         <div className="relative z-10 text-sm text-gray-400 font-medium">
-          © 2026 Technavyug Education • Secure Access
+          &copy; 2026 Technavyug Education
         </div>
       </div>
 
-      {/* --- RIGHT SIDE: Clean Form (No Box, Directly on Page) --- */}
+      {/* Right Side: Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
         <div className="w-full max-w-md">
-          {/* Mobile Logo Only */}
           <div className="lg:hidden mb-10">
             <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
               Tech<span className="text-cyan-400">navyug</span>
@@ -112,21 +81,22 @@ const LoginPage = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email Input */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 ml-1">
-                Email or Username
+                Email
               </label>
-              <Input
+              <input
+                {...register("email")}
                 placeholder="you@example.com"
-                name="email"
-                register={register}
-                error={errors.email?.message}
-                className="w-full px-5 py-4 rounded-2xl border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-base shadow-sm"
+                className="w-full px-5 py-4 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-base"
               />
+              {errors.email && (
+                <p className="form-error">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
-            {/* Password Input */}
             <div className="space-y-2">
               <div className="flex justify-between items-center px-1">
                 <label className="text-sm font-bold text-gray-700">
@@ -141,25 +111,27 @@ const LoginPage = () => {
                 </button>
               </div>
               <div className="relative">
-                <Input
+                <input
+                  {...register("password")}
                   placeholder="••••••••"
-                  name="password"
                   type={showPass ? "text" : "password"}
-                  register={register}
-                  error={errors.password?.message}
-                  className="w-full px-5 py-4 rounded-2xl border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-base shadow-sm pr-12"
+                  className="w-full px-5 py-4 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-base pr-12"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0f2c59] transition-colors"
                 >
-                  {showPass ? <FaEyeSlash size={22} /> : <FaEye size={22} />}
+                  {showPass ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="form-error">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
-            {/* Remember Me */}
             <div className="flex items-center px-1 py-1">
               <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-gray-600">
                 <input
@@ -171,25 +143,23 @@ const LoginPage = () => {
               </label>
             </div>
 
-            {/* Submit Button */}
-            <Button
+            <button
               type="submit"
               disabled={isPending}
               className="w-full bg-[#0f2c59] text-white font-bold py-4 rounded-2xl shadow-xl hover:bg-[#1a4073] active:scale-[0.98] transition-all disabled:opacity-70 text-lg mt-4"
             >
               {isPending ? "Authenticating..." : "Sign In"}
-            </Button>
+            </button>
           </form>
 
-          {/* Signup Link */}
           <p className="mt-12 text-center text-gray-500 font-medium">
             New to Technavyug?{" "}
-            <button
-              onClick={() => navigate("/register")}
+            <Link
+              to="/register"
               className="font-bold text-[#0f2c59] hover:text-cyan-500 transition-colors underline underline-offset-4"
             >
               Join for free
-            </button>
+            </Link>
           </p>
         </div>
       </div>

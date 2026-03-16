@@ -1,80 +1,105 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { forgotPasswordSchema } from "@/utils/validation/forgotPasswordSchema";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { useNavigate } from "react-router-dom";
-import { useForgotPassword } from "@/hooks/useForgotPassword";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { forgotPassword } from "@/api/authApi";
 
-const ForgotPassword = () => {
-  const navigate = useNavigate();
-  const { mutate, isPending } = useForgotPassword();
+export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(forgotPasswordSchema),
-  });
-
-  const onSubmit = (data) => {
-    mutate(data, {
-      onSuccess: () => {
-        navigate("/check-email", { state: { type: "reset" } }); // extra state for dynamic message
-      },
-      onError: (err) => {
-        toast.error(err?.response?.data?.message || "Something went wrong");
-      },
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await forgotPassword(email);
+      setSent(true);
+      toast.success("Reset link sent to your email.");
+    } catch (error) {
+      toast.error(error?.userMessage || "Failed to send reset link.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-105">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+      <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-[32px] font-bold tracking-tight mb-6">
-            Forgot Password?
-          </h1>
-          <p className="text-gray-600">No worries! We'll send you reset instructions.</p>
+          <Link to="/" className="text-3xl font-bold text-[#0f2c59]">
+            Tech<span className="text-cyan-400">navyug</span>
+          </Link>
         </div>
 
-        <div className="bg-white shadow-2xl rounded-3xl p-8 sm:p-10 border border-gray-100">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
-            <Input
-              label="Email Address"
-              placeholder="Enter your email"
-              name="email"
-              type="email"
-              register={register}
-              error={errors.email?.message}
-              className="text-primary text-base py-3 font-medium bg-gray-100"
-            />
+        <div className="bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Forgot Password
+          </h1>
+          <p className="text-gray-500 text-sm mb-8">
+            Enter your email and we will send you a link to reset your password.
+          </p>
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="bg-blue-900 hover:bg-blue-950 font-semibold py-3 text-base shadow-lg active:scale-[0.985] transition-all"
-            >
-              {isPending ? "Sending..." : "Send Reset Link"}
-            </Button>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => navigate("/login")}
-                className="text-blue-500 hover:underline text-sm font-medium"
+          {sent ? (
+            <div className="text-center py-4">
+              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-green-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <p className="text-gray-600 text-sm">
+                Check your email for a password reset link.
+              </p>
+              <Link
+                to="/login"
+                className="text-cyan-600 font-bold text-sm mt-4 inline-block hover:underline"
               >
-                ← Back to Login
-              </button>
+                Back to Login
+              </Link>
             </div>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="text-sm font-bold text-gray-700 mb-2 block">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 outline-none text-sm"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#0f2c59] text-white font-bold py-3.5 rounded-2xl hover:bg-[#1a4073] transition-all disabled:opacity-70"
+              >
+                {loading ? "Sending..." : "Send Reset Link"}
+              </button>
+              <p className="text-center text-sm text-gray-500">
+                <Link
+                  to="/login"
+                  className="font-bold text-[#0f2c59] hover:underline"
+                >
+                  Back to Login
+                </Link>
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </div>
   );
-};
-
-export default ForgotPassword;
+}
