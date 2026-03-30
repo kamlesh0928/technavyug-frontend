@@ -67,7 +67,8 @@ export default function EditCourse() {
       const lang = c.language || "English";
       const isCustomLang = !LANGUAGES.includes(lang);
 
-      setForm({
+      setForm((prev) => ({
+        ...prev,
         title: c.title || "",
         description: c.description || "",
         shortDescription: c.shortDescription || "",
@@ -76,7 +77,7 @@ export default function EditCourse() {
         language: isCustomLang ? "" : lang,
         categoryId: c.categoryId || "",
         status: c.status || "Draft",
-      });
+      }));
 
       if (isCustomLang) {
         setShowCustomLanguage(true);
