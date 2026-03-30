@@ -44,9 +44,9 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex h-screen bg-white">
       {/* Left Side */}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f2c59]">
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f2c59] flex-shrink-0">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop"
@@ -76,7 +76,7 @@ export default function Register() {
       </div>
 
       {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="lg:hidden mb-10">
             <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
@@ -104,9 +104,7 @@ export default function Register() {
                 className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
               />
               {errors.name && (
-                <p className="form-error">
-                  {errors.name.message}
-                </p>
+                <p className="form-error">{errors.name.message}</p>
               )}
             </div>
 
@@ -120,9 +118,7 @@ export default function Register() {
                 className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
               />
               {errors.email && (
-                <p className="form-error">
-                  {errors.email.message}
-                </p>
+                <p className="form-error">{errors.email.message}</p>
               )}
             </div>
 
@@ -146,9 +142,7 @@ export default function Register() {
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error">
-                  {errors.password.message}
-                </p>
+                <p className="form-error">{errors.password.message}</p>
               )}
             </div>
 
@@ -163,9 +157,7 @@ export default function Register() {
                 className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
               />
               {errors.confirmPassword && (
-                <p className="form-error">
-                  {errors.confirmPassword.message}
-                </p>
+                <p className="form-error">{errors.confirmPassword.message}</p>
               )}
             </div>
 

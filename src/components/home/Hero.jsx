@@ -52,13 +52,6 @@ export default function Hero() {
                 Explore Courses
                 <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
               </Link>
-
-              <button className="inline-flex items-center gap-3 text-gray-700 font-semibold hover:text-cyan-600 transition-colors py-4 text-sm">
-                <div className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center bg-white shadow-sm">
-                  <FaPlayCircle className="text-lg text-gray-400" />
-                </div>
-                Watch Demo
-              </button>
             </div>
 
             {/* Stats */}

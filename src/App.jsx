@@ -40,6 +40,7 @@ import AdminSettings from "@/pages/admin/Settings";
 import InstructorDashboard from "@/pages/instructor/Dashboard";
 import InstructorMyCourses from "@/pages/instructor/MyCourses";
 import InstructorCreateCourse from "@/pages/instructor/CreateCourses";
+import InstructorEditCourse from "@/pages/instructor/EditCourse";
 import InstructorEarnings from "@/pages/instructor/Earnings";
 
 // Student Pages
@@ -114,6 +115,7 @@ function App() {
           <Route index element={<InstructorDashboard />} />
           <Route path="courses" element={<InstructorMyCourses />} />
           <Route path="courses/new" element={<InstructorCreateCourse />} />
+          <Route path="courses/edit/:id" element={<InstructorEditCourse />} />
           <Route path="earnings" element={<InstructorEarnings />} />
         </Route>
 
