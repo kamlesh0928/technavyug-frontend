@@ -3,12 +3,12 @@ import { api } from "./axiosInstance";
 export const studentService = {
   // Enrollments
   getMyEnrollments: async (params = {}) => {
-    const response = await api.get("/enrollments", { params });
+    const response = await api.get("/enrollments/my", { params });
     return response.data;
   },
 
   enrollInCourse: async (courseId) => {
-    const response = await api.post("/enrollments", { courseId });
+    const response = await api.post(`/enrollments/courses/${courseId}`);
     return response.data;
   },
 
@@ -25,7 +25,7 @@ export const studentService = {
 
   // Orders
   getMyOrders: async (params = {}) => {
-    const response = await api.get("/orders", { params });
+    const response = await api.get("/orders/my", { params });
     return response.data;
   },
 
