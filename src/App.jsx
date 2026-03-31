@@ -19,6 +19,7 @@ import CourseDetails from "@/pages/public/CourseDetails";
 import About from "@/pages/public/About";
 import Contact from "@/pages/public/Contact";
 import Blogs from "@/pages/public/Blogs";
+import NotFound from "@/pages/public/NotFound";
 
 // Auth Pages
 import Login from "@/pages/auth/Login";
@@ -76,6 +77,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blogs />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Auth Routes (no layout) */}

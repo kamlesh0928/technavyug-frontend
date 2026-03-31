@@ -9,12 +9,22 @@ import {
   LuLogOut,
   LuChevronLeft,
   LuChevronRight,
-  LuGraduationCap,
 } from "react-icons/lu";
+import logo from "@/assets/image/Technavyug Logo.png";
 
 const navItems = [
-  { label: "Dashboard", path: "/instructor", icon: LuLayoutDashboard, end: true },
-  { label: "My Courses", path: "/instructor/courses", icon: LuBookOpen, end: true },
+  {
+    label: "Dashboard",
+    path: "/instructor",
+    icon: LuLayoutDashboard,
+    end: true,
+  },
+  {
+    label: "My Courses",
+    path: "/instructor/courses",
+    icon: LuBookOpen,
+    end: true,
+  },
   { label: "Create Course", path: "/instructor/courses/new", icon: LuPlus },
   { label: "Earnings", path: "/instructor/earnings", icon: LuDollarSign },
 ];
@@ -33,10 +43,11 @@ export default function InstructorLayout() {
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
           {!collapsed && (
-            <button onClick={() => navigate("/")} className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#0f2c59] rounded-lg flex items-center justify-center">
-                <LuGraduationCap className="text-white text-sm" />
-              </div>
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2"
+            >
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
               <span className="text-lg font-bold text-[#0f2c59]">
                 Tech<span className="text-cyan-500">navyug</span>
               </span>
@@ -46,7 +57,11 @@ export default function InstructorLayout() {
             onClick={() => setCollapsed(!collapsed)}
             className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
           >
-            {collapsed ? <LuChevronRight size={18} /> : <LuChevronLeft size={18} />}
+            {collapsed ? (
+              <LuChevronRight size={18} />
+            ) : (
+              <LuChevronLeft size={18} />
+            )}
           </button>
         </div>
 
@@ -79,8 +94,12 @@ export default function InstructorLayout() {
                 {user?.name?.charAt(0)?.toUpperCase() || "I"}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-gray-800 truncate">{user?.name}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider">Instructor</p>
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {user?.name}
+                </p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                  Instructor
+                </p>
               </div>
             </div>
           )}
