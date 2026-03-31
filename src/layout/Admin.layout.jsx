@@ -12,8 +12,8 @@ import {
   LuLogOut,
   LuChevronLeft,
   LuChevronRight,
-  LuShield,
 } from "react-icons/lu";
+import logo from "@/assets/image/Technavyug Logo.png";
 
 const navItems = [
   { label: "Dashboard", path: "/admin", icon: LuLayoutDashboard, end: true },
@@ -39,10 +39,11 @@ export default function AdminLayout() {
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/5">
           {!collapsed && (
-            <button onClick={() => navigate("/")} className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
-                <LuShield className="text-white text-sm" />
-              </div>
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2"
+            >
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
               <span className="text-lg font-bold text-white">
                 Tech<span className="text-cyan-400">navyug</span>
               </span>
@@ -52,7 +53,11 @@ export default function AdminLayout() {
             onClick={() => setCollapsed(!collapsed)}
             className="p-1.5 rounded-lg hover:bg-white/5 text-gray-400"
           >
-            {collapsed ? <LuChevronRight size={18} /> : <LuChevronLeft size={18} />}
+            {collapsed ? (
+              <LuChevronRight size={18} />
+            ) : (
+              <LuChevronLeft size={18} />
+            )}
           </button>
         </div>
 
@@ -85,8 +90,12 @@ export default function AdminLayout() {
                 {user?.name?.charAt(0)?.toUpperCase() || "A"}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-                <p className="text-[10px] text-cyan-400 uppercase tracking-wider">{user?.role}</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {user?.name}
+                </p>
+                <p className="text-[10px] text-cyan-400 uppercase tracking-wider">
+                  {user?.role}
+                </p>
               </div>
             </div>
           )}

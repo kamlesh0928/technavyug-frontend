@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useNavigate, Link } from "react-router-dom";
 
 import { useLogin } from "@/hooks/useLogin";
@@ -91,9 +91,7 @@ const LoginPage = () => {
                 className="w-full px-5 py-4 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-base"
               />
               {errors.email && (
-                <p className="form-error">
-                  {errors.email.message}
-                </p>
+                <p className="form-error">{errors.email.message}</p>
               )}
             </div>
 
@@ -122,13 +120,11 @@ const LoginPage = () => {
                   onClick={() => setShowPass(!showPass)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0f2c59] transition-colors"
                 >
-                  {showPass ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                  {showPass ? <LuEyeOff size={20} /> : <LuEye size={20} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error">
-                  {errors.password.message}
-                </p>
+                <p className="form-error">{errors.password.message}</p>
               )}
             </div>
 

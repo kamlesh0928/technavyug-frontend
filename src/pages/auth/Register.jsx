@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  LuEye,
+  LuEyeOff,
+  LuUser,
+  LuGraduationCap,
+  LuLayoutDashboard,
+} from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -16,10 +22,13 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm({
     resolver: yupResolver(signupSchema),
     defaultValues: { role: "Student" },
   });
+
+  const selectedRole = useWatch({ control, name: "role" });
 
   const { mutate, isPending } = useMutation({
     mutationFn: registerUser,
@@ -44,148 +53,244 @@ export default function Register() {
   };
 
   return (
-    <div className="flex h-screen bg-white">
-      {/* Left Side */}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f2c59] flex-shrink-0">
+    <div className="flex min-h-screen bg-[#f8fafc]">
+      {/* Left Side - Visual Focus */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-16 text-white overflow-hidden bg-[#0f172a]">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop"
-            alt="Learning"
-            className="w-full h-full object-cover opacity-40"
+            src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop"
+            alt="Collaboration and Learning"
+            className="w-full h-full object-cover opacity-30 select-none scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f2c59] via-[#0f2c59]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0f172a]/80 to-transparent" />
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse-slow" />
         </div>
+
         <div className="relative z-10">
-          <Link to="/" className="text-3xl font-bold tracking-tight">
-            Tech<span className="text-cyan-400">navyug</span>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+          >
+            <span className="text-white">Tech</span>
+            <span className="text-cyan-400">navyug</span>
           </Link>
         </div>
+
         <div className="relative z-10 max-w-lg">
-          <h2 className="text-5xl font-extrabold leading-[1.1] tracking-tight mb-6">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-wider uppercase mb-6 border border-cyan-500/20 backdrop-blur-sm">
+            Empowering the next generation
+          </span>
+          <h2 className="text-6xl font-extrabold leading-tight tracking-tight mb-8">
             Start Your <br />
-            <span className="text-cyan-400">Learning Journey.</span>
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              Learning Journey.
+            </span>
           </h2>
-          <p className="text-lg text-gray-200 font-medium leading-relaxed opacity-90">
-            Create your free account and gain access to hundreds of
-            industry-grade courses built by experts.
-          </p>
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10">
+                <LuGraduationCap className="text-cyan-400" size={24} />
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-white">
+                  Expert-Led Courses
+                </h4>
+                <p className="text-gray-400 leading-relaxed">
+                  Learn from industry veterans and gain practical knowledge that
+                  matters.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10">
+                <LuLayoutDashboard className="text-cyan-400" size={24} />
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-white">
+                  Industry Portfolio
+                </h4>
+                <p className="text-gray-400 leading-relaxed">
+                  Build real-world projects and showcase your skills with an
+                  industry portfolio.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="relative z-10 text-sm text-gray-400 font-medium">
-          &copy; 2026 Technavyug Education
+
+        <div className="relative z-10">
+          <div className="h-px w-full bg-gradient-to-r from-white/20 to-transparent mb-6" />
+          <div className="flex justify-between items-center text-sm font-medium text-gray-500">
+            <span>&copy; 2026 Technavyug Education</span>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-white transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Terms
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white overflow-y-auto">
-        <div className="w-full max-w-md">
-          <div className="lg:hidden mb-10">
-            <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
-              Tech<span className="text-cyan-400">navyug</span>
-            </h1>
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 lg:p-20 bg-white">
+        <div className="w-full max-w-lg">
+          {/* Logo - Mobile only */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <Link to="/" className="text-3xl font-extrabold tracking-tight">
+              Tech<span className="text-cyan-500">navyug</span>
+            </Link>
           </div>
 
-          <div className="mb-10">
-            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+          <div className="text-center lg:text-left mb-10">
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
               Create Account
             </h1>
-            <p className="text-gray-500 mt-3 text-lg">
+            <p className="text-slate-500 text-lg font-medium">
               Join the future of tech education.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">
-                Full Name
-              </label>
-              <input
-                {...register("name")}
-                placeholder="John Doe"
-                className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
-              />
-              {errors.name && (
-                <p className="form-error">{errors.name.message}</p>
-              )}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 block ml-1">
+                  Full Name
+                </label>
+                <div className="relative group">
+                  <input
+                    {...register("name")}
+                    placeholder="John Doe"
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/30 focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 focus:bg-white transition-all outline-none text-slate-900 group-hover:border-slate-300"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1.5 ml-1 font-semibold animate-in fade-in slide-in-from-top-1">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 block ml-1">
+                  Email
+                </label>
+                <div className="relative group">
+                  <input
+                    {...register("email")}
+                    placeholder="you@example.com"
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/30 focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 focus:bg-white transition-all outline-none text-slate-900 group-hover:border-slate-300"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1.5 ml-1 font-semibold animate-in fade-in slide-in-from-top-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">
-                Email
-              </label>
-              <input
-                {...register("email")}
-                placeholder="you@example.com"
-                className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
-              />
-              {errors.email && (
-                <p className="form-error">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">
+              <label className="text-sm font-bold text-slate-700 block ml-1">
                 Password
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <input
                   {...register("password")}
                   type={showPass ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm pr-12"
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/30 focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 focus:bg-white transition-all outline-none text-slate-900 pr-12 group-hover:border-slate-300"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 transition-colors"
                 >
-                  {showPass ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  {showPass ? <LuEyeOff size={20} /> : <LuEye size={20} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error">{errors.password.message}</p>
+                <p className="text-red-500 text-xs mt-1.5 ml-1 font-semibold animate-in fade-in slide-in-from-top-1">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">
+              <label className="text-sm font-bold text-slate-700 block ml-1">
                 Confirm Password
               </label>
-              <input
-                {...register("confirmPassword")}
-                type="password"
-                placeholder="••••••••"
-                className="w-full px-5 py-3.5 rounded-2xl border border-gray-200 bg-gray-50/50 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all outline-none text-sm"
-              />
+              <div className="relative group">
+                <input
+                  {...register("confirmPassword")}
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/30 focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 focus:bg-white transition-all outline-none text-slate-900 group-hover:border-slate-300"
+                />
+              </div>
               {errors.confirmPassword && (
-                <p className="form-error">{errors.confirmPassword.message}</p>
+                <p className="text-red-500 text-xs mt-1.5 ml-1 font-semibold animate-in fade-in slide-in-from-top-1">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">
-                I want to
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-slate-700 block ml-1">
+                I want to join as
               </label>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="relative">
+              <div className="grid grid-cols-2 gap-4">
+                <label className="relative cursor-pointer group">
                   <input
                     type="radio"
                     value="Student"
                     {...register("role")}
                     className="peer sr-only"
                   />
-                  <div className="px-4 py-3 rounded-xl border-2 border-gray-200 text-center cursor-pointer text-sm font-medium text-gray-600 peer-checked:border-[#0f2c59] peer-checked:bg-[#0f2c59]/5 peer-checked:text-[#0f2c59] transition-all">
-                    Student
+                  <div
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Student" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
+                  >
+                    <LuUser
+                      className={
+                        selectedRole === "Student"
+                          ? "text-cyan-500"
+                          : "text-slate-400"
+                      }
+                      size={22}
+                    />
+                    <span
+                      className={`text-sm font-bold ${selectedRole === "Student" ? "text-cyan-700" : "text-slate-600"}`}
+                    >
+                      Student
+                    </span>
                   </div>
                 </label>
-                <label className="relative">
+                <label className="relative cursor-pointer group">
                   <input
                     type="radio"
                     value="Instructor"
                     {...register("role")}
                     className="peer sr-only"
                   />
-                  <div className="px-4 py-3 rounded-xl border-2 border-gray-200 text-center cursor-pointer text-sm font-medium text-gray-600 peer-checked:border-[#0f2c59] peer-checked:bg-[#0f2c59]/5 peer-checked:text-[#0f2c59] transition-all">
-                    Instructor
+                  <div
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Instructor" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
+                  >
+                    <LuGraduationCap
+                      className={
+                        selectedRole === "Instructor"
+                          ? "text-cyan-500"
+                          : "text-slate-400"
+                      }
+                      size={22}
+                    />
+                    <span
+                      className={`text-sm font-bold ${selectedRole === "Instructor" ? "text-cyan-700" : "text-slate-600"}`}
+                    >
+                      Instructor
+                    </span>
                   </div>
                 </label>
               </div>
@@ -194,19 +299,25 @@ export default function Register() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full bg-[#0f2c59] text-white font-bold py-4 rounded-2xl shadow-xl hover:bg-[#1a4073] active:scale-[0.98] transition-all disabled:opacity-70 text-lg mt-2"
+              className="w-full bg-[#0f172a] text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-slate-200 hover:bg-[#1e293b] hover:shadow-2xl active:scale-[0.98] transition-all disabled:opacity-70 text-lg mt-4 flex items-center justify-center gap-2 overflow-hidden relative group"
             >
-              {isPending ? "Creating Account..." : "Create Account"}
+              <span className="relative z-10">
+                {isPending ? "Creating Account..." : "Create Account"}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
             </button>
           </form>
 
-          <p className="mt-10 text-center text-gray-500 font-medium">
+          <p className="mt-10 text-center text-slate-500 font-semibold tracking-tight">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-bold text-[#0f2c59] hover:text-cyan-500 transition-colors underline underline-offset-4"
+              className="font-extrabold text-cyan-600 hover:text-cyan-500 transition-colors inline-flex items-center gap-1 group"
             >
               Sign in
+              <span className="group-hover:translate-x-1 transition-transform">
+                →
+              </span>
             </Link>
           </p>
         </div>

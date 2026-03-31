@@ -10,8 +10,8 @@ import {
   LuLogOut,
   LuChevronLeft,
   LuChevronRight,
-  LuGraduationCap,
 } from "react-icons/lu";
+import logo from "@/assets/image/Technavyug Logo.png";
 
 const navItems = [
   { label: "Dashboard", path: "/student", icon: LuLayoutDashboard, end: true },
@@ -35,10 +35,11 @@ export default function StudentLayout() {
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
           {!collapsed && (
-            <button onClick={() => navigate("/")} className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#0f2c59] rounded-lg flex items-center justify-center">
-                <LuGraduationCap className="text-white text-sm" />
-              </div>
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2"
+            >
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
               <span className="text-lg font-bold text-[#0f2c59]">
                 Tech<span className="text-cyan-500">navyug</span>
               </span>
@@ -48,7 +49,11 @@ export default function StudentLayout() {
             onClick={() => setCollapsed(!collapsed)}
             className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
           >
-            {collapsed ? <LuChevronRight size={18} /> : <LuChevronLeft size={18} />}
+            {collapsed ? (
+              <LuChevronRight size={18} />
+            ) : (
+              <LuChevronLeft size={18} />
+            )}
           </button>
         </div>
 
@@ -81,8 +86,12 @@ export default function StudentLayout() {
                 {user?.name?.charAt(0)?.toUpperCase() || "S"}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-gray-800 truncate">{user?.name}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider">Student</p>
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {user?.name}
+                </p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                  Student
+                </p>
               </div>
             </div>
           )}

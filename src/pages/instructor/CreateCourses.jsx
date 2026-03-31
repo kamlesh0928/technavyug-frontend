@@ -407,6 +407,11 @@ export default function CreateCourse() {
                   <img
                     src={thumbnailPreview}
                     alt="Thumbnail preview"
+                    onError={() => {
+                      toast.error("Invalid image preview. Please re-upload.");
+                      setThumbnailPreview(null);
+                      setForm((f) => ({ ...f, thumbnail: "" }));
+                    }}
                     className="w-full h-52 object-cover rounded-xl"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
@@ -536,7 +541,7 @@ export default function CreateCourse() {
                 <input
                   type="number"
                   min="0"
-                  step="100"
+                  step="any"
                   value={form.price}
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 transition-all"
@@ -594,33 +599,35 @@ export default function CreateCourse() {
               </div>
 
               {/* Category */}
-              <div>
-                <label className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5">
-                  <LuTag size={12} />
-                  Category
-                </label>
-                <select
-                  value={showCustomCategory ? "__other__" : form.categoryId}
-                  onChange={handleCategoryChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 bg-white transition-all cursor-pointer"
-                >
-                  <option value="">Select category</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                  <option value="__other__">+ Add new category</option>
-                </select>
-                {showCustomCategory && (
-                  <input
-                    value={customCategoryName}
-                    onChange={(e) => setCustomCategoryName(e.target.value)}
-                    placeholder="Enter category name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 mt-2"
-                  />
-                )}
-              </div>
+              {categories.length > 0 && (
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5">
+                    <LuTag size={12} />
+                    Category
+                  </label>
+                  <select
+                    value={showCustomCategory ? "__other__" : form.categoryId}
+                    onChange={handleCategoryChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 bg-white transition-all cursor-pointer"
+                  >
+                    <option value="">Select category (Optional)</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                    <option value="__other__">+ Add new category</option>
+                  </select>
+                  {showCustomCategory && (
+                    <input
+                      value={customCategoryName}
+                      onChange={(e) => setCustomCategoryName(e.target.value)}
+                      placeholder="Enter category name"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 mt-2"
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -932,12 +939,13 @@ export default function CreateCourse() {
                   ) : (
                     <button
                       type="button"
+                      disabled={createLectureMutation.isPending}
                       onClick={() => {
                         resetLectureForm();
                         setLectureFormSection(section.id);
                         setExpandedSection(section.id);
                       }}
-                      className="flex items-center gap-2 text-sm font-bold text-cyan-600 hover:text-cyan-700 mt-2 px-2 py-1.5 rounded-lg hover:bg-cyan-50/50 transition-all"
+                      className="flex items-center gap-2 text-sm font-bold text-cyan-600 hover:text-cyan-700 mt-2 px-2 py-1.5 rounded-lg hover:bg-cyan-50/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <LuPlus size={14} /> Add Lecture
                     </button>
@@ -1014,7 +1022,8 @@ export default function CreateCourse() {
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
+                disabled={createLectureMutation.isPending}
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Review & Publish
                 <LuArrowRight size={16} />

@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaPlayCircle } from "react-icons/fa";
-import { LuUsers, LuBookOpen, LuAward } from "react-icons/lu";
+import {
+  LuArrowRight,
+  LuCirclePlay,
+  LuUsers,
+  LuBookOpen,
+  LuAward,
+} from "react-icons/lu";
 
 export default function Hero() {
   return (
@@ -9,20 +14,6 @@ export default function Hero() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-cyan-100/40 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-100/30 rounded-full blur-[80px]" />
-        <svg
-          className="absolute top-32 left-20 text-gray-200/60 w-6 h-6"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <circle cx="12" cy="12" r="4" />
-        </svg>
-        <svg
-          className="absolute top-60 right-40 text-cyan-200/60 w-4 h-4"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <rect width="24" height="24" rx="4" />
-        </svg>
       </div>
 
       <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
@@ -50,7 +41,7 @@ export default function Hero() {
                 className="group inline-flex items-center gap-2.5 bg-gray-900 text-white px-7 py-4 rounded-2xl font-bold text-sm shadow-lg shadow-gray-900/20 hover:bg-gray-800 hover:-translate-y-0.5 transition-all duration-300"
               >
                 Explore Courses
-                <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
+                <LuArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
