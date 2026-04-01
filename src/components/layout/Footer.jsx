@@ -49,6 +49,7 @@ const Footer = () => {
                 <a
                   key={i}
                   href={s.href}
+                  target="_blank"
                   className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center hover:bg-cyan-600 hover:text-white transition-all text-gray-500"
                 >
                   <s.icon size={16} />
