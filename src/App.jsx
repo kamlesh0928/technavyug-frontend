@@ -28,6 +28,11 @@ import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
 
+// New Blog Pages
+import BlogDetail from "@/pages/public/BlogDetail";
+import AdminBlogList from "@/pages/admin/BlogList";
+import AdminBlogEditor from "@/pages/admin/BlogEditor";
+
 // Admin Pages
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminUsers from "@/pages/admin/Users";
@@ -77,6 +82,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blogs />} />
+          <Route path="blog/:slug" element={<BlogDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -102,6 +108,9 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="cms" element={<AdminCMS />} />
+          <Route path="cms/blogs" element={<AdminBlogList />} />
+          <Route path="cms/blogs/new" element={<AdminBlogEditor />} />
+          <Route path="cms/blogs/edit/:id" element={<AdminBlogEditor />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
