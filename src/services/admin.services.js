@@ -19,7 +19,7 @@ export const adminService = {
 
   // Analytics
   getAnalytics: async () => {
-    const response = await api.get("/admin/analytics");
+    const response = await api.get("/admin/analytics/dashboard");
     return response.data;
   },
 
