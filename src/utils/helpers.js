@@ -14,6 +14,7 @@ export const parseTags = (tags) => {
     try {
       const parsed = JSON.parse(tags);
       return Array.isArray(parsed) ? parsed : [];
+      // eslint-disable-next-line no-unused-vars
     } catch (e) {
       // If not valid JSON, return empty array
       return [];

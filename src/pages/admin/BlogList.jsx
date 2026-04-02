@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   LuPlus,
@@ -21,7 +21,7 @@ export default function BlogList() {
   const [search, setSearch] = useState("");
   const [view, setView] = useState("table");
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true);
       const response = await cmsApi.getBlogs({ search, limit: 50 });
@@ -68,14 +68,14 @@ export default function BlogList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchBlogs();
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, fetchBlogs]);
 
   const handleDelete = async (id) => {
     if (
