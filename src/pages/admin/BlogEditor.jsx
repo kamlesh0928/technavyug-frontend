@@ -19,6 +19,7 @@ import cmsApi from "@/api/cmsApi";
 import { toast } from "react-toastify";
 import ReactMarkdown from "react-markdown";
 import { parseTags } from "@/utils/helpers";
+import Placeholder from '@tiptap/extension-placeholder';
 
 // TipTap Toolbar Component
 // eslint-disable-next-line no-unused-vars
@@ -302,8 +303,12 @@ export default function BlogEditor() {
       TipTapLink.configure({
         openOnClick: false,
       }),
+      Placeholder.configure({
+      placeholder: "Start writing your amazing article...",
+      showOnlyCurrent: false,  
+    }),
     ],
-    content: formData.content || "<p>Start writing your amazing article...</p>",
+    content: formData.content || "<p></p>",
     onUpdate: ({ editor }) => {
       setFormData({ ...formData, content: editor.getHTML() });
     },
@@ -476,7 +481,7 @@ export default function BlogEditor() {
             <input
               type="text"
               placeholder="Enter an eye-catching headline..."
-              className="w-full text-4xl font-black text-gray-900 placeholder:text-gray-200 border-none bg-transparent p-0 focus:ring-0"
+              className="w-full text-4xl font-black text-gray-900 placeholder:text-gray-200 border-none bg-transparent p-3 focus:ring-0"
               value={formData.title}
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
@@ -492,7 +497,7 @@ export default function BlogEditor() {
             <textarea
               placeholder="A brief summary that captures the essence..."
               rows={2}
-              className="w-full text-lg text-gray-700 placeholder:text-gray-200 border-none bg-transparent p-0 focus:ring-0 resize-none leading-relaxed"
+              className="w-full text-lg text-gray-700 placeholder:text-gray-200 border-none bg-transparent p-3 focus:ring-0 resize-none leading-relaxed"
               value={formData.excerpt}
               onChange={(e) =>
                 setFormData({ ...formData, excerpt: e.target.value })
