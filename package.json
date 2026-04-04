@@ -24,6 +24,7 @@
     "@tiptap/extension-image": "^3.22.0",
     "@tiptap/extension-italic": "^3.22.0",
     "@tiptap/extension-link": "^3.22.0",
+    "@tiptap/extension-placeholder": "^3.22.1",
     "@tiptap/pm": "^3.22.0",
     "@tiptap/react": "^3.22.0",
     "@tiptap/starter-kit": "^3.22.0",
