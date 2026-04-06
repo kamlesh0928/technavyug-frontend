@@ -1,20 +1,7 @@
 import { useState, useCallback } from "react";
 import { LuChevronLeft, LuChevronRight, LuShoppingCart, LuImage, LuPackage } from "react-icons/lu";
 
-// Parse images safely from DB (can be Array or JSON string)
-export function parseImages(raw) {
-  if (!raw) return [];
-  if (Array.isArray(raw)) return raw.filter((u) => typeof u === "string" && u.trim());
-  if (typeof raw === "string") {
-    try {
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.filter((u) => typeof u === "string" && u.trim()) : [];
-    } catch {
-      return [];
-    }
-  }
-  return [];
-}
+import { parseImages } from "@/utils/helpers";
 
 const FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800";
 

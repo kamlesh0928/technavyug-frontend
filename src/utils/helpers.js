@@ -5,22 +5,33 @@
  */
 export const parseTags = (tags) => {
   if (!tags) return [];
-
-  // If already an array, return it
   if (Array.isArray(tags)) return tags;
-
-  // If it's a string, try to parse as JSON
   if (typeof tags === "string") {
     try {
       const parsed = JSON.parse(tags);
       return Array.isArray(parsed) ? parsed : [];
-      // eslint-disable-next-line no-unused-vars
-    } catch (e) {
-      // If not valid JSON, return empty array
+    } catch {
       return [];
     }
   }
-
-  // Fallback for any other type
   return [];
 };
+
+/**
+ * Safely parse images from DB (can be Array or JSON string)
+ * @param {any} raw - Raw image data
+ * @returns {Array} - Always returns an array of image URLs
+ */
+export function parseImages(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.filter((u) => typeof u === "string" && u.trim());
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter((u) => typeof u === "string" && u.trim()) : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}

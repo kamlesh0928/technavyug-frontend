@@ -10,7 +10,7 @@ import {
   LuZap,
   LuImage,
 } from "react-icons/lu";
-import { parseImages } from "./ProductCard";
+import { parseImages } from "@/utils/helpers";
 
 const FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800";
 
@@ -27,12 +27,6 @@ export default function ProductDetailModal({ product, onClose }) {
   const [imgError, setImgError] = useState({});
   const [isZoomed, setIsZoomed] = useState(false);
 
-  // Reset index when product changes
-  useEffect(() => {
-    setActiveIdx(0);
-    setImgError({});
-    setIsZoomed(false);
-  }, [product?.id]);
 
   // Keyboard navigation
   useEffect(() => {

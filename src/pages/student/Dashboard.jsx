@@ -503,7 +503,11 @@ export default function StudentDashboard() {
 
       {/* Product Detail Modal */}
       {selectedProduct && (
-        <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        <ProductDetailModal
+          key={selectedProduct.id}
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
       )}
 
       {/* Goal Setting Modal */}

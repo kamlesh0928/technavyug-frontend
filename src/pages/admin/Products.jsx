@@ -6,7 +6,7 @@ import {
 } from "react-icons/lu";
 import { toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
-import { parseImages } from "@/components/ui/ProductCard";
+import { parseImages } from "@/utils/helpers";
 
 const FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800";
 
