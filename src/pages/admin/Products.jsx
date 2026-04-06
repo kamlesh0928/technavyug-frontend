@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminService } from "@/services/admin.services";
 import { LuPlus, LuPencil, LuTrash, LuPackage } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 export default function AdminProducts() {
   const queryClient = useQueryClient();
@@ -10,6 +11,30 @@ export default function AdminProducts() {
     queryFn: () => adminService.getProducts(),
   });
   const products = data?.data || [];
+
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState({ name: "", description: "", price: "", stock: "0", type: "Digital", image: "" });
+
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: (data) => adminService.createProduct({
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+    }),
+    onSuccess: () => {
+      toast.success("Product created successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      setIsAdding(false);
+      setFormData({ name: "", description: "", price: "", stock: "0", type: "Digital", image: "" });
+    },
+    onError: (e) => toast.error(e?.userMessage || "Failed to create product"),
+  });
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    createMutation.mutate(formData);
+  };
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -38,7 +63,10 @@ export default function AdminProducts() {
             Manage e-commerce inventory and digital assets
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-[#0f2c59] text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-blue-900/20 active:scale-95 transition-all">
+        <button 
+          onClick={() => setIsAdding(true)}
+          className="flex items-center gap-2 bg-[#0f2c59] text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-blue-900/20 active:scale-95 transition-all"
+        >
           <LuPlus size={18} /> Add New Product
         </button>
       </div>
@@ -133,6 +161,49 @@ export default function AdminProducts() {
           ))
         )}
       </div>
+
+      {/* Add Product Modal */}
+      {isAdding && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h2 className="text-2xl font-black text-gray-900 mb-6">Add New Product</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Name</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 uppercase">Price (₹)</label>
+                  <input required type="number" step="0.01" min="0" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 uppercase">Stock</label>
+                  <input required type="number" min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Type</label>
+                <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all">
+                  <option value="Digital">Digital</option>
+                  <option value="Physical">Physical</option>
+                  <option value="Service">Service</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Description</label>
+                <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+              </div>
+              <div className="pt-4 flex gap-3">
+                <button type="button" onClick={() => setIsAdding(false)} className="flex-1 py-3 rounded-xl border text-gray-600 font-bold hover:bg-gray-50 transition-all">Cancel</button>
+                <button type="submit" disabled={createMutation.isPending} className="flex-1 py-3 rounded-xl bg-[#0f2c59] text-white font-bold disabled:opacity-70 transition-all">
+                  {createMutation.isPending ? "Adding..." : "Add Product"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -140,25 +140,6 @@ export default function AdminSettings() {
           </div>
         </section>
 
-        {/* Danger Zone */}
-        <section className="bg-red-50/30 rounded-3xl border border-red-100 overflow-hidden">
-          <div className="px-8 py-6 border-b border-red-100 flex items-center gap-3 text-red-600">
-            <LuTrash2 size={24} />
-            <h3 className="font-bold">Danger Zone</h3>
-          </div>
-          <div className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <p className="font-bold text-gray-900 mb-1">Delete Account</p>
-              <p className="text-sm text-gray-500">
-                Permanently remove your account and all associated data. This
-                action cannot be undone.
-              </p>
-            </div>
-            <button className="bg-red-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/20 active:scale-95 transition-all whitespace-nowrap">
-              Delete Account
-            </button>
-          </div>
-        </section>
       </div>
     </div>
   );
