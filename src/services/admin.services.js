@@ -23,6 +23,18 @@ export const adminService = {
     return response.data;
   },
 
+  getRevenueChart: async (period = "monthly") => {
+    const response = await api.get("/admin/analytics/revenue", {
+      params: { period },
+    });
+    return response.data;
+  },
+
+  getEnrollmentChart: async () => {
+    const response = await api.get("/admin/analytics/enrollments");
+    return response.data;
+  },
+
   // Courses (admin can list all)
   getAllCourses: async (params = {}) => {
     const response = await api.get("/courses", { params });
