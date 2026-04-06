@@ -8,6 +8,8 @@ import {
   LuBookOpen,
   LuCircleCheck,
   LuFileText,
+  LuUsers,
+  LuFilter,
 } from "react-icons/lu";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -16,20 +18,29 @@ import { Link } from "react-router-dom";
 export default function AdminCourses() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("");
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-courses", { search, page }],
+    queryKey: ["admin-courses", { search, page, status: statusFilter }],
     queryFn: () =>
       adminService.getAllCourses({
         search: search || undefined,
+        status: statusFilter || undefined,
         page,
         limit: 10,
       }),
   });
 
+  // Fetch dashboard analytics for accurate aggregate stats
+  const { data: analytics } = useQuery({
+    queryKey: ["admin-analytics"],
+    queryFn: adminService.getAnalytics,
+  });
+
   const courses = data?.data || [];
   const pagination = data?.pagination || { totalPages: 1 };
+  const courseStats = analytics?.data?.courses;
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -37,6 +48,7 @@ export default function AdminCourses() {
     onSuccess: () => {
       toast.success("Course deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
     },
     onError: (e) => toast.error(e?.userMessage || "Failed to delete course"),
   });
@@ -54,24 +66,27 @@ export default function AdminCourses() {
   const stats = [
     {
       label: "Total Courses",
-      value: pagination.totalItems || courses.length,
+      value: courseStats?.total ?? pagination.totalItems ?? courses.length,
       icon: LuBookOpen,
       color: "text-blue-600",
       bg: "bg-blue-50",
+      gradient: "from-blue-500 to-blue-600",
     },
     {
-      label: "Active Courses",
-      value: courses.filter((c) => c.status === "Published").length,
+      label: "Published",
+      value: courseStats?.published ?? 0,
       icon: LuCircleCheck,
       color: "text-green-600",
       bg: "bg-green-50",
+      gradient: "from-green-500 to-green-600",
     },
     {
-      label: "Drafts",
-      value: courses.filter((c) => c.status === "Draft").length,
-      icon: LuFileText,
-      color: "text-yellow-600",
-      bg: "bg-yellow-50",
+      label: "Total Enrollments",
+      value: courseStats?.totalEnrollments ?? 0,
+      icon: LuUsers,
+      color: "text-cyan-600",
+      bg: "bg-cyan-50",
+      gradient: "from-cyan-500 to-cyan-600",
     },
   ];
 
@@ -89,7 +104,7 @@ export default function AdminCourses() {
         {stats.map((s, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4"
+            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
           >
             <div
               className={`w-12 h-12 ${s.bg} ${s.color} rounded-xl flex items-center justify-center`}
@@ -120,6 +135,21 @@ export default function AdminCourses() {
             }}
             className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-cyan-400 outline-none transition-all"
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <LuFilter size={14} className="text-gray-400" />
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="text-sm border border-gray-200 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-cyan-400 outline-none bg-white text-gray-700"
+          >
+            <option value="">All Status</option>
+            <option value="Published">Published</option>
+            <option value="Draft">Draft</option>
+          </select>
         </div>
       </div>
 
@@ -153,7 +183,10 @@ export default function AdminCourses() {
                     colSpan={5}
                     className="px-6 py-12 text-center text-gray-400"
                   >
-                    Loading courses...
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                      Loading courses...
+                    </div>
                   </td>
                 </tr>
               ) : courses.length === 0 ? (
@@ -162,6 +195,10 @@ export default function AdminCourses() {
                     colSpan={5}
                     className="px-6 py-12 text-center text-gray-400"
                   >
+                    <LuBookOpen
+                      size={32}
+                      className="mx-auto mb-2 text-gray-200"
+                    />
                     No courses found matching your criteria
                   </td>
                 </tr>

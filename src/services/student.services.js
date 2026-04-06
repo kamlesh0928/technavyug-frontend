@@ -50,4 +50,21 @@ export const studentService = {
     const response = await api.get(`/reviews/course/${courseId}`, { params });
     return response.data;
   },
+
+  // Student Dashboard
+  getStudentDashboard: async () => {
+    const response = await api.get("/student/dashboard");
+    return response.data;
+  },
+
+  // Monthly Goals
+  setMonthlyGoal: async (data) => {
+    const response = await api.post("/student/goals/monthly", data);
+    return response.data;
+  },
+
+  getMonthlyGoal: async () => {
+    const response = await api.get("/student/goals/monthly");
+    return response.data;
+  },
 };
