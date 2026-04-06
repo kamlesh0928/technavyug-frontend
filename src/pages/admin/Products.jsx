@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminService } from "@/services/admin.services";
-import { LuPlus, LuPencil, LuTrash, LuPackage } from "react-icons/lu";
+import { LuPlus, LuPencil, LuTrash, LuPackage, LuCloudUpload, LuX } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 export default function AdminProducts() {
   const queryClient = useQueryClient();
@@ -10,6 +11,65 @@ export default function AdminProducts() {
     queryFn: () => adminService.getProducts(),
   });
   const products = data?.data || [];
+
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState({ name: "", description: "", price: "", stock: "0", type: "Digital", image: "" });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: (data) => adminService.createProduct({
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+    }),
+    onSuccess: () => {
+      toast.success("Product created successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      setIsAdding(false);
+      setFormData({ name: "", description: "", price: "", stock: "0", type: "Digital", image: "" });
+      setImageFile(null);
+      setImagePreview(null);
+    },
+    onError: (e) => toast.error(e?.userMessage || "Failed to create product"),
+  });
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+    try {
+      let uploadedImages = [];
+      if (imageFile) {
+        const payload = new FormData();
+        payload.append("image", imageFile);
+        const uploadRes = await adminService.uploadProductImage(payload);
+        if (uploadRes?.data?.url) {
+          uploadedImages.push(uploadRes.data.url);
+        }
+      }
+      
+      await createMutation.mutateAsync({
+        ...formData,
+        images: uploadedImages
+      });
+    } catch (err) {
+      toast.error(err?.userMessage || err?.response?.data?.message || "Error adding product");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -38,7 +98,10 @@ export default function AdminProducts() {
             Manage e-commerce inventory and digital assets
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-[#0f2c59] text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-blue-900/20 active:scale-95 transition-all">
+        <button 
+          onClick={() => setIsAdding(true)}
+          className="flex items-center gap-2 bg-[#0f2c59] text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-blue-900/20 active:scale-95 transition-all"
+        >
           <LuPlus size={18} /> Add New Product
         </button>
       </div>
@@ -75,7 +138,7 @@ export default function AdminProducts() {
               <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
                 <img
                   src={
-                    p.image ||
+                    (p.images && p.images[0]) || p.image ||
                     "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800"
                   }
                   alt={p.name}
@@ -133,6 +196,75 @@ export default function AdminProducts() {
           ))
         )}
       </div>
+
+      {/* Add Product Modal */}
+      {isAdding && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h2 className="text-2xl font-black text-gray-900 mb-6">Add New Product</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Name</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 uppercase">Price (₹)</label>
+                  <input required type="number" step="0.01" min="0" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 uppercase">Stock</label>
+                  <input required type="number" min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Type</label>
+                <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all">
+                  <option value="Digital">Digital</option>
+                  <option value="Physical">Physical</option>
+                  <option value="Service">Service</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Description</label>
+                <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-cyan-400 outline-none transition-all" />
+              </div>
+
+              {/* Image Upload Area */}
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase">Product Image</label>
+                {!imagePreview ? (
+                  <label className="mt-1 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                    <LuCloudUpload size={24} className="text-gray-400 mb-2" />
+                    <span className="text-sm font-bold text-gray-500">Click to upload image</span>
+                    <span className="text-xs text-gray-400 mt-1">JPEG, PNG up to 10MB</span>
+                    <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                  </label>
+                ) : (
+                  <div className="relative mt-1 w-full h-40 rounded-xl overflow-hidden border border-gray-200">
+                    <img src={imagePreview} className="w-full h-full object-cover" />
+                    <button type="button" onClick={() => { setImagePreview(null); setImageFile(null); }} className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-lg bg-black/50 text-white hover:bg-black/70 backdrop-blur transition-all">
+                      <LuX size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button type="button" onClick={() => setIsAdding(false)} className="flex-1 py-3 rounded-xl border text-gray-600 font-bold hover:bg-gray-50 transition-all">Cancel</button>
+                <button type="submit" disabled={isUploading || createMutation.isPending} className="flex-1 py-3 rounded-xl bg-[#0f2c59] text-white font-bold disabled:opacity-70 transition-all flex justify-center items-center gap-2">
+                  {(isUploading || createMutation.isPending) ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>{isUploading ? "Uploading Image..." : "Adding..."}</span>
+                    </>
+                  ) : "Add Product"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

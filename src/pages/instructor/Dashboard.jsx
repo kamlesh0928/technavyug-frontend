@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { studentService } from "@/services/student.services";
+import { authService } from "@/services/auth.services";
 import {
   LuBookOpen,
   LuUsers,
@@ -9,11 +10,33 @@ import {
   LuPlus,
   LuArrowRight,
   LuCalendar,
+  LuTrash2,
+  LuLock,
 } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function InstructorDashboard() {
   const { user } = useSelector((state) => state.auth);
+  
+  const [showDelete, setShowDelete] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
+
+  const handleDeleteAccount = async () => {
+    if (!confirmPassword) return toast.error("Password is required");
+    setIsDeleting(true);
+    try {
+      await authService.deleteAccount(confirmPassword);
+      toast.success("Account deleted successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error?.userMessage || "Failed to delete account");
+      setIsDeleting(false);
+    }
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["instructor-courses", user?.id],
@@ -222,6 +245,57 @@ export default function InstructorDashboard() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Danger Zone */}
+      <div className="bg-red-50/30 rounded-3xl border border-red-100 overflow-hidden w-full max-w-4xl mt-12 mb-8">
+        <div className="px-8 py-6 border-b border-red-100 flex items-center gap-3 text-red-600">
+          <LuTrash2 size={24} />
+          <h3 className="font-bold">Danger Zone</h3>
+        </div>
+        <div className="p-8">
+          <p className="font-bold text-gray-900 mb-1">Delete Account</p>
+          <p className="text-sm text-gray-500 mb-6">
+            Permanently remove your instructor account, all your courses and associated data. This action cannot be undone.
+          </p>
+          
+          {showDelete ? (
+            <div className="space-y-4 animate-in fade-in slide-in-from-top-4 max-w-md">
+              <div className="relative">
+                <LuLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  type="password"
+                  placeholder="Confirm password to delete"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-red-200 text-sm outline-none focus:ring-2 focus:ring-red-400 transition-all font-medium text-gray-800"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDelete(false)}
+                  className="flex-1 bg-white border border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={isDeleting || !confirmPassword}
+                  className="flex-1 bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-red-700 transition-all hover:shadow-lg hover:shadow-red-600/20 disabled:opacity-50"
+                >
+                  {isDeleting ? "Deleting..." : "Confirm Delete"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button 
+              onClick={() => setShowDelete(true)}
+              className="bg-red-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/20 active:scale-95 transition-all w-full md:w-auto"
+            >
+              Delete Account
+            </button>
+          )}
         </div>
       </div>
     </div>

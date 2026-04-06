@@ -58,6 +58,13 @@ export const adminService = {
     return response.data;
   },
 
+  uploadProductImage: async (formData) => {
+    const response = await api.post("/products/upload-image", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  },
+
   updateProduct: async (id, data) => {
     const response = await api.put(`/products/${id}`, data);
     return response.data;
