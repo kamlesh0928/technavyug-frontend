@@ -17,12 +17,16 @@ import {
   LuCalendar,
   LuCheck,
   LuX,
+  LuPackage,
 } from "react-icons/lu";
+import ProductCard from "@/components/ui/ProductCard";
+import ProductDetailModal from "@/components/ui/ProductDetailModal";
 
 export default function StudentDashboard() {
   const { user } = useSelector((state) => state.auth);
   const queryClient = useQueryClient();
   const [showGoalModal, setShowGoalModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [goalForm, setGoalForm] = useState({
     targetLectures: 10,
     goalName: "",
@@ -41,6 +45,13 @@ export default function StudentDashboard() {
     queryFn: () => studentService.getStudentDashboard(),
   });
   const dash = dashData?.data;
+
+  // Products
+  const { data: productsData, isLoading: isProductsLoading } = useQuery({
+    queryKey: ["public-products"],
+    queryFn: () => studentService.getProducts(),
+  });
+  const products = productsData?.data || [];
 
   // Set monthly goal mutation
   const goalMutation = useMutation({
@@ -454,6 +465,50 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Products Showcase */}
+      <div className="mt-12 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-2xl font-black text-gray-900 flex items-center gap-2">
+              <LuPackage className="text-blue-500" /> Digital Store
+            </h3>
+            <p className="text-gray-500 text-sm mt-1">Explore our collection of digital assets and products</p>
+          </div>
+          <Link to="#" className="text-sm font-bold text-blue-600 hover:text-blue-700">View All Products</Link>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {isProductsLoading ? (
+            [...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-4 animate-pulse">
+                <div className="bg-gray-100 aspect-[4/3] rounded-xl" />
+                <div className="h-4 bg-gray-100 rounded w-2/3" />
+                <div className="h-3 bg-gray-100 rounded w-full" />
+                <div className="h-8 bg-gray-100 rounded w-full mt-2" />
+              </div>
+            ))
+          ) : products.length === 0 ? (
+            <div className="col-span-full bg-white rounded-3xl border border-dashed border-gray-200 py-12 flex flex-col items-center justify-center text-gray-400">
+              <LuPackage size={40} className="mb-3 opacity-20" />
+              <p className="text-md font-bold">No products available</p>
+            </div>
+          ) : (
+            products.slice(0, 4).map((p) => (
+              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} />
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <ProductDetailModal
+          key={selectedProduct.id}
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
 
       {/* Goal Setting Modal */}
       {showGoalModal && (

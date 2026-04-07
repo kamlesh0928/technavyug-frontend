@@ -40,6 +40,12 @@ export const studentService = {
     return response.data;
   },
 
+  // Products
+  getProducts: async (params = {}) => {
+    const response = await api.get("/products", { params });
+    return response.data;
+  },
+
   // Reviews
   submitReview: async (data) => {
     const response = await api.post("/reviews", data);
