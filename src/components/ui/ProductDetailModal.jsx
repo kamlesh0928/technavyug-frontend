@@ -20,7 +20,7 @@ const TYPE_COLORS = {
   Service: { bg: "bg-purple-100", text: "text-purple-700", dot: "bg-purple-500" },
 };
 
-export default function ProductDetailModal({ product, onClose }) {
+export default function ProductDetailModal({ product, onClose, onBuy, isLoggedIn }) {
   const images = parseImages(product?.images);
   const allImages = images.length > 0 ? images : [FALLBACK];
   const [activeIdx, setActiveIdx] = useState(0);
@@ -213,14 +213,21 @@ export default function ProductDetailModal({ product, onClose }) {
             {/* CTA */}
             <div className="mt-auto pt-4 border-t border-gray-50">
               <button
+                onClick={() => onBuy && onBuy(product)}
                 disabled={!product.stock || product.stock <= 0}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-black text-base hover:shadow-xl hover:shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <LuShoppingCart size={20} />
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                {product.stock > 0
+                  ? isLoggedIn
+                    ? "Add to Cart"
+                    : "Login to Buy"
+                  : "Out of Stock"}
               </button>
               <p className="text-center text-xs text-gray-400 mt-3">
-                🔒 Secure checkout · Instant delivery
+                {isLoggedIn
+                  ? "🔒 Secure checkout · Instant delivery"
+                  : "You'll be redirected to login, then back here."}
               </p>
             </div>
           </div>

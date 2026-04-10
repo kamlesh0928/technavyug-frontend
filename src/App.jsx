@@ -6,6 +6,7 @@ import PublicLayout from "@/layout/Public.layout";
 import AdminLayout from "@/layout/Admin.layout";
 import InstructorLayout from "@/layout/Instructor.layout";
 import StudentLayout from "@/layout/Student.layout";
+import CartDrawer from "@/components/ui/CartDrawer";
 
 // Guards
 import AdminGuard from "@/guards/Admin.guard";
@@ -19,6 +20,7 @@ import CourseDetails from "@/pages/public/CourseDetails";
 import About from "@/pages/public/About";
 import Contact from "@/pages/public/Contact";
 import Blogs from "@/pages/public/Blogs";
+import Products from "@/pages/public/Products";
 import NotFound from "@/pages/public/NotFound";
 
 // Auth Pages
@@ -73,12 +75,15 @@ function App() {
         transition={Bounce}
       />
 
+      <CartDrawer />
+
       <Routes>
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="courses" element={<Courses />} />
           <Route path="courses/:slug" element={<CourseDetails />} />
+          <Route path="products" element={<Products />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blogs />} />
