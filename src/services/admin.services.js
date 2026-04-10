@@ -7,13 +7,15 @@ export const adminService = {
     return response.data;
   },
 
-  updateUserStatus: async (userId, data) => {
-    const response = await api.put(`/admin/users/${userId}/status`, data);
+  updateUserStatus: async (userId, status) => {
+    const response = await api.patch(
+      `/admin/users/${userId}/${status === "Blocked" ? "block" : "unblock"}`,
+    );
     return response.data;
   },
 
   updateUserRole: async (userId, data) => {
-    const response = await api.put(`/admin/users/${userId}/role`, data);
+    const response = await api.put(`/admin/users/${userId}`, data);
     return response.data;
   },
 

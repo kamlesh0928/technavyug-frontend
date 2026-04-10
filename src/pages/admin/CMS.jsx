@@ -9,15 +9,6 @@ import {
 
 const cmsModules = [
   {
-    title: "Homepage Editor",
-    description:
-      "Customize hero sections, feature grids, and statistical counters across the home page.",
-    icon: LuLayoutDashboard,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-    path: "/admin/cms/homepage",
-  },
-  {
     title: "Blog Management",
     description:
       "Write, edit, and publish industry insights or platform updates for your audience.",
@@ -54,7 +45,7 @@ export default function AdminCMS() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {cmsModules.map((m, i) => (
           <div
             key={i}
@@ -79,23 +70,6 @@ export default function AdminCMS() {
             </Link>
           </div>
         ))}
-      </div>
-
-      {/* Quick Help Footer */}
-      <div className="bg-[#0f172a] rounded-[2.5rem] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative border border-white/5 shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px]" />
-        <div className="relative z-10">
-          <h4 className="text-2xl font-black mb-2 tracking-tight">
-            Need help with content?
-          </h4>
-          <p className="text-gray-400 text-sm max-w-md leading-relaxed">
-            Our documentation provides best practices for SEO-friendly blogs and
-            high-converting homepage copy to help you scale faster.
-          </p>
-        </div>
-        <button className="relative z-10 bg-white text-gray-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-cyan-50 hover:text-cyan-700 hover:scale-105 transition-all shadow-xl active:scale-95">
-          View Documentation
-        </button>
       </div>
     </div>
   );
