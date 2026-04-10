@@ -9,12 +9,15 @@ import {
   LuLayoutDashboard,
   LuLogOut,
   LuChevronDown,
+  LuShoppingCart,
 } from "react-icons/lu";
 import logo from "@/assets/image/Technavyug Logo.png";
+import { toggleCart, selectCartCount } from "@/store/Slices/cartSlice";
 
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "Courses", path: "/courses" },
+  { label: "Products", path: "/products" },
   { label: "About", path: "/about" },
   { label: "Blog", path: "/blog" },
   { label: "Contact", path: "/contact" },
@@ -37,6 +40,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const cartCount = useSelector(selectCartCount);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -95,6 +99,20 @@ const Navbar = () => {
                 </NavLink>
               ))}
             </div>
+
+            {/* Cart Icon */}
+            <button
+              onClick={() => dispatch(toggleCart())}
+              className="relative p-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+              aria-label="Open cart"
+            >
+              <LuShoppingCart size={20} />
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#0f2c59] text-white text-[10px] font-black flex items-center justify-center shadow-md">
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </button>
 
             {/* Auth / User */}
             <div className="hidden lg:flex items-center gap-2">

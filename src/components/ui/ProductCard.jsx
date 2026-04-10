@@ -11,7 +11,7 @@ const TYPE_STYLES = {
   Service: "bg-purple-100 text-purple-700",
 };
 
-export default function ProductCard({ product, onDetailClick }) {
+export default function ProductCard({ product, onDetailClick, onBuyClick }) {
   const images = parseImages(product?.images);
   const hasImages = images.length > 0;
   const allImages = hasImages ? images : [FALLBACK];
@@ -152,12 +152,29 @@ export default function ProductCard({ product, onDetailClick }) {
               </span>
             )}
           </div>
-          <button
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 bg-[#0f2c59] hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:shadow-md active:scale-95"
-          >
-            <LuShoppingCart size={13} /> Buy
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onBuyClick ? onBuyClick(product) : (onDetailClick && onDetailClick(product));
+              }}
+              disabled={!product?.stock || product?.stock <= 0}
+              className="flex items-center justify-center p-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-[#0f2c59] hover:text-white transition-all active:scale-95 disabled:opacity-40"
+              title="Add to Cart"
+            >
+              <LuShoppingCart size={14} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDetailClick && onDetailClick(product);
+              }}
+              disabled={!product?.stock || product?.stock <= 0}
+              className="flex items-center gap-1.5 bg-[#0f2c59] hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
     </div>
