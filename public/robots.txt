@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.jsx$
+
+# Specific rules for Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Specific rules for Bingbot
+User-agent: Bingbot
+Allow: /
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://technavyug.com/sitemap.xml
