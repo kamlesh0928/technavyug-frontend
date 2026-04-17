@@ -175,7 +175,7 @@ We value code quality and consistency. Please follow these steps:
   <p>Engineered for excellence by <b>Tech Navyug Team</b></p>
   <p>
     <a href="https://github.com/your-username"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="Github" /></a>
-    <a href="https://linkedin.com/in/your-profile"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+    <a href="https://linkedin.com/in/technavyug"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
   </p>
   <p>© 2026 Tech Navyug. All rights reserved.</p>
 </div>
