@@ -35,6 +35,13 @@ export const useLogin = () => {
       navigate(from || getRoleDashboard(data.user.role), { replace: true });
     },
     onError: (error) => {
+      // If it's a verification error, we handle it in the Login component UI
+      if (
+        error?.status === 401 &&
+        error?.userMessage?.toLowerCase().includes("verify")
+      ) {
+        return;
+      }
       toast.error(error?.userMessage || "Login failed. Please try again.");
     },
   });

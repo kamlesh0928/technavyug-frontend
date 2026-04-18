@@ -23,6 +23,16 @@ export const studentService = {
     return response.data;
   },
 
+  getCourseProgress: async (courseId) => {
+    const response = await api.get(`/enrollments/progress/${courseId}`);
+    return response.data;
+  },
+
+  markLectureComplete: async (lectureId) => {
+    const response = await api.post(`/enrollments/progress/${lectureId}/complete`);
+    return response.data;
+  },
+
   // Orders
   getMyOrders: async (params = {}) => {
     const response = await api.get("/orders/my", { params });

@@ -1,11 +1,15 @@
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { studentService } from "@/services/student.services";
 import { LuClock, LuBookOpen, LuUsers, LuStar, LuPlay, LuChevronDown, LuChevronUp, LuGlobe, LuShield } from "react-icons/lu";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function CourseDetails() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const [openSection, setOpenSection] = useState(null);
 
   const { data, isLoading } = useQuery({
@@ -14,6 +18,32 @@ export default function CourseDetails() {
   });
 
   const course = data?.data;
+
+  const enrollMutation = useMutation({
+    mutationFn: (courseId) => studentService.enrollInCourse(courseId),
+    onSuccess: (res) => {
+      toast.success(res.message || "Enrolled successfully! Enjoy your learning. 🚀");
+      navigate("/student/courses");
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || "Failed to enroll. Please try again.");
+    },
+  });
+
+  const handleEnroll = () => {
+    if (!user) {
+      toast.info("Please login to enroll in this course");
+      navigate("/login", { state: { from: `/courses/${slug}` } });
+      return;
+    }
+
+    if (parseFloat(course.price) === 0) {
+      enrollMutation.mutate(course.id);
+    } else {
+      // Logic for paid courses (e.g., redirect to checkout)
+      toast.info("Paid courses enrollment is coming soon!");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -72,8 +102,16 @@ export default function CourseDetails() {
                   {parseFloat(course.price) === 0 ? "Free" : `₹${course.price}`}
                 </span>
               </div>
-              <button className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold text-sm hover:bg-gray-800 transition-all shadow-lg mb-4">
-                Enroll Now
+              <button
+                onClick={handleEnroll}
+                disabled={enrollMutation.isPending}
+                className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold text-sm hover:bg-gray-800 transition-all shadow-lg mb-4 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {enrollMutation.isPending ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  "Enroll Now"
+                )}
               </button>
               <div className="space-y-3 text-sm text-gray-500">
                 <div className="flex items-center gap-3">

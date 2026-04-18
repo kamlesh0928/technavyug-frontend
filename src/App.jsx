@@ -146,7 +146,7 @@ function App() {
         >
           <Route index element={<StudentDashboard />} />
           <Route path="courses" element={<StudentMyCourses />} />
-          <Route path="learning" element={<StudentLearning />} />
+          <Route path="learning/:courseId" element={<StudentLearning />} />
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />
         </Route>
