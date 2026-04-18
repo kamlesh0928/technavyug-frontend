@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { studentService } from "@/services/student.services";
@@ -26,33 +26,28 @@ export default function StudentLearning() {
   });
 
   const progressData = data?.data;
-  const sections = progressData?.sections || [];
+  const sections = useMemo(() => progressData?.sections || [], [progressData]);
 
-  // Set initial active lecture
-  useEffect(() => {
-    if (sections.length > 0 && !activeLecture) {
-      // Find first incomplete lecture or just first lecture
-      let found = null;
-      for (const section of sections) {
-        const incomplete = section.lectures.find((l) => !l.completed);
-        if (incomplete) {
-          found = incomplete;
-          break;
-        }
-      }
-      setActiveLecture(found || sections[0].lectures[0]);
-
-      // Open the section of the active lecture
-      const sectionOfActive = sections.find((s) =>
-        s.lectures.find(
-          (l) => l.lectureId === (found?.lectureId || sections[0].lectures[0].lectureId),
-        ),
-      );
-      if (sectionOfActive) {
-        setOpenSections((prev) => ({ ...prev, [sectionOfActive.sectionId]: true }));
-      }
+  // Default lecture (first incomplete or just first)
+  const defaultLecture = useMemo(() => {
+    if (sections.length === 0) return null;
+    for (const section of sections) {
+      const incomplete = section.lectures.find((l) => !l.completed);
+      if (incomplete) return incomplete;
     }
-  }, [sections, activeLecture]);
+    return sections[0].lectures[0];
+  }, [sections]);
+
+  const currentLecture = activeLecture || defaultLecture;
+
+  // Default open section (the one containing the current lecture)
+  const defaultOpenSectionId = useMemo(() => {
+    if (!currentLecture || sections.length === 0) return null;
+    const section = sections.find((s) =>
+      s.lectures.some((l) => l.lectureId === currentLecture.lectureId),
+    );
+    return section?.sectionId;
+  }, [currentLecture, sections]);
 
   const completeMutation = useMutation({
     mutationFn: (lectureId) => studentService.markLectureComplete(lectureId),
@@ -119,21 +114,21 @@ export default function StudentLearning() {
                   <span className="text-sm font-bold text-gray-800 line-clamp-1">
                     {section.title}
                   </span>
-                  {openSections[section.sectionId] ? (
+                  {openSections[section.sectionId] ?? (section.sectionId === defaultOpenSectionId) ? (
                     <LuChevronUp size={16} className="text-gray-400" />
                   ) : (
                     <LuChevronDown size={16} className="text-gray-400" />
                   )}
                 </button>
 
-                {openSections[section.sectionId] && (
+                {(openSections[section.sectionId] ?? (section.sectionId === defaultOpenSectionId)) && (
                   <div className="space-y-1 px-1 pb-2">
                     {section.lectures.map((lecture) => (
                       <button
                         key={lecture.lectureId}
                         onClick={() => setActiveLecture(lecture)}
                         className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                          activeLecture?.lectureId === lecture.lectureId
+                          currentLecture?.lectureId === lecture.lectureId
                             ? "bg-cyan-50 text-cyan-700 shadow-sm shadow-cyan-900/5 ring-1 ring-cyan-100"
                             : "text-gray-600 hover:bg-gray-50"
                         }`}
@@ -173,22 +168,22 @@ export default function StudentLearning() {
           Back to Courses
         </button>
 
-        {activeLecture ? (
+        {currentLecture ? (
           <>
             <div className="bg-black rounded-3xl overflow-hidden shadow-2xl shadow-black/20 aspect-video relative group">
-              {activeLecture.type === "Video" ? (
-                activeLecture.videoUrl ? (
-                  activeLecture.videoUrl.match(/\.(mp4|webm|ogg|mov)$|^https:\/\/res\.cloudinary\.com/i) ? (
+              {currentLecture.type === "Video" ? (
+                currentLecture.videoUrl ? (
+                  currentLecture.videoUrl.match(/\.(mp4|webm|ogg|mov)$|^https:\/\/res\.cloudinary\.com/i) ? (
                     <video
-                      src={activeLecture.videoUrl}
+                      src={currentLecture.videoUrl}
                       controls
                       className="w-full h-full"
                       controlsList="nodownload"
                     />
                   ) : (
                     <iframe
-                      src={activeLecture.videoUrl}
-                      title={activeLecture.title}
+                      src={currentLecture.videoUrl}
+                      title={currentLecture.title}
                       className="w-full h-full border-0"
                       allowFullScreen
                     />
@@ -199,7 +194,7 @@ export default function StudentLearning() {
                     <p className="font-medium">No video content for this lecture</p>
                   </div>
                 )
-              ) : activeLecture.type === "Document" ? (
+              ) : currentLecture.type === "Document" ? (
                 <div className="w-full h-full bg-white p-12 overflow-y-auto">
                     <div className="max-w-2xl mx-auto">
                         <div className="flex items-center gap-3 mb-6 text-cyan-600">
@@ -207,14 +202,14 @@ export default function StudentLearning() {
                             <span className="font-black uppercase tracking-widest text-sm">Study Document</span>
                         </div>
                         <div className="prose prose-cyan max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-                            {activeLecture.content || "No document content available for this lecture."}
+                            {currentLecture.content || "No document content available for this lecture."}
                         </div>
                     </div>
                 </div>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 gap-4 bg-gray-900">
                   <LuPlay size={64} className="opacity-20 animate-pulse" />
-                  <p className="font-medium">Unsupported lecture type: {activeLecture.type}</p>
+                  <p className="font-medium">Unsupported lecture type: {currentLecture.type}</p>
                 </div>
               )}
             </div>
@@ -224,22 +219,22 @@ export default function StudentLearning() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                   <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-                    {activeLecture.title}
+                    {currentLecture.title}
                   </h1>
                   <p className="text-gray-500 mt-1 font-medium">
                     Current Lecture
                   </p>
                 </div>
                 <button
-                  onClick={() => completeMutation.mutate(activeLecture.lectureId)}
-                  disabled={activeLecture.completed || completeMutation.isPending}
+                  onClick={() => completeMutation.mutate(currentLecture.lectureId)}
+                  disabled={currentLecture.completed || completeMutation.isPending}
                   className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:scale-100 ${
-                    activeLecture.completed
+                    currentLecture.completed
                       ? "bg-green-100 text-green-700 shadow-none cursor-default"
                       : "bg-[#0f2c59] text-white hover:bg-[#1a4073] hover:shadow-cyan-900/20"
                   }`}
                 >
-                  {activeLecture.completed ? (
+                  {currentLecture.completed ? (
                     <>
                       <LuCheck size={20} />
                       <span>Completed!</span>

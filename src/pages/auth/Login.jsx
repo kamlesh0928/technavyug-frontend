@@ -23,7 +23,7 @@ const LoginPage = () => {
     defaultValues: { rememberMe: false },
   });
 
-  const { mutate, isPending, error: loginError } = useLogin();
+  const { mutate, isPending } = useLogin();
   const [showResend, setShowResend] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [lastEmail, setLastEmail] = useState("");
