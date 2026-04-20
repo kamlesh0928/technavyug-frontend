@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LuEye, LuEyeOff } from "react-icons/lu";
@@ -6,6 +6,9 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { useLogin } from "@/hooks/useLogin";
 import { loginSchema } from "@/utils/validation/loginSchema";
+import { useMutation } from "@tanstack/react-query";
+import { resendVerification } from "@/api/authApi";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,13 +24,61 @@ const LoginPage = () => {
   });
 
   const { mutate, isPending } = useLogin();
+  const [showResend, setShowResend] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [lastEmail, setLastEmail] = useState("");
+
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  const resendMutation = useMutation({
+    mutationFn: resendVerification,
+    onSuccess: (data) => {
+      toast.success(data.message || "Verification email sent! Check your inbox.");
+      setCountdown(60); // Start 60s cooldown
+    },
+    onError: (err) => {
+      toast.error(err?.data?.message || "Failed to resend email.");
+    },
+  });
 
   const onSubmit = (data) => {
-    mutate({
-      email: data.email,
-      password: data.password,
-      rememberMe: data.rememberMe,
-    });
+    setLastEmail(data.email);
+    mutate(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe,
+      },
+      {
+        onError: (err) => {
+          // Check for unverified error using formatted error object from axiosInstance
+          if (
+            err?.status === 401 &&
+            err?.userMessage?.toLowerCase().includes("verify")
+          ) {
+            setShowResend(true);
+            // Automatically trigger resend on encounter if no cooldown is active
+            if (countdown === 0 && !resendMutation.isPending) {
+              resendMutation.mutate(data.email);
+            }
+          }
+        },
+      },
+    );
+  };
+
+  const handleResend = () => {
+    if (lastEmail) {
+      resendMutation.mutate(lastEmail);
+    }
   };
 
   return (
@@ -146,6 +197,79 @@ const LoginPage = () => {
             >
               {isPending ? "Authenticating..." : "Sign In"}
             </button>
+
+            {showResend && (
+              <div className="mt-6 p-5 bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/50 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 relative">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                  </div>
+
+                  <div className="flex-1 text-left">
+                    <h4 className="text-base font-bold text-[#0f2c59]">
+                      Verify your email
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                      Sent to{" "}
+                      <span className="font-semibold text-cyan-600 break-all">
+                        {lastEmail}
+                      </span>
+                      . Please verify to continue.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-50 space-y-3">
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendMutation.isPending || countdown > 0}
+                    className="group relative w-full py-2.5 px-4 bg-[#0f2c59] text-white text-sm font-bold rounded-xl transition-all hover:bg-[#1a4073] active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 overflow-hidden"
+                  >
+                    {resendMutation.isPending ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <svg
+                        className="w-4 h-4 text-cyan-400 group-hover:rotate-12 transition-transform"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                      </svg>
+                    )}
+                    <span>
+                      {countdown > 0
+                        ? `Resend in ${countdown}s`
+                        : "Resend Link"}
+                    </span>
+                  </button>
+
+                  {countdown > 0 && (
+                    <div className="relative w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="absolute inset-y-0 left-0 bg-cyan-500 transition-all duration-1000 ease-linear"
+                        style={{ width: `${(countdown / 60) * 100}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </form>
 
           <p className="mt-12 text-center text-gray-500 font-medium">

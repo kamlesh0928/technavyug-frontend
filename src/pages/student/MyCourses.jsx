@@ -38,7 +38,7 @@ export default function StudentMyCourses() {
                   <div className="h-full bg-cyan-500 rounded-full transition-all" style={{ width: `${e.completionPercentage || 0}%` }} />
                 </div>
               </div>
-              <Link to="/student/learning" className="text-sm font-bold text-cyan-600 hover:text-cyan-700">
+              <Link to={`/student/learning/${e.courseId}`} className="text-sm font-bold text-cyan-600 hover:text-cyan-700">
                 Continue Learning &rarr;
               </Link>
             </div>
