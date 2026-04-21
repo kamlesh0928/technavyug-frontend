@@ -7,12 +7,16 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// Request interceptor: attach JWT access token
+// Request interceptor: attach JWT access token + set upload timeout
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Allow longer timeout for file uploads (10 minutes)
+    if (config.headers?.["Content-Type"] === "multipart/form-data") {
+      config.timeout = 10 * 60 * 1000;
     }
     return config;
   },

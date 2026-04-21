@@ -32,10 +32,10 @@ export default function StudentMyCourses() {
               <div className="mb-4">
                 <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
                   <span>Progress</span>
-                  <span>{e.completionPercentage || 0}%</span>
+                  <span>{e.progress || 0}%</span>
                 </div>
                 <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-500 rounded-full transition-all" style={{ width: `${e.completionPercentage || 0}%` }} />
+                  <div className="h-full bg-cyan-500 rounded-full transition-all" style={{ width: `${e.progress || 0}%` }} />
                 </div>
               </div>
               <Link to={`/student/learning/${e.courseId}`} className="text-sm font-bold text-cyan-600 hover:text-cyan-700">

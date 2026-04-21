@@ -10,7 +10,6 @@ export default function CourseDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const [openSection, setOpenSection] = useState(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["course", slug],
@@ -67,7 +66,6 @@ export default function CourseDetails() {
     <div className="pt-[72px]">
       {/* Hero */}
       <section className="py-16 md:py-20 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2000')] bg-cover bg-center opacity-[0.07]" />
         <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
@@ -156,32 +154,15 @@ export default function CourseDetails() {
             <div className="space-y-3">
               {sections.map((section) => (
                 <div key={section.id} className="border border-gray-100 rounded-xl overflow-hidden">
-                  <button
-                    onClick={() => setOpenSection(openSection === section.id ? null : section.id)}
-                    className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-bold text-gray-800 text-sm">{section.title}</span>
-                    <div className="flex items-center gap-3 text-sm text-gray-400">
-                      <span className="text-xs">{section.lectures?.length || 0} lectures</span>
-                      {openSection === section.id ? <LuChevronUp size={16} /> : <LuChevronDown size={16} />}
+                  <div className="w-full flex items-center justify-between p-5 bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-gray-800 text-sm">{section.title}</span>
                     </div>
-                  </button>
-                  {openSection === section.id && section.lectures && (
-                    <div className="border-t border-gray-50 bg-gray-50/50">
-                      {section.lectures.map((lecture) => (
-                        <div key={lecture.id} className="flex items-center gap-3 px-5 py-3 border-b border-gray-50 last:border-0">
-                          <LuPlay className="text-gray-300 flex-shrink-0" size={14} />
-                          <span className="text-sm text-gray-700 flex-1">{lecture.title}</span>
-                          <span className="text-xs text-gray-400">
-                            {lecture.duration ? `${Math.floor(lecture.duration / 60)}m` : ""}
-                          </span>
-                          {lecture.isFree && (
-                            <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Preview</span>
-                          )}
-                        </div>
-                      ))}
+                    <div className="flex items-center gap-2 text-sm text-gray-500 font-medium bg-gray-50 px-3 py-1 rounded-full">
+                      <LuPlay size={14} className="text-gray-400" />
+                      <span>{section.lectures?.length || 0} lectures</span>
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
