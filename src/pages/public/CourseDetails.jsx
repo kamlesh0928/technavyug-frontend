@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { studentService } from "@/services/student.services";
 import { LuClock, LuBookOpen, LuUsers, LuStar, LuPlay, LuChevronDown, LuChevronUp, LuGlobe, LuShield } from "react-icons/lu";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
