@@ -1,9 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { studentService } from "@/services/student.services";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useCallback } from "react";
 import { toast } from "react-toastify";
+import { addToCart, openCart } from "@/store/Slices/cartSlice";
 import {
   LuBookOpen,
   LuTrophy,
@@ -24,6 +25,9 @@ import ProductDetailModal from "@/components/ui/ProductDetailModal";
 
 export default function StudentDashboard() {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -63,6 +67,19 @@ export default function StudentDashboard() {
     },
     onError: (e) => toast.error(e?.userMessage || "Failed to set goal"),
   });
+
+  // Cart handler for products
+  const handleAddToCart = useCallback(
+    (product) => {
+      if (!user) {
+        navigate("/login", { state: { from: location.pathname } });
+        return;
+      }
+      dispatch(addToCart(product));
+      dispatch(openCart());
+    },
+    [user, navigate, location.pathname, dispatch],
+  );
 
   const handleSetGoal = (e) => {
     e.preventDefault();
@@ -194,6 +211,7 @@ export default function StudentDashboard() {
                   {enrollments.slice(0, 4).map((e) => (
                     <div
                       key={e.id}
+                      onClick={() => navigate(`/student/learning/${e.courseId}`)}
                       className="group flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer border border-transparent hover:border-gray-100"
                     >
                       <div className="flex items-center gap-4 flex-1">
@@ -215,7 +233,7 @@ export default function StudentDashboard() {
                             <div
                               className="h-full bg-cyan-500 transition-all duration-1000"
                               style={{
-                                width: `${e.completionPercentage || 0}%`,
+                                width: `${e.progress || 0}%`,
                               }}
                             />
                           </div>
@@ -223,7 +241,7 @@ export default function StudentDashboard() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                          {e.completionPercentage || 0}% Done
+                          {e.progress || 0}% Done
                         </span>
                         <div className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-transparent transition-all shadow-sm">
                           <LuPlay size={16} fill="currentColor" />
@@ -495,7 +513,7 @@ export default function StudentDashboard() {
             </div>
           ) : (
             products.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} />
+              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} onBuyClick={handleAddToCart} />
             ))
           )}
         </div>
@@ -507,6 +525,8 @@ export default function StudentDashboard() {
           key={selectedProduct.id}
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
+          onBuy={handleAddToCart}
+          isLoggedIn={!!user}
         />
       )}
 

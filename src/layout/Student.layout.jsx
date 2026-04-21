@@ -16,7 +16,6 @@ import logo from "@/assets/image/Technavyug Logo.png";
 const navItems = [
   { label: "Dashboard", path: "/student", icon: LuLayoutDashboard, end: true },
   { label: "My Courses", path: "/student/courses", icon: LuBookOpen },
-  { label: "Learning", path: "/student/learning", icon: LuPlay },
   { label: "Orders", path: "/student/orders", icon: LuShoppingCart },
   { label: "Profile", path: "/student/profile", icon: LuUser },
 ];
