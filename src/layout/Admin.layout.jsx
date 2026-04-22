@@ -13,7 +13,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
 } from "react-icons/lu";
-import logo from "@/assets/image/Technavyug Logo.png";
+import logo from "@/assets/image/android-chrome-512x512.png";
 
 const navItems = [
   { label: "Dashboard", path: "/admin", icon: LuLayoutDashboard, end: true },

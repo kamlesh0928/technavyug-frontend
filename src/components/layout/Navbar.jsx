@@ -11,7 +11,7 @@ import {
   LuChevronDown,
   LuShoppingCart,
 } from "react-icons/lu";
-import logo from "@/assets/image/Technavyug Logo.png";
+import logo from "@/assets/image/android-chrome-512x512.png";
 import { toggleCart, selectCartCount } from "@/store/Slices/cartSlice";
 
 const navLinks = [
