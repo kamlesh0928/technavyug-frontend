@@ -22,6 +22,7 @@ import Contact from "@/pages/public/Contact";
 import Blogs from "@/pages/public/Blogs";
 import Products from "@/pages/public/Products";
 import NotFound from "@/pages/public/NotFound";
+import Policies from "@/pages/public/Policies";
 
 // Auth Pages
 import Login from "@/pages/auth/Login";
@@ -88,6 +89,8 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blogs />} />
           <Route path="blog/:slug" element={<BlogDetail />} />
+          <Route path="policies" element={<Policies />} />
+          <Route path="policies/:policyType" element={<Policies />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

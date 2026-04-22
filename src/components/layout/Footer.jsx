@@ -11,9 +11,10 @@ const footerLinks = {
   ],
   Support: [
     { label: "Help Center", to: "/contact" },
-    { label: "FAQ", to: "/#faq" },
-    { label: "Terms of Service", to: "/about" },
-    { label: "Privacy Policy", to: "/about" },
+    { label: "Terms & Conditions", to: "/policies/terms-and-conditions" },
+    { label: "Privacy Policy", to: "/policies/privacy-policy" },
+    { label: "Refund Policy", to: "/policies/refund-policy" },
+    { label: "All Policies", to: "/policies" },
   ],
 };
 
