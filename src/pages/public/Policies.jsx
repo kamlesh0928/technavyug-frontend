@@ -368,6 +368,30 @@ const policiesData = {
             applicable laws.
           </li>
         </ul>
+
+        <div className="mt-10 p-6 bg-gray-800/50 rounded-xl border border-gray-700">
+          <h4 className="text-xl font-bold text-white mb-4">
+            Grievance Officer
+          </h4>
+          <ul className="space-y-2">
+            <li>
+              <strong>Name:</strong> Tushant Kumar
+            </li>
+            <li>
+              <strong>Designation:</strong> Grievance Officer
+            </li>
+            <li>
+              <strong>Address:</strong> Technavyug Private Limited, Awadh Nagar
+              Colony, Chhawani Line, Ghazipur, 233001, Uttar Pradesh, India
+            </li>
+            <li>
+              <strong>Contact us:</strong> support.technavyug@gmail.com
+            </li>
+            <li>
+              <strong>Time:</strong> Monday - Friday (9:00 - 18:00)
+            </li>
+          </ul>
+        </div>
       </div>
     ),
   },
