@@ -417,10 +417,9 @@ const policiesData = {
             product at the doorstep.
           </li>
           <li>
-            <strong>Technavyug Private Limited</strong> does not accept
-            cancellation requests for perishable items like flowers, eatables,
-            etc. However, the refund / replacement can be made if the user
-            establishes that the quality of the product delivered is not good.
+            However, the refund / replacement can be made if the user
+            establishes that the quality of the product delivered is not good
+            replacement will be delivered within 5-7 business days.
           </li>
           <li>
             In case of receipt of damaged or defective items, please report to
@@ -491,7 +490,7 @@ const policiesData = {
           exchange / return accepted request(s) (as applicable), once your
           returned product / item is received and inspected by us, we will send
           you an email to notify you about receipt of the returned / exchanged
-          product.
+          product exchange will delivered within 5-7 business days
         </p>
 
         <p>
