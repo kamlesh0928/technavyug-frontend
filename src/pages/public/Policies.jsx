@@ -409,38 +409,34 @@ const policiesData = {
         <ol className="list-decimal pl-6 space-y-4 marker:text-cyan-500">
           <li>
             Cancellations will only be considered if the request is made{" "}
-            <strong>within 5 days</strong> of placing the order. However,
-            cancellation requests may not be entertained if the orders have been
-            communicated to such sellers / merchant(s) listed on the Platform
-            and they have initiated the process of shipping them, or the product
-            is out for delivery. In such an event, you may choose to reject the
-            product at the doorstep.
-          </li>
-          <li>
-            However, the refund / replacement can be made if the user
-            establishes that the quality of the product delivered is not good
-            replacement will be delivered within 5-7 business days.
+            <strong>7 days</strong>
+            of placing the order. However, cancellation requests may not be
+            entertained if the orders have been communicated to such sellers /
+            merchant(s) listed on the Platform and they have initiated the
+            process of shipping them, or the product is out for delivery. In
+            such an event, you may choose to reject the product at the doorstep.
           </li>
           <li>
             In case of receipt of damaged or defective items, please report to
             our customer service team. The request would be entertained once the
             seller/ merchant listed on the Platform, has checked and determined
             the same at its own end. This should be reported within{" "}
-            <strong>5 days</strong> of receipt of products.
+            <strong>7 days</strong> of receipt of products.
           </li>
           <li>
             In case you feel that the product received is not as shown on the
             site or as per your expectations, you must bring it to the notice of
-            our customer service within <strong>5 days</strong> of receiving the
+            our customer service within <strong>7 days</strong> of receiving the
             product. The customer service team after looking into your complaint
-            will take an appropriate decision. In case of complaints regarding
-            the products that come with a warranty from the manufacturers,
-            please refer the issue to them.
+            will take an appropriate decision.
           </li>
           <li>
-            In case of any refunds approved by{" "}
-            <strong>Technavyug Private Limited</strong>, it will take{" "}
-            <strong>5 days</strong> for the refund to be processed to you.
+            In case of complaints regarding the products that come with a
+            warranty from the manufacturers, please refer the issue to them.
+          </li>
+          <li>
+            In case of any refunds approved by us , it will take{" "}
+            <strong>15 days</strong> for the refund to be credited to you.
           </li>
         </ol>
       </div>
@@ -452,8 +448,8 @@ const policiesData = {
     content: (
       <div className="text-gray-300 leading-relaxed space-y-6">
         <p>
-          We offer refund / exchange within first <strong>3 days</strong> from
-          the date of your purchase. If <strong>3 days</strong> have passed
+          We offer return / exchange within <strong>first 7 days</strong> from
+          the date of your purchase. If <strong>7 days</strong> have passed
           since your purchase, you will not be offered a return, exchange or
           refund of any kind.
         </p>
@@ -467,12 +463,12 @@ const policiesData = {
             style={{ listStyleType: "lower-roman" }}
           >
             <li>
-              the purchased item should be unused and in the same condition as
+              The purchased item should be unused and in the same condition as
               you received it,
             </li>
-            <li>the item must have original packaging,</li>
+            <li>The item must have original packaging,</li>
             <li>
-              if the item that you purchased on a sale, then the item may not be
+              If the item that you purchased on a sale, then the item may not be
               eligible for a return / exchange.
             </li>
           </ol>
@@ -484,13 +480,18 @@ const policiesData = {
         </p>
 
         <p>
+          All the exchanged and replaced products will be delivered within{" "}
+          <strong>5-7 business days</strong>.
+        </p>
+
+        <p>
           You agree that there may be a certain category of products / items
           that are exempted from returns or refunds. Such categories of the
           products would be identified to you at the item of purchase. For
           exchange / return accepted request(s) (as applicable), once your
           returned product / item is received and inspected by us, we will send
           you an email to notify you about receipt of the returned / exchanged
-          product exchange will delivered within 5-7 business days
+          product.
         </p>
 
         <p>
@@ -508,17 +509,17 @@ const policiesData = {
       <div className="text-gray-300 leading-relaxed space-y-6">
         <p>
           The orders for the user are shipped through registered domestic
-          courier companies and/or speed post only. Orders are shipped within{" "}
-          <strong>3 days</strong> from the date of the order and/or payment or
-          as per the delivery date agreed at the time of order confirmation and
-          delivering of the shipment, subject to courier company / post office
-          norms. Platform Owner shall not be liable for any delay in delivery by
-          the courier company / postal authority. Delivery of all orders will be
-          made to the address provided by the buyer at the time of purchase.
-          Delivery of our services will be confirmed on your email ID as
-          specified at the time of registration. If there are any shipping
-          cost(s) levied by the seller or the Platform Owner (as the case be),
-          the same is not refundable.
+          courier companies and/or speed post only. Orders are shipped and
+          delivered within <strong>5 business days</strong> from the date of the
+          order and/or payment or as per the delivery date agreed at the time of
+          order confirmation and delivering of the shipment, subject to courier
+          company / post office norms. Platform Owner shall not be liable for
+          any delay in delivery by the courier company / postal authority.
+          Delivery of all orders will be made to the address provided by the
+          buyer at the time of purchase. Delivery of our services will be
+          confirmed on your email ID as specified at the time of registration.
+          If there are any shipping cost(s) levied by the seller or the Platform
+          Owner (as the case be), the same is not refundable.
         </p>
       </div>
     ),
