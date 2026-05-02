@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 
 // Layouts
@@ -146,6 +146,7 @@ function App() {
         >
           <Route index element={<StudentDashboard />} />
           <Route path="courses" element={<StudentMyCourses />} />
+          <Route path="learning" element={<Navigate to="/student/courses" replace />} />
           <Route path="learning/:courseId" element={<StudentLearning />} />
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />

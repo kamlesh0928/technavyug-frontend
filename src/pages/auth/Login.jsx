@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { FcGoogle } from "react-icons/fc";
 import { useNavigate, Link } from "react-router-dom";
 
 import { useLogin } from "@/hooks/useLogin";
@@ -271,6 +272,30 @@ const LoginPage = () => {
               </div>
             )}
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = `${import.meta.env.VITE_API_BACKEND_URL}/auth/google`;
+                }}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 text-gray-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-gray-50 hover:border-gray-200 active:scale-[0.98] transition-all"
+              >
+                <FcGoogle size={24} />
+                <span>Sign in with Google</span>
+              </button>
+            </div>
+          </div>
 
           <p className="mt-12 text-center text-gray-500 font-medium">
             New to Technavyug?{" "}

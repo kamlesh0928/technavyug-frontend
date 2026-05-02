@@ -50,12 +50,8 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logoutApi();
-    } catch {
-      // ignore
-    }
+  const handleLogout = () => {
+    logoutApi().catch(() => {});
     dispatch(logoutUser());
     setDropdownOpen(false);
     navigate("/login");

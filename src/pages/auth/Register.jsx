@@ -8,6 +8,7 @@ import {
   LuGraduationCap,
   LuLayoutDashboard,
 } from "react-icons/lu";
+import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -307,6 +308,30 @@ export default function Register() {
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
             </button>
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-slate-500 font-medium">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = `${import.meta.env.VITE_API_BACKEND_URL}/auth/google`;
+                }}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all"
+              >
+                <FcGoogle size={24} />
+                <span>Sign up with Google</span>
+              </button>
+            </div>
+          </div>
 
           <p className="mt-10 text-center text-slate-500 font-semibold tracking-tight">
             Already have an account?{" "}
