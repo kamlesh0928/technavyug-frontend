@@ -22,7 +22,7 @@ import ProductDetailModal from "@/components/ui/ProductDetailModal";
 
 export default function InstructorDashboard() {
   const { user } = useSelector((state) => state.auth);
-  
+
   const [showDelete, setShowDelete] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -172,6 +172,7 @@ export default function InstructorDashboard() {
                 {courses.slice(0, 5).map((c) => (
                   <div
                     key={c.id}
+                    onClick={() => navigate(`/instructor/courses`)}
                     className="group flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer border border-transparent hover:border-gray-100"
                   >
                     <div className="flex items-center gap-4">
@@ -266,15 +267,25 @@ export default function InstructorDashboard() {
             <h3 className="text-2xl font-black text-gray-900 flex items-center gap-2">
               <LuPackage className="text-blue-500" /> Digital Marketplace
             </h3>
-            <p className="text-gray-500 text-sm mt-1">Explore our collection of digital assets and community products</p>
+            <p className="text-gray-500 text-sm mt-1">
+              Explore our collection of digital assets and community products
+            </p>
           </div>
-          <Link to="#" className="text-sm font-bold text-blue-600 hover:text-blue-700">View All Products</Link>
+          <Link
+            to="#"
+            className="text-sm font-bold text-blue-600 hover:text-blue-700"
+          >
+            View All Products
+          </Link>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {isProductsLoading ? (
             [...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-4 animate-pulse">
+              <div
+                key={i}
+                className="bg-white rounded-2xl border border-gray-100 p-4 space-y-4 animate-pulse"
+              >
                 <div className="bg-gray-100 aspect-[4/3] rounded-xl" />
                 <div className="h-4 bg-gray-100 rounded w-2/3" />
                 <div className="h-3 bg-gray-100 rounded w-full" />
@@ -287,9 +298,15 @@ export default function InstructorDashboard() {
               <p className="text-md font-bold">No products available</p>
             </div>
           ) : (
-            products.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} />
-            ))
+            products
+              .slice(0, 4)
+              .map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onDetailClick={setSelectedProduct}
+                />
+              ))
           )}
         </div>
       </div>
@@ -312,13 +329,17 @@ export default function InstructorDashboard() {
         <div className="p-8">
           <p className="font-bold text-gray-900 mb-1">Delete Account</p>
           <p className="text-sm text-gray-500 mb-6">
-            Permanently remove your instructor account, all your courses and associated data. This action cannot be undone.
+            Permanently remove your instructor account, all your courses and
+            associated data. This action cannot be undone.
           </p>
-          
+
           {showDelete ? (
             <div className="space-y-4 animate-in fade-in slide-in-from-top-4 max-w-md">
               <div className="relative">
-                <LuLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <LuLock
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={16}
+                />
                 <input
                   type="password"
                   placeholder="Confirm password to delete"
@@ -344,7 +365,7 @@ export default function InstructorDashboard() {
               </div>
             </div>
           ) : (
-            <button 
+            <button
               onClick={() => setShowDelete(true)}
               className="bg-red-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/20 active:scale-95 transition-all w-full md:w-auto"
             >

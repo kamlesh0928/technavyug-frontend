@@ -161,6 +161,20 @@ export default function CreateCourse() {
     onError: (e) => toast.error(e?.userMessage || "Failed to create lecture"),
   });
 
+  const deleteLectureMutation = useMutation({
+    mutationFn: instructorService.deleteLecture,
+    onSuccess: (data, deletedLectureId) => {
+      setSections((prev) =>
+        prev.map((s) => ({
+          ...s,
+          lectures: s.lectures?.filter((l) => l.id !== deletedLectureId) || [],
+        })),
+      );
+      toast.success("Lecture deleted!");
+    },
+    onError: (e) => toast.error(e?.userMessage || "Failed to delete lecture"),
+  });
+
   const publishMutation = useMutation({
     mutationFn: (id) =>
       instructorService.updateCourse(id, { status: "Published" }),
@@ -289,6 +303,10 @@ export default function CreateCourse() {
       const validTypes = ["video/mp4", "video/webm", "video/quicktime"];
       if (!validTypes.includes(file.type)) {
         toast.error("Please drop a video file (MP4, WebM, or MOV)");
+        return;
+      }
+      if (file.size > 100 * 1024 * 1024) {
+        toast.error("Video file must be less than 100 MB");
         return;
       }
       setLectureFile(file);
@@ -819,6 +837,19 @@ export default function CreateCourse() {
                             "No video"
                           )}
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this lecture?")) {
+                              deleteLectureMutation.mutate(l.id);
+                            }
+                          }}
+                          disabled={deleteLectureMutation.isPending}
+                          className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors ml-2 disabled:opacity-50"
+                          title="Delete lecture"
+                        >
+                          <LuTrash size={14} />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -838,7 +869,7 @@ export default function CreateCourse() {
                       {/* Drag & drop video area */}
                       <div>
                         <label className="text-xs font-bold text-gray-500 mb-2 block">
-                          Video File (optional)
+                          Video File
                         </label>
                         {lectureFile ? (
                           <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
@@ -901,9 +932,17 @@ export default function CreateCourse() {
                           ref={fileInputRef}
                           type="file"
                           accept="video/mp4,video/webm,video/quicktime"
-                          onChange={(e) =>
-                            setLectureFile(e.target.files[0] || null)
-                          }
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              if (file.size > 100 * 1024 * 1024) {
+                                toast.error("Video file must be less than 100 MB");
+                                e.target.value = "";
+                                return;
+                              }
+                              setLectureFile(file);
+                            }
+                          }}
                           className="hidden"
                         />
                       </div>

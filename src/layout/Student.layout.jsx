@@ -4,19 +4,17 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   LuLayoutDashboard,
   LuBookOpen,
-  LuPlay,
   LuShoppingCart,
   LuUser,
   LuLogOut,
   LuChevronLeft,
   LuChevronRight,
 } from "react-icons/lu";
-import logo from "@/assets/image/Technavyug Logo.png";
+import logo from "@/assets/image/android-chrome-512x512.png";
 
 const navItems = [
   { label: "Dashboard", path: "/student", icon: LuLayoutDashboard, end: true },
   { label: "My Courses", path: "/student/courses", icon: LuBookOpen },
-  { label: "Learning", path: "/student/courses", icon: LuPlay },
   { label: "Orders", path: "/student/orders", icon: LuShoppingCart },
   { label: "Profile", path: "/student/profile", icon: LuUser },
 ];
