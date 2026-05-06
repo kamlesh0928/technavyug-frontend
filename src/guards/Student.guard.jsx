@@ -7,7 +7,7 @@ export default function StudentGuard({ children }) {
 
   return (
     <AuthGuard>
-      {user?.role === "Student" ? (
+      {user ? (
         children
       ) : (
         <Navigate to="/" replace />

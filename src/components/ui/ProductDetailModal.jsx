@@ -20,7 +20,7 @@ const TYPE_COLORS = {
   Service: { bg: "bg-purple-100", text: "text-purple-700", dot: "bg-purple-500" },
 };
 
-export default function ProductDetailModal({ product, onClose, onBuy, isLoggedIn }) {
+export default function ProductDetailModal({ product, onClose, onAddToCart, onBuyNow, isLoggedIn }) {
   const images = parseImages(product?.images);
   const allImages = images.length > 0 ? images : [FALLBACK];
   const [activeIdx, setActiveIdx] = useState(0);
@@ -211,20 +211,26 @@ export default function ProductDetailModal({ product, onClose, onBuy, isLoggedIn
             </div>
 
             {/* CTA */}
-            <div className="mt-auto pt-4 border-t border-gray-50">
-              <button
-                onClick={() => onBuy && onBuy(product)}
-                disabled={!product.stock || product.stock <= 0}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-black text-base hover:shadow-xl hover:shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <LuShoppingCart size={20} />
-                {product.stock > 0
-                  ? isLoggedIn
-                    ? "Add to Cart"
-                    : "Login to Buy"
-                  : "Out of Stock"}
-              </button>
-              <p className="text-center text-xs text-gray-400 mt-3">
+            <div className="mt-auto pt-4 border-t border-gray-50 space-y-3">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => onAddToCart && onAddToCart(product)}
+                  disabled={!product.stock || product.stock <= 0}
+                  className="flex-1 py-3.5 rounded-2xl border-2 border-[#0f2c59] text-[#0f2c59] font-black text-sm hover:bg-blue-50 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <LuShoppingCart size={18} />
+                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                </button>
+                <button
+                  onClick={() => onBuyNow && onBuyNow(product)}
+                  disabled={!product.stock || product.stock <= 0 || !isLoggedIn}
+                  className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-black text-sm hover:shadow-xl hover:shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <LuZap size={18} />
+                  {!isLoggedIn ? "Login to Buy" : product.stock > 0 ? "Buy Now" : "Out of Stock"}
+                </button>
+              </div>
+              <p className="text-center text-xs text-gray-400">
                 {isLoggedIn
                   ? "🔒 Secure checkout · Instant delivery"
                   : "You'll be redirected to login, then back here."}

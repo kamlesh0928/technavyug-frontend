@@ -15,8 +15,10 @@ import {
   LuPackage,
 } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "react-toastify";
+import { addToCart, openCart } from "@/store/Slices/cartSlice";
+import { useDispatch } from "react-redux";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductDetailModal from "@/components/ui/ProductDetailModal";
 
@@ -28,6 +30,30 @@ export default function InstructorDashboard() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleAddToCart = useCallback(
+    (product) => {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      dispatch(addToCart(product));
+      dispatch(openCart());
+    },
+    [user, navigate, dispatch]
+  );
+
+  const handleBuyNow = useCallback(
+    (product) => {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      navigate("/student/checkout", { state: { buyNowItem: { ...product, quantity: 1 } } });
+    },
+    [user, navigate]
+  );
 
   const handleDeleteAccount = async () => {
     if (!confirmPassword) return toast.error("Password is required");
@@ -305,6 +331,8 @@ export default function InstructorDashboard() {
                   key={p.id}
                   product={p}
                   onDetailClick={setSelectedProduct}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
                 />
               ))
           )}
@@ -317,6 +345,9 @@ export default function InstructorDashboard() {
           key={selectedProduct.id}
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
+          onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
+          isLoggedIn={!!user}
         />
       )}
 

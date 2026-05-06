@@ -99,7 +99,7 @@ export default function CartDrawer() {
       navigate("/login", { state: { from: "/products" } });
     } else {
       // TODO: navigate to checkout page
-      navigate("/checkout");
+      navigate("/student/checkout");
     }
   };
 

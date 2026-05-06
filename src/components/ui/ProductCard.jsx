@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { LuChevronLeft, LuChevronRight, LuShoppingCart, LuImage, LuPackage } from "react-icons/lu";
+import { LuChevronLeft, LuChevronRight, LuShoppingCart, LuImage, LuPackage, LuZap } from "react-icons/lu";
 
 import { parseImages } from "@/utils/helpers";
 
@@ -11,7 +11,7 @@ const TYPE_STYLES = {
   Service: "bg-purple-100 text-purple-700",
 };
 
-export default function ProductCard({ product, onDetailClick, onBuyClick }) {
+export default function ProductCard({ product, onDetailClick, onAddToCart, onBuyNow }) {
   const images = parseImages(product?.images);
   const hasImages = images.length > 0;
   const allImages = hasImages ? images : [FALLBACK];
@@ -36,6 +36,7 @@ export default function ProductCard({ product, onDetailClick, onBuyClick }) {
   );
 
   const typeStyle = TYPE_STYLES[product?.type] || "bg-gray-100 text-gray-600";
+  const inStock = product?.stock > 0;
 
   return (
     <div
@@ -142,7 +143,7 @@ export default function ProductCard({ product, onDetailClick, onBuyClick }) {
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
           <div>
             <span className="text-base font-black text-gray-900">₹{product?.price}</span>
-            {product?.stock > 0 ? (
+            {inStock ? (
               <span className="ml-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
                 In Stock
               </span>
@@ -156,9 +157,9 @@ export default function ProductCard({ product, onDetailClick, onBuyClick }) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onBuyClick ? onBuyClick(product) : (onDetailClick && onDetailClick(product));
+                onAddToCart && onAddToCart(product);
               }}
-              disabled={!product?.stock || product?.stock <= 0}
+              disabled={!inStock}
               className="flex items-center justify-center p-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-[#0f2c59] hover:text-white transition-all active:scale-95 disabled:opacity-40"
               title="Add to Cart"
             >
@@ -167,12 +168,12 @@ export default function ProductCard({ product, onDetailClick, onBuyClick }) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onDetailClick && onDetailClick(product);
+                onBuyNow && onBuyNow(product);
               }}
-              disabled={!product?.stock || product?.stock <= 0}
+              disabled={!inStock}
               className="flex items-center gap-1.5 bg-[#0f2c59] hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Buy Now
+              <LuZap size={12} /> Buy Now
             </button>
           </div>
         </div>
