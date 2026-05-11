@@ -38,8 +38,7 @@ export default function CourseDetails() {
     if (parseFloat(course.price) === 0) {
       enrollMutation.mutate(course.id);
     } else {
-      // Logic for paid courses (e.g., redirect to checkout)
-      toast.info("Paid courses enrollment is coming soon!");
+      navigate(`/student/purchase-course/${course.id}`);
     }
   };
 

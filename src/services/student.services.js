@@ -83,4 +83,58 @@ export const studentService = {
     const response = await api.get("/student/goals/monthly");
     return response.data;
   },
+
+  // PhonePe Payment - Course
+  initiateCoursePurchase: async (data) => {
+    const response = await api.post("/phonepe/initiate-course-payment", data);
+    return response.data;
+  },
+
+  getCoursePurchaseStatus: async (merchantOrderId) => {
+    const response = await api.get(`/phonepe/course-payment-status/${merchantOrderId}`);
+    return response.data;
+  },
+
+  // PhonePe Payment - Order
+  initiateOrderPayment: async (data) => {
+    const response = await api.post("/phonepe/initiate-order-payment", data);
+    return response.data;
+  },
+
+  getOrderPaymentStatus: async (merchantOrderId) => {
+    const response = await api.get(`/phonepe/order-payment-status/${merchantOrderId}`);
+    return response.data;
+  },
+
+  // Coupons
+  validateCoupon: async (data) => {
+    const response = await api.post("/coupons/validate", data);
+    return response.data;
+  },
+
+  // Addresses
+  getAddresses: async () => {
+    const response = await api.get("/addresses");
+    return response.data;
+  },
+
+  createAddress: async (data) => {
+    const response = await api.post("/addresses", data);
+    return response.data;
+  },
+
+  updateAddress: async (id, data) => {
+    const response = await api.put(`/addresses/${id}`, data);
+    return response.data;
+  },
+
+  deleteAddress: async (id) => {
+    const response = await api.delete(`/addresses/${id}`);
+    return response.data;
+  },
+
+  setDefaultAddress: async (id) => {
+    const response = await api.patch(`/addresses/${id}/default`);
+    return response.data;
+  },
 };
