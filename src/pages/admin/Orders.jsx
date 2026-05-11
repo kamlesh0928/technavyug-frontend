@@ -105,7 +105,8 @@ export default function AdminOrders() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-gray-900">
-                            {o.orderNumber || `#${o.id?.slice(0, 8).toUpperCase()}`}
+                            {o.orderNumber ||
+                              `#${o.id?.slice(0, 8).toUpperCase()}`}
                           </p>
                           {o.invoiceNumber && (
                             <p className="text-[10px] text-gray-400 font-mono">

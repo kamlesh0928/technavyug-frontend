@@ -4,7 +4,6 @@ import {
   LuChevronLeft,
   LuChevronRight,
   LuShoppingCart,
-  LuPackage,
   LuTag,
   LuBoxes,
   LuZap,
@@ -12,35 +11,57 @@ import {
 } from "react-icons/lu";
 import { parseImages } from "@/utils/helpers";
 
-const FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800";
+const FALLBACK =
+  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800";
 
 const TYPE_COLORS = {
   Digital: { bg: "bg-blue-100", text: "text-blue-700", dot: "bg-blue-500" },
-  Physical: { bg: "bg-emerald-100", text: "text-emerald-700", dot: "bg-emerald-500" },
-  Service: { bg: "bg-purple-100", text: "text-purple-700", dot: "bg-purple-500" },
+  Physical: {
+    bg: "bg-emerald-100",
+    text: "text-emerald-700",
+    dot: "bg-emerald-500",
+  },
+  Service: {
+    bg: "bg-purple-100",
+    text: "text-purple-700",
+    dot: "bg-purple-500",
+  },
 };
 
-export default function ProductDetailModal({ product, onClose, onAddToCart, onBuyNow, isLoggedIn }) {
+export default function ProductDetailModal({
+  product,
+  onClose,
+  onAddToCart,
+  onBuyNow,
+  isLoggedIn,
+}) {
   const images = parseImages(product?.images);
   const allImages = images.length > 0 ? images : [FALLBACK];
   const [activeIdx, setActiveIdx] = useState(0);
   const [imgError, setImgError] = useState({});
   const [isZoomed, setIsZoomed] = useState(false);
 
-
   // Keyboard navigation
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") setActiveIdx((i) => (i - 1 + allImages.length) % allImages.length);
-      if (e.key === "ArrowRight") setActiveIdx((i) => (i + 1) % allImages.length);
+      if (e.key === "ArrowLeft")
+        setActiveIdx((i) => (i - 1 + allImages.length) % allImages.length);
+      if (e.key === "ArrowRight")
+        setActiveIdx((i) => (i + 1) % allImages.length);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [allImages.length, onClose]);
 
-  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + allImages.length) % allImages.length), [allImages.length]);
-  const next = useCallback(() => setActiveIdx((i) => (i + 1) % allImages.length), [allImages.length]);
+  const prev = useCallback(
+    () => setActiveIdx((i) => (i - 1 + allImages.length) % allImages.length),
+    [allImages.length],
+  );
+  const next = useCallback(
+    () => setActiveIdx((i) => (i + 1) % allImages.length),
+    [allImages.length],
+  );
 
   const typeColor = TYPE_COLORS[product?.type] || TYPE_COLORS.Digital;
 
@@ -73,7 +94,9 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
                 key={activeIdx}
                 src={imgError[activeIdx] ? FALLBACK : allImages[activeIdx]}
                 alt={product.name}
-                onError={() => setImgError((p) => ({ ...p, [activeIdx]: true }))}
+                onError={() =>
+                  setImgError((p) => ({ ...p, [activeIdx]: true }))
+                }
                 onClick={() => setIsZoomed(!isZoomed)}
                 className={`max-h-full max-w-full object-contain transition-all duration-300 cursor-zoom-in select-none ${isZoomed ? "scale-150 cursor-zoom-out" : ""}`}
                 draggable={false}
@@ -126,7 +149,9 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
                     />
                     {i === 0 && (
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent">
-                        <p className="text-[7px] font-black text-white text-center pb-0.5 uppercase tracking-wider">Cover</p>
+                        <p className="text-[7px] font-black text-white text-center pb-0.5 uppercase tracking-wider">
+                          Cover
+                        </p>
                       </div>
                     )}
                   </button>
@@ -146,7 +171,9 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
           <div className="md:w-[45%] flex flex-col overflow-y-auto p-8">
             {/* Type + Stock badges */}
             <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <span className={`flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full ${typeColor.bg} ${typeColor.text}`}>
+              <span
+                className={`flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full ${typeColor.bg} ${typeColor.text}`}
+              >
                 <span className={`w-1.5 h-1.5 rounded-full ${typeColor.dot}`} />
                 {product.type || "Digital"}
               </span>
@@ -168,18 +195,30 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
 
             {/* Price */}
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-4xl font-black text-gray-900">₹{product.price}</span>
-              {product.comparePrice && parseFloat(product.comparePrice) > parseFloat(product.price) && (
-                <>
-                  <span className="text-lg text-gray-400 line-through">₹{product.comparePrice}</span>
-                  <span className="text-sm font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    {Math.round((1 - product.price / product.comparePrice) * 100)}% OFF
-                  </span>
-                </>
-              )}
+              <span className="text-4xl font-black text-gray-900">
+                ₹{product.price}
+              </span>
+              {product.comparePrice &&
+                parseFloat(product.comparePrice) >
+                  parseFloat(product.price) && (
+                  <>
+                    <span className="text-lg text-gray-400 line-through">
+                      ₹{product.comparePrice}
+                    </span>
+                    <span className="text-sm font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                      {Math.round(
+                        (1 - product.price / product.comparePrice) * 100,
+                      )}
+                      % OFF
+                    </span>
+                  </>
+                )}
             </div>
             <p className="text-xs text-gray-400 mb-6">
-              + 18% GST · Total: <span className="font-bold text-gray-600">₹{(parseFloat(product.price) * 1.18).toFixed(2)}</span>
+              + 18% GST · Total:{" "}
+              <span className="font-bold text-gray-600">
+                ₹{(parseFloat(product.price) * 1.18).toFixed(2)}
+              </span>
             </p>
 
             {/* Divider */}
@@ -191,7 +230,9 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
                 <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">
                   Description
                 </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {product.description}
+                </p>
               </div>
             )}
 
@@ -200,16 +241,24 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
               <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <LuTag size={13} className="text-gray-400" />
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">Type</span>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">
+                    Type
+                  </span>
                 </div>
-                <p className="text-sm font-bold text-gray-800">{product.type || "Digital"}</p>
+                <p className="text-sm font-bold text-gray-800">
+                  {product.type || "Digital"}
+                </p>
               </div>
               <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <LuBoxes size={13} className="text-gray-400" />
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">Stock</span>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">
+                    Stock
+                  </span>
                 </div>
-                <p className="text-sm font-bold text-gray-800">{product.stock || 0} units</p>
+                <p className="text-sm font-bold text-gray-800">
+                  {product.stock || 0} units
+                </p>
               </div>
             </div>
 
@@ -230,7 +279,11 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
                   className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-black text-sm hover:shadow-xl hover:shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <LuZap size={18} />
-                  {!isLoggedIn ? "Login to Buy" : product.stock > 0 ? "Buy Now" : "Out of Stock"}
+                  {!isLoggedIn
+                    ? "Login to Buy"
+                    : product.stock > 0
+                      ? "Buy Now"
+                      : "Out of Stock"}
                 </button>
               </div>
               <p className="text-center text-xs text-gray-400">

@@ -1,15 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 
-/**
- * Unit tests for the PhonePe checkout flow logic.
- * These tests verify the business logic decisions made in the
- * Checkout, CoursePurchase, and PaymentStatus pages without requiring
- * a full React rendering environment.
- */
-
-// ============================================================
-// Coupon Discount Calculation Logic
-// ============================================================
 describe("Coupon Discount Calculation", () => {
   function calculateDiscount(coupon, subtotal) {
     if (!coupon) return { discountAmount: 0, finalAmount: subtotal };
@@ -31,14 +21,22 @@ describe("Coupon Discount Calculation", () => {
   }
 
   it("should calculate percentage discount", () => {
-    const coupon = { discountType: "percentage", discountValue: 20, maxDiscount: null };
+    const coupon = {
+      discountType: "percentage",
+      discountValue: 20,
+      maxDiscount: null,
+    };
     const result = calculateDiscount(coupon, 1000);
     expect(result.discountAmount).toBe(200);
     expect(result.finalAmount).toBe(800);
   });
 
   it("should cap percentage discount at maxDiscount", () => {
-    const coupon = { discountType: "percentage", discountValue: 50, maxDiscount: 100 };
+    const coupon = {
+      discountType: "percentage",
+      discountValue: 50,
+      maxDiscount: 100,
+    };
     const result = calculateDiscount(coupon, 1000);
     expect(result.discountAmount).toBe(100);
     expect(result.finalAmount).toBe(900);
@@ -65,13 +63,14 @@ describe("Coupon Discount Calculation", () => {
   });
 });
 
-// ============================================================
-// Order Payload Validation Logic
-// ============================================================
 describe("Order Payment Payload Validation", () => {
   function validateOrderPayload(payload) {
     const errors = [];
-    if (!payload.items || !Array.isArray(payload.items) || payload.items.length === 0) {
+    if (
+      !payload.items ||
+      !Array.isArray(payload.items) ||
+      payload.items.length === 0
+    ) {
       errors.push("At least one item is required");
     }
     if (!payload.addressId) {
@@ -79,8 +78,10 @@ describe("Order Payment Payload Validation", () => {
     }
     if (payload.items) {
       payload.items.forEach((item, i) => {
-        if (!item.productId) errors.push(`Item ${i + 1}: productId is required`);
-        if (!item.quantity || item.quantity < 1) errors.push(`Item ${i + 1}: quantity must be >= 1`);
+        if (!item.productId)
+          errors.push(`Item ${i + 1}: productId is required`);
+        if (!item.quantity || item.quantity < 1)
+          errors.push(`Item ${i + 1}: quantity must be >= 1`);
       });
     }
     return { valid: errors.length === 0, errors };
@@ -127,13 +128,14 @@ describe("Order Payment Payload Validation", () => {
   });
 });
 
-// ============================================================
-// Payment Status Polling Logic
-// ============================================================
 describe("Payment Status Polling Logic", () => {
   function shouldContinuePolling(statusResponse, pollCount, maxPolls) {
     if (!statusResponse) return pollCount < maxPolls;
-    if (statusResponse.status === "Success" || statusResponse.status === "Failed") return false;
+    if (
+      statusResponse.status === "Success" ||
+      statusResponse.status === "Failed"
+    )
+      return false;
     return pollCount < maxPolls;
   }
 
@@ -162,13 +164,11 @@ describe("Payment Status Polling Logic", () => {
   });
 });
 
-// ============================================================
-// Course Purchase Flow Guards
-// ============================================================
 describe("Course Purchase Flow Guards", () => {
   function canPurchaseCourse(course, user, enrollments) {
     if (!course) return { allowed: false, reason: "Course not found" };
-    if (parseFloat(course.price) === 0) return { allowed: false, reason: "Free courses don't require payment" };
+    if (parseFloat(course.price) === 0)
+      return { allowed: false, reason: "Free courses don't require payment" };
     if (!user) return { allowed: false, reason: "Login required" };
     const alreadyEnrolled = enrollments.some((e) => e.courseId === course.id);
     if (alreadyEnrolled) return { allowed: false, reason: "Already enrolled" };
@@ -179,7 +179,7 @@ describe("Course Purchase Flow Guards", () => {
     const result = canPurchaseCourse(
       { id: "c1", price: "999" },
       { id: "u1" },
-      []
+      [],
     );
     expect(result.allowed).toBe(true);
   });
@@ -188,28 +188,22 @@ describe("Course Purchase Flow Guards", () => {
     const result = canPurchaseCourse(
       { id: "c1", price: "0" },
       { id: "u1" },
-      []
+      [],
     );
     expect(result.allowed).toBe(false);
     expect(result.reason).toMatch(/free/i);
   });
 
   it("should reject if not logged in", () => {
-    const result = canPurchaseCourse(
-      { id: "c1", price: "999" },
-      null,
-      []
-    );
+    const result = canPurchaseCourse({ id: "c1", price: "999" }, null, []);
     expect(result.allowed).toBe(false);
     expect(result.reason).toMatch(/login/i);
   });
 
   it("should reject if already enrolled", () => {
-    const result = canPurchaseCourse(
-      { id: "c1", price: "999" },
-      { id: "u1" },
-      [{ courseId: "c1" }]
-    );
+    const result = canPurchaseCourse({ id: "c1", price: "999" }, { id: "u1" }, [
+      { courseId: "c1" },
+    ]);
     expect(result.allowed).toBe(false);
     expect(result.reason).toMatch(/already enrolled/i);
   });
@@ -220,9 +214,6 @@ describe("Course Purchase Flow Guards", () => {
   });
 });
 
-// ============================================================
-// Address Selection Logic
-// ============================================================
 describe("Address Selection Logic", () => {
   function getDefaultAddressId(addresses) {
     if (!addresses || addresses.length === 0) return null;

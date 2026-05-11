@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import {
-  LuCalendar,
-  LuUser,
-  LuArrowLeft,
-  LuTag,
-  LuClock,
-} from "react-icons/lu";
+import { LuCalendar, LuArrowLeft, LuClock } from "react-icons/lu";
 import cmsApi from "@/api/cmsApi";
 import { toast } from "react-toastify";
 import { parseTags } from "@/utils/helpers";
@@ -189,7 +183,7 @@ export default function BlogDetail() {
                 prose-blockquote:border-cyan-500 prose-blockquote:bg-slate-50 prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl
               "
               dangerouslySetInnerHTML={{
-                __html: blog.content.replace(/\n/g, "<br />"),
+                __html: blog.content,
               }}
             />
 
