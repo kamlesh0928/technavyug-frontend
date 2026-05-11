@@ -143,6 +143,7 @@ export default function ProductCard({ product, onDetailClick, onAddToCart, onBuy
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
           <div>
             <span className="text-base font-black text-gray-900">₹{product?.price}</span>
+            <span className="ml-1 text-[9px] font-bold text-gray-400 align-middle">+ 18% GST</span>
             {inStock ? (
               <span className="ml-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
                 In Stock

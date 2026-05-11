@@ -180,15 +180,34 @@ export default function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-gray-100 px-5 py-5 space-y-4 bg-white">
-            {/* Subtotal */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500 font-medium">
-                Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})
-              </span>
-              <span className="text-xl font-black text-gray-900">
-                ₹{total.toFixed(0)}
-              </span>
+          <div className="border-t border-gray-100 px-5 py-5 space-y-3 bg-white">
+            {/* Price Breakdown */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500 font-medium">
+                  Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})
+                </span>
+                <span className="text-sm font-bold text-gray-900">
+                  ₹{total.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500 font-medium">
+                  GST (18%)
+                </span>
+                <span className="text-sm font-bold text-gray-900">
+                  ₹{(Math.round(total * 18) / 100).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                <span className="text-sm font-bold text-gray-900">
+                  Estimated Total
+                </span>
+                <span className="text-xl font-black text-gray-900">
+                  ₹{(total + Math.round(total * 18) / 100).toFixed(2)}
+                </span>
+              </div>
+              <p className="text-[10px] text-gray-400 text-right">Incl. of all taxes</p>
             </div>
 
             {/* Checkout button */}

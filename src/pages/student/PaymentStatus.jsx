@@ -114,15 +114,24 @@ export default function PaymentStatus() {
                 : "Your order has been confirmed. We will process it shortly."}
             </p>
             {transaction && (
-              <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left">
-                <div className="flex justify-between text-sm mb-1">
+              <div className="bg-gray-50 rounded-xl p-4 mb-4 text-left space-y-1.5">
+                <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Amount Paid</span>
-                  <span className="font-bold text-gray-900">Rs. {parseFloat(transaction.amount).toFixed(0)}</span>
+                  <span className="font-bold text-gray-900">₹{parseFloat(transaction.amount).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Transaction ID</span>
                   <span className="font-mono text-xs text-gray-600">{transaction.merchantOrderId}</span>
                 </div>
+                <p className="text-[10px] text-gray-400 pt-1">Amount is inclusive of 18% GST</p>
+              </div>
+            )}
+            {type === "product" && (
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 mb-6 text-left">
+                <p className="text-xs text-blue-700 font-medium flex items-center gap-1.5">
+                  <LuCircleCheck size={14} />
+                  Tax invoice and order confirmation have been sent to your email.
+                </p>
               </div>
             )}
             <button onClick={() => navigate(type === "course" ? "/student/courses" : "/student/orders")}

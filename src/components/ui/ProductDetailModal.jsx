@@ -167,7 +167,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
             </h2>
 
             {/* Price */}
-            <div className="flex items-baseline gap-2 mb-6">
+            <div className="flex items-baseline gap-2 mb-2">
               <span className="text-4xl font-black text-gray-900">₹{product.price}</span>
               {product.comparePrice && parseFloat(product.comparePrice) > parseFloat(product.price) && (
                 <>
@@ -178,6 +178,9 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, onBu
                 </>
               )}
             </div>
+            <p className="text-xs text-gray-400 mb-6">
+              + 18% GST · Total: <span className="font-bold text-gray-600">₹{(parseFloat(product.price) * 1.18).toFixed(2)}</span>
+            </p>
 
             {/* Divider */}
             <div className="h-px bg-gray-100 mb-6" />

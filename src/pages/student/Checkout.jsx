@@ -15,7 +15,10 @@ import {
   LuChevronRight,
   LuTrash2,
   LuPackage,
+  LuReceipt,
 } from "react-icons/lu";
+
+const GST_RATE = 18;
 
 function AddressForm({ onSave, onCancel, saving }) {
   const [form, setForm] = useState({
@@ -75,6 +78,10 @@ export default function Checkout() {
   
   const cartItems = buyNowItem ? [buyNowItem] : reduxCartItems;
   const cartTotal = buyNowItem ? parseFloat(buyNowItem.price) * buyNowItem.quantity : reduxCartTotal;
+
+  // GST Calculations
+  const gstAmount = Math.round((cartTotal * GST_RATE) / 100 * 100) / 100;
+  const subtotalWithGST = cartTotal + gstAmount;
 
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -138,7 +145,7 @@ export default function Checkout() {
 
   const handleApplyCoupon = () => {
     if (!couponCode.trim()) return;
-    couponMutation.mutate({ code: couponCode, subtotal: cartTotal, applicableTo: "product" });
+    couponMutation.mutate({ code: couponCode, subtotal: subtotalWithGST, applicableTo: "product" });
   };
 
   // Reset coupon if cart changes to prevent invalid discount amounts
@@ -156,7 +163,7 @@ export default function Checkout() {
   };
 
   const discountAmount = couponResult?.discountAmount || 0;
-  const finalTotal = Math.max(0, cartTotal - discountAmount);
+  const finalTotal = Math.max(0, subtotalWithGST - discountAmount);
 
   const handlePay = async () => {
     if (!selectedAddressId) {
@@ -195,6 +202,12 @@ export default function Checkout() {
   };
 
   if (cartItems.length === 0) return null;
+
+  // Per-item GST calculation
+  const getItemGST = (price, quantity) => {
+    const taxable = parseFloat(price) * quantity;
+    return Math.round((taxable * GST_RATE) / 100 * 100) / 100;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -249,7 +262,7 @@ export default function Checkout() {
                 <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
                   <div>
                     <p className="text-sm font-bold text-green-700">{couponResult.code} applied</p>
-                    <p className="text-xs text-green-600">You save Rs. {couponResult.discountAmount}</p>
+                    <p className="text-xs text-green-600">You save ₹{couponResult.discountAmount}</p>
                   </div>
                   <button onClick={removeCoupon} className="text-red-500 hover:text-red-700 transition-colors">
                     <LuTrash2 size={16} />
@@ -274,36 +287,67 @@ export default function Checkout() {
               <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
                 <LuPackage size={18} className="text-[#0f2c59]" /> Order Summary
               </h2>
+
+              {/* Item List */}
               <div className="space-y-3 mb-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-sm">
-                    <span className="text-gray-700 flex-1 mr-2 line-clamp-1">{item.name} x{item.quantity}</span>
-                    <span className="font-bold text-gray-900 whitespace-nowrap">Rs. {(parseFloat(item.price) * item.quantity).toFixed(0)}</span>
-                  </div>
-                ))}
+                {cartItems.map((item) => {
+                  const itemPrice = parseFloat(item.price) * item.quantity;
+                  const itemGst = getItemGST(item.price, item.quantity);
+                  return (
+                    <div key={item.id} className="text-sm">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-700 flex-1 mr-2 line-clamp-1 font-medium">{item.name} ×{item.quantity}</span>
+                        <span className="font-bold text-gray-900 whitespace-nowrap">₹{itemPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-0.5">
+                        <span className="text-[11px] text-gray-400 ml-1">GST @{GST_RATE}%</span>
+                        <span className="text-[11px] text-gray-400">₹{itemGst.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+
+              {/* Price Breakdown */}
               <div className="border-t border-gray-100 pt-3 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Subtotal</span>
-                  <span className="font-bold text-gray-900">Rs. {cartTotal.toFixed(0)}</span>
+                  <span className="font-bold text-gray-900">₹{cartTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500 flex items-center gap-1">
+                    <LuReceipt size={12} className="text-blue-500" />
+                    GST (18%)
+                  </span>
+                  <span className="font-bold text-gray-900">₹{gstAmount.toFixed(2)}</span>
+                </div>
+                {/* GST Split */}
+                <div className="flex justify-between text-xs pl-4">
+                  <span className="text-gray-400">CGST (9%)</span>
+                  <span className="text-gray-400">₹{(gstAmount / 2).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-xs pl-4">
+                  <span className="text-gray-400">SGST (9%)</span>
+                  <span className="text-gray-400">₹{(gstAmount / 2).toFixed(2)}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-green-600">Discount</span>
-                    <span className="font-bold text-green-600">-Rs. {discountAmount.toFixed(0)}</span>
+                    <span className="font-bold text-green-600">-₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-base pt-2 border-t border-gray-100">
                   <span className="font-bold text-gray-900">Total</span>
-                  <span className="font-extrabold text-gray-900 text-xl">Rs. {finalTotal.toFixed(0)}</span>
+                  <span className="font-extrabold text-gray-900 text-xl">₹{finalTotal.toFixed(2)}</span>
                 </div>
+                <p className="text-[10px] text-gray-400 text-right">Inclusive of all taxes</p>
               </div>
               <button onClick={handlePay} disabled={paying || !selectedAddressId}
                 className="w-full mt-6 py-4 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-bold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-blue-900/20 active:scale-[0.98] transition-all text-sm disabled:opacity-50">
                 {paying ? (
                   <><LuLoader size={18} className="animate-spin" /> Processing...</>
                 ) : (
-                  <>Pay with PhonePe <LuChevronRight size={16} /></>
+                  <>Pay ₹{finalTotal.toFixed(2)} with PhonePe <LuChevronRight size={16} /></>
                 )}
               </button>
               <p className="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-1">
