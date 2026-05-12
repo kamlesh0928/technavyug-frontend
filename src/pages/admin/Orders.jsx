@@ -105,11 +105,14 @@ export default function AdminOrders() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-gray-900">
-                            #{o.id?.slice(0, 8).toUpperCase()}
+                            {o.orderNumber ||
+                              `#${o.id?.slice(0, 8).toUpperCase()}`}
                           </p>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
-                            {o.itemsCount || 0} Items
-                          </p>
+                          {o.invoiceNumber && (
+                            <p className="text-[10px] text-gray-400 font-mono">
+                              {o.invoiceNumber}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -125,8 +128,13 @@ export default function AdminOrders() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-sm font-black text-gray-900">
-                        ₹{o.totalAmount}
+                        ₹{parseFloat(o.totalAmount || 0).toFixed(2)}
                       </p>
+                      {parseFloat(o.gstAmount || 0) > 0 && (
+                        <p className="text-[10px] text-gray-400">
+                          GST: ₹{parseFloat(o.gstAmount).toFixed(2)}
+                        </p>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <span
