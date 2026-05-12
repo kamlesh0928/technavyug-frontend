@@ -20,7 +20,8 @@ import {
 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
-const FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=200";
+const FALLBACK =
+  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=200";
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
@@ -46,7 +47,9 @@ function CartItem({ item }) {
           <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
             <button
               onClick={() =>
-                dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))
+                dispatch(
+                  updateQuantity({ id: item.id, quantity: item.quantity - 1 }),
+                )
               }
               className="w-7 h-7 rounded-md flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all"
             >
@@ -57,7 +60,9 @@ function CartItem({ item }) {
             </span>
             <button
               onClick={() =>
-                dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))
+                dispatch(
+                  updateQuantity({ id: item.id, quantity: item.quantity + 1 }),
+                )
               }
               disabled={item.quantity >= (item.stock || 99)}
               className="w-7 h-7 rounded-md flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all disabled:opacity-30"
@@ -99,7 +104,7 @@ export default function CartDrawer() {
       navigate("/login", { state: { from: "/products" } });
     } else {
       // TODO: navigate to checkout page
-      navigate("/checkout");
+      navigate("/student/checkout");
     }
   };
 
@@ -180,15 +185,36 @@ export default function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-gray-100 px-5 py-5 space-y-4 bg-white">
-            {/* Subtotal */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500 font-medium">
-                Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})
-              </span>
-              <span className="text-xl font-black text-gray-900">
-                ₹{total.toFixed(0)}
-              </span>
+          <div className="border-t border-gray-100 px-5 py-5 space-y-3 bg-white">
+            {/* Price Breakdown */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500 font-medium">
+                  Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})
+                </span>
+                <span className="text-sm font-bold text-gray-900">
+                  ₹{total.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500 font-medium">
+                  GST (18%)
+                </span>
+                <span className="text-sm font-bold text-gray-900">
+                  ₹{(Math.round(total * 18) / 100).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                <span className="text-sm font-bold text-gray-900">
+                  Estimated Total
+                </span>
+                <span className="text-xl font-black text-gray-900">
+                  ₹{(total + Math.round(total * 18) / 100).toFixed(2)}
+                </span>
+              </div>
+              <p className="text-[10px] text-gray-400 text-right">
+                Incl. of all taxes
+              </p>
             </div>
 
             {/* Checkout button */}
@@ -197,9 +223,13 @@ export default function CartDrawer() {
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#0f2c59] to-blue-700 text-white font-black flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-blue-900/20 active:scale-95 transition-all text-sm"
             >
               {user ? (
-                <>Proceed to Checkout <LuArrowRight size={16} /></>
+                <>
+                  Proceed to Checkout <LuArrowRight size={16} />
+                </>
               ) : (
-                <>Login to Checkout <LuArrowRight size={16} /></>
+                <>
+                  Login to Checkout <LuArrowRight size={16} />
+                </>
               )}
             </button>
 

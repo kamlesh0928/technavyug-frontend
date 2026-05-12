@@ -81,6 +81,18 @@ export default function StudentDashboard() {
     [user, navigate, location.pathname, dispatch],
   );
 
+  // Buy Now handler - pass to checkout without modifying cart
+  const handleBuyNow = useCallback(
+    (product) => {
+      if (!user) {
+        navigate("/login", { state: { from: location.pathname } });
+        return;
+      }
+      navigate("/student/checkout", { state: { buyNowItem: { ...product, quantity: 1 } } });
+    },
+    [user, navigate, location.pathname],
+  );
+
   const handleSetGoal = (e) => {
     e.preventDefault();
     if (goalForm.targetLectures < 1) {
@@ -513,7 +525,7 @@ export default function StudentDashboard() {
             </div>
           ) : (
             products.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} onBuyClick={handleAddToCart} />
+              <ProductCard key={p.id} product={p} onDetailClick={setSelectedProduct} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />
             ))
           )}
         </div>
@@ -525,7 +537,8 @@ export default function StudentDashboard() {
           key={selectedProduct.id}
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
-          onBuy={handleAddToCart}
+          onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           isLoggedIn={!!user}
         />
       )}

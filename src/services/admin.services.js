@@ -113,4 +113,25 @@ export const adminService = {
     const response = await api.post("/categories", data);
     return response.data;
   },
+
+  // Coupons
+  getCoupons: async (params = {}) => {
+    const response = await api.get("/coupons", { params });
+    return response.data;
+  },
+
+  createCoupon: async (data) => {
+    const response = await api.post("/coupons", data);
+    return response.data;
+  },
+
+  updateCoupon: async (id, data) => {
+    const response = await api.put(`/coupons/${id}`, data);
+    return response.data;
+  },
+
+  deleteCoupon: async (id) => {
+    const response = await api.delete(`/coupons/${id}`);
+    return response.data;
+  },
 };

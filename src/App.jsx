@@ -44,6 +44,7 @@ import AdminOrders from "@/pages/admin/Orders";
 import AdminProducts from "@/pages/admin/Products";
 import AdminCMS from "@/pages/admin/CMS";
 import AdminSettings from "@/pages/admin/Settings";
+import AdminCoupons from "@/pages/admin/Coupons";
 
 // Instructor Pages
 import InstructorDashboard from "@/pages/instructor/Dashboard";
@@ -58,6 +59,9 @@ import StudentMyCourses from "@/pages/student/MyCourses";
 import StudentLearning from "@/pages/student/Learning";
 import StudentOrders from "@/pages/student/Orders";
 import StudentProfile from "@/pages/student/Profile";
+import StudentCheckout from "@/pages/student/Checkout";
+import StudentCoursePurchase from "@/pages/student/CoursePurchase";
+import StudentPaymentStatus from "@/pages/student/PaymentStatus";
 
 function App() {
   return (
@@ -120,6 +124,7 @@ function App() {
           <Route path="cms/blogs/new" element={<AdminBlogEditor />} />
           <Route path="cms/blogs/edit/:id" element={<AdminBlogEditor />} />
           <Route path="settings" element={<AdminSettings />} />
+          <Route path="coupons" element={<AdminCoupons />} />
         </Route>
 
         {/* Instructor Routes */}
@@ -156,6 +161,9 @@ function App() {
           <Route path="learning/:courseId" element={<StudentLearning />} />
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />
+          <Route path="checkout" element={<StudentCheckout />} />
+          <Route path="purchase-course/:courseId" element={<StudentCoursePurchase />} />
+          <Route path="payment-status" element={<StudentPaymentStatus />} />
         </Route>
       </Routes>
     </>

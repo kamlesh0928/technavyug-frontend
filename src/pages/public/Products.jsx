@@ -58,21 +58,33 @@ export default function Products() {
     setPage(1);
   }, []);
 
-  // Called when user clicks "Buy" or "Add to Cart"
+  // Called when user clicks "Add to Cart" icon
   const handleAddToCart = useCallback(
     (product) => {
       if (!user) {
-        // Save current path so login can redirect back here
         navigate("/login", {
           state: { from: location.pathname },
         });
         return;
       }
-      // Logged in — add to cart and open drawer
       dispatch(addToCart(product));
       dispatch(openCart());
     },
     [user, navigate, location.pathname, dispatch]
+  );
+
+  // Called when user clicks "Buy Now" — goes directly to checkout without modifying cart
+  const handleBuyNow = useCallback(
+    (product) => {
+      if (!user) {
+        navigate("/login", {
+          state: { from: location.pathname },
+        });
+        return;
+      }
+      navigate("/student/checkout", { state: { buyNowItem: { ...product, quantity: 1 } } });
+    },
+    [user, navigate, location.pathname]
   );
 
   return (
@@ -221,7 +233,8 @@ export default function Products() {
                   key={product.id}
                   product={product}
                   onDetailClick={setSelectedProduct}
-                  onBuyClick={handleAddToCart}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
                 />
               ))}
             </div>
@@ -291,7 +304,8 @@ export default function Products() {
         <ProductDetailModal
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
-          onBuy={handleAddToCart}
+          onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           isLoggedIn={!!user}
         />
       )}
