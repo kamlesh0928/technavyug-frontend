@@ -34,3 +34,8 @@ export const resendVerification = async (email) => {
   const response = await api.post("/auth/resend-verification", { email });
   return response?.data;
 };
+
+export const googleLogin = async (idToken) => {
+  const response = await api.post("/auth/google", { idToken });
+  return response?.data;
+};

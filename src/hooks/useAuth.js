@@ -11,12 +11,11 @@ export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logout = useCallback(async () => {
-    try {
-      await logoutApi();
-    } catch {
-      // ignore API error on logout
-    }
+  const logout = useCallback(() => {
+    // Fire and forget logout API call
+    logoutApi().catch(() => {});
+    
+    // Clear state and navigate immediately
     dispatch(logoutAction());
     navigate("/login");
   }, [dispatch, navigate]);

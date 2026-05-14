@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   LuLayoutDashboard,
   LuBookOpen,
-  LuPlay,
   LuShoppingCart,
   LuUser,
   LuLogOut,

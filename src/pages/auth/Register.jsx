@@ -8,15 +8,23 @@ import {
   LuGraduationCap,
   LuLayoutDashboard,
 } from "react-icons/lu";
+import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { registerUser } from "@/api/authApi";
 import { signupSchema } from "@/utils/validation/signupSchema";
+import { auth, googleProvider } from "@/config/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "@/store/Slices/authSlice";
+import { googleLogin } from "@/api/authApi";
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const {
     register,
@@ -50,6 +58,34 @@ export default function Register() {
       password: data.password,
       role: data.role,
     });
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      setIsGoogleLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const backendResponse = await googleLogin(idToken);
+
+      dispatch(setUser(backendResponse.user));
+      dispatch(setToken(backendResponse.accessToken));
+      
+      toast.success("Account created successfully with Google!");
+      
+      const redirectPath = backendResponse.user.role === "Student" 
+        ? "/student" 
+        : backendResponse.user.role === "Instructor" 
+          ? "/instructor" 
+          : "/admin";
+          
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Google Sign-Up Error:", error);
+      toast.error(error.response?.data?.message || "Failed to sign up with Google.");
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
@@ -307,6 +343,33 @@ export default function Register() {
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
             </button>
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-slate-500 font-medium">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                disabled={isGoogleLoading}
+                onClick={handleGoogleSignUp}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-70"
+              >
+                {isGoogleLoading ? (
+                  <div className="w-6 h-6 border-2 border-slate-300 border-t-cyan-500 rounded-full animate-spin" />
+                ) : (
+                  <FcGoogle size={24} />
+                )}
+                <span>{isGoogleLoading ? "Signing up..." : "Sign up with Google"}</span>
+              </button>
+            </div>
+          </div>
 
           <p className="mt-10 text-center text-slate-500 font-semibold tracking-tight">
             Already have an account?{" "}

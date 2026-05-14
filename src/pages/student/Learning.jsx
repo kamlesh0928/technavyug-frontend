@@ -30,12 +30,13 @@ export default function StudentLearning() {
 
   // Default lecture (first incomplete or just first)
   const defaultLecture = useMemo(() => {
-    if (sections.length === 0) return null;
+    if (!sections || sections.length === 0) return null;
     for (const section of sections) {
+      if (!section.lectures) continue;
       const incomplete = section.lectures.find((l) => !l.completed);
       if (incomplete) return incomplete;
     }
-    return sections[0].lectures[0];
+    return sections[0]?.lectures?.[0] || null;
   }, [sections]);
 
   const currentLecture = activeLecture || defaultLecture;
