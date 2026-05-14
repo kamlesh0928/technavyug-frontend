@@ -48,7 +48,9 @@ const LoginPage = () => {
   const resendMutation = useMutation({
     mutationFn: resendVerification,
     onSuccess: (data) => {
-      toast.success(data.message || "Verification email sent! Check your inbox.");
+      toast.success(
+        data.message || "Verification email sent! Check your inbox.",
+      );
       setCountdown(60); // Start 60s cooldown
     },
     onError: (err) => {
@@ -98,19 +100,22 @@ const LoginPage = () => {
 
       dispatch(setUser(backendResponse.user));
       dispatch(setToken(backendResponse.accessToken));
-      
+
       toast.success("Logged in successfully with Google!");
-      
-      const redirectPath = backendResponse.user.role === "Student" 
-        ? "/student" 
-        : backendResponse.user.role === "Instructor" 
-          ? "/instructor" 
-          : "/admin";
-          
+
+      const redirectPath =
+        backendResponse.user.role === "Student"
+          ? "/student"
+          : backendResponse.user.role === "Instructor"
+            ? "/instructor"
+            : "/admin";
+
       navigate(redirectPath);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
-      toast.error(error.response?.data?.message || "Failed to sign in with Google.");
+      toast.error(
+        error.response?.data?.message || "Failed to sign in with Google.",
+      );
     } finally {
       setIsGoogleLoading(false);
     }
@@ -313,7 +318,9 @@ const LoginPage = () => {
                 <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+                <span className="px-4 bg-white text-gray-500 font-medium">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -329,7 +336,9 @@ const LoginPage = () => {
                 ) : (
                   <FcGoogle size={24} />
                 )}
-                <span>{isGoogleLoading ? "Signing in..." : "Sign in with Google"}</span>
+                <span>
+                  {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
+                </span>
               </button>
             </div>
           </div>
