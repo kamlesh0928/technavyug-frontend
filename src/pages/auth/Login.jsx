@@ -8,12 +8,18 @@ import { useNavigate, Link } from "react-router-dom";
 import { useLogin } from "@/hooks/useLogin";
 import { loginSchema } from "@/utils/validation/loginSchema";
 import { useMutation } from "@tanstack/react-query";
-import { resendVerification } from "@/api/authApi";
+import { resendVerification, googleLogin } from "@/api/authApi";
 import { toast } from "react-toastify";
+import { auth, googleProvider } from "@/config/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "@/store/Slices/authSlice";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const {
     register,
@@ -79,6 +85,34 @@ const LoginPage = () => {
   const handleResend = () => {
     if (lastEmail) {
       resendMutation.mutate(lastEmail);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsGoogleLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const backendResponse = await googleLogin(idToken);
+
+      dispatch(setUser(backendResponse.user));
+      dispatch(setToken(backendResponse.accessToken));
+      
+      toast.success("Logged in successfully with Google!");
+      
+      const redirectPath = backendResponse.user.role === "Student" 
+        ? "/student" 
+        : backendResponse.user.role === "Instructor" 
+          ? "/instructor" 
+          : "/admin";
+          
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+      toast.error(error.response?.data?.message || "Failed to sign in with Google.");
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -286,13 +320,16 @@ const LoginPage = () => {
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => {
-                  window.location.href = `${import.meta.env.VITE_API_BACKEND_URL}/auth/google`;
-                }}
-                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 text-gray-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-gray-50 hover:border-gray-200 active:scale-[0.98] transition-all"
+                disabled={isGoogleLoading}
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 text-gray-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-gray-50 hover:border-gray-200 active:scale-[0.98] transition-all disabled:opacity-70"
               >
-                <FcGoogle size={24} />
-                <span>Sign in with Google</span>
+                {isGoogleLoading ? (
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-cyan-500 rounded-full animate-spin" />
+                ) : (
+                  <FcGoogle size={24} />
+                )}
+                <span>{isGoogleLoading ? "Signing in..." : "Sign in with Google"}</span>
               </button>
             </div>
           </div>
