@@ -38,4 +38,9 @@ export const resendVerification = async (email) => {
 export const googleLogin = async (idToken) => {
   const response = await api.post("/auth/google", { idToken });
   return response?.data;
+};
+
+export const updateUserRole = async (role) => {
+  const response = await api.post("/auth/update-role", { role });
+  return response?.data;
 };

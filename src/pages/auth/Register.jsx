@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   LuEye,
@@ -30,13 +30,9 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm({
     resolver: yupResolver(signupSchema),
-    defaultValues: { role: "Student" },
   });
-
-  const selectedRole = useWatch({ control, name: "role" });
 
   const { mutate, isPending } = useMutation({
     mutationFn: registerUser,
@@ -56,7 +52,6 @@ export default function Register() {
       name: data.name,
       email: data.email,
       password: data.password,
-      role: data.role,
     });
   };
 
@@ -66,23 +61,38 @@ export default function Register() {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
 
-      const backendResponse = await googleLogin(idToken);
+      const backendResponse = await googleLogin(idToken); // Role is handled later
 
       dispatch(setUser(backendResponse.user));
       dispatch(setToken(backendResponse.accessToken));
       
-      toast.success("Account created successfully with Google!");
+      toast.success("Authentication successful!");
       
-      const redirectPath = backendResponse.user.role === "Student" 
-        ? "/student" 
-        : backendResponse.user.role === "Instructor" 
-          ? "/instructor" 
-          : "/admin";
-          
-      navigate(redirectPath);
+      if (backendResponse.isNewUser || backendResponse.user.role === "Guest") {
+        navigate("/select-role");
+      } else {
+        const redirectPath = backendResponse.user.role === "Student" 
+          ? "/student" 
+          : backendResponse.user.role === "Instructor" 
+            ? "/instructor" 
+            : "/admin";
+            
+        navigate(redirectPath);
+      }
     } catch (error) {
       console.error("Google Sign-Up Error:", error);
-      toast.error(error.response?.data?.message || "Failed to sign up with Google.");
+      
+      let errorMessage = "Failed to sign up with Google.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.code) {
+        // Firebase errors
+        errorMessage = `Firebase Error: ${error.message}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setIsGoogleLoading(false);
     }
@@ -274,63 +284,7 @@ export default function Register() {
               )}
             </div>
 
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-700 block ml-1">
-                I want to join as
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="relative cursor-pointer group">
-                  <input
-                    type="radio"
-                    value="Student"
-                    {...register("role")}
-                    className="peer sr-only"
-                  />
-                  <div
-                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Student" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
-                  >
-                    <LuUser
-                      className={
-                        selectedRole === "Student"
-                          ? "text-cyan-500"
-                          : "text-slate-400"
-                      }
-                      size={22}
-                    />
-                    <span
-                      className={`text-sm font-bold ${selectedRole === "Student" ? "text-cyan-700" : "text-slate-600"}`}
-                    >
-                      Student
-                    </span>
-                  </div>
-                </label>
-                <label className="relative cursor-pointer group">
-                  <input
-                    type="radio"
-                    value="Instructor"
-                    {...register("role")}
-                    className="peer sr-only"
-                  />
-                  <div
-                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Instructor" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
-                  >
-                    <LuGraduationCap
-                      className={
-                        selectedRole === "Instructor"
-                          ? "text-cyan-500"
-                          : "text-slate-400"
-                      }
-                      size={22}
-                    />
-                    <span
-                      className={`text-sm font-bold ${selectedRole === "Instructor" ? "text-cyan-700" : "text-slate-600"}`}
-                    >
-                      Instructor
-                    </span>
-                  </div>
-                </label>
-              </div>
-            </div>
+
 
             <button
               type="submit"
