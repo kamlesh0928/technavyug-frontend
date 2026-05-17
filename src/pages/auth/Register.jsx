@@ -65,7 +65,6 @@ export default function Register() {
 
       dispatch(setUser(backendResponse.user));
       dispatch(setToken(backendResponse.accessToken));
-      
       toast.success("Authentication successful!");
       
       if (backendResponse.isNewUser || backendResponse.user.role === "Guest") {
@@ -118,8 +117,9 @@ export default function Register() {
             to="/"
             className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
           >
-            <span className="text-white">Tech</span>
-            <span className="text-cyan-400">navyug</span>
+            <Link to="/" className="text-3xl font-bold tracking-tight">
+              Tech<span className="text-cyan-400">navyug</span>
+            </Link>
           </Link>
         </div>
 
@@ -304,7 +304,9 @@ export default function Register() {
                 <div className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-slate-500 font-medium">Or continue with</span>
+                <span className="px-4 bg-white text-slate-500 font-medium">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -320,7 +322,9 @@ export default function Register() {
                 ) : (
                   <FcGoogle size={24} />
                 )}
-                <span>{isGoogleLoading ? "Signing up..." : "Sign up with Google"}</span>
+                <span>
+                  {isGoogleLoading ? "Signing up..." : "Sign up with Google"}
+                </span>
               </button>
             </div>
           </div>
