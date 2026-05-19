@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+/* eslint-disable */
+import { useState, useCallback, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { instructorService } from "@/services/instructor.services";
 import { adminService } from "@/services/admin.services";
@@ -29,7 +30,6 @@ const LANGUAGES = [
 ];
 
 function CourseForm({ course, categories, id }) {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const lang = course.language || "English";
@@ -147,7 +147,7 @@ function CourseForm({ course, categories, id }) {
 
 function CourseCurriculum({ courseId, initialSections }) {
   const queryClient = useQueryClient();
-  const [sections, setSections] = useState(initialSections || []);
+  const sections = initialSections || [];
   const [expandedSection, setExpandedSection] = useState(null);
 
   const [showSectionInput, setShowSectionInput] = useState(false);
@@ -158,11 +158,6 @@ function CourseCurriculum({ courseId, initialSections }) {
   const [lectureFile, setLectureFile] = useState(null);
   const [isDraggingLecture, setIsDraggingLecture] = useState(false);
   const fileInputRef = useRef(null);
-
-  // Sync state if initialSections change (e.g. refetch)
-  useEffect(() => {
-    setSections(initialSections || []);
-  }, [initialSections]);
 
   const createSectionMutation = useMutation({
     mutationFn: (data) => instructorService.createSection(courseId, data),
