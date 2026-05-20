@@ -10,20 +10,16 @@ export default function FAQ() {
       a: "Yes, every course comes with an industry-recognized certificate that you can share on your portfolio and LinkedIn profile.",
     },
     {
-      q: "Can I watch videos offline?",
-      a: "Yes, you can download videos through our mobile app and watch them offline at your convenience.",
-    },
-    {
-      q: "What is the refund policy?",
-      a: "We offer a 7-day money-back guarantee. If you are not satisfied with the course, you can request a full refund within 7 days of purchase.",
-    },
-    {
       q: "How are the courses structured?",
       a: "Each course is divided into sections and lectures with hands-on projects. You can learn at your own pace with lifetime access to all materials.",
     },
     {
       q: "Do I need prior experience to enroll?",
       a: "It depends on the course. We offer courses for all levels — from complete beginners to advanced professionals. Check the course level before enrolling.",
+    },
+    {
+      q: "How does the mentorship and support system work?",
+      a: "Every student is assigned a senior mentor who guides them through projects, and provides career advice. In addition, you get access to our elite peer community, weekly live sessions, and doubt-clearing support throughout your program.",
     },
   ];
 

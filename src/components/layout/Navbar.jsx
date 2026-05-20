@@ -16,9 +16,9 @@ import { toggleCart, selectCartCount } from "@/store/Slices/cartSlice";
 
 const navLinks = [
   { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
   { label: "Courses", path: "/courses" },
   { label: "Products", path: "/products" },
-  { label: "About", path: "/about" },
   { label: "Blog", path: "/blog" },
   { label: "Contact", path: "/contact" },
 ];
@@ -137,7 +137,9 @@ const Navbar = () => {
                       />
                       <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl shadow-black/[0.08] border border-gray-100 py-1.5 z-50">
                         <div className="px-4 py-2.5 border-b border-gray-50">
-                          <p className="text-sm font-semibold text-gray-800">{user.name}</p>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {user.name}
+                          </p>
                           <p className="text-xs text-gray-400">{user.email}</p>
                         </div>
                         <Link

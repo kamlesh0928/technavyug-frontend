@@ -44,43 +44,6 @@ export default function Hero() {
                 <LuArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-6 border-t border-gray-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-cyan-50 flex items-center justify-center">
-                  <LuUsers className="text-cyan-600" size={18} />
-                </div>
-                <div>
-                  <p className="text-lg font-extrabold text-gray-900">10K+</p>
-                  <p className="text-[11px] text-gray-400 font-medium">
-                    Active Students
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-                  <LuBookOpen className="text-blue-600" size={18} />
-                </div>
-                <div>
-                  <p className="text-lg font-extrabold text-gray-900">200+</p>
-                  <p className="text-[11px] text-gray-400 font-medium">
-                    Expert Courses
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center">
-                  <LuAward className="text-green-600" size={18} />
-                </div>
-                <div>
-                  <p className="text-lg font-extrabold text-gray-900">95%</p>
-                  <p className="text-[11px] text-gray-400 font-medium">
-                    Placement Rate
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Visual */}

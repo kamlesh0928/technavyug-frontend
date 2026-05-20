@@ -70,7 +70,7 @@ export default function Products() {
       dispatch(addToCart(product));
       dispatch(openCart());
     },
-    [user, navigate, location.pathname, dispatch]
+    [user, navigate, location.pathname, dispatch],
   );
 
   // Called when user clicks "Buy Now" — goes directly to checkout without modifying cart
@@ -82,9 +82,11 @@ export default function Products() {
         });
         return;
       }
-      navigate("/student/checkout", { state: { buyNowItem: { ...product, quantity: 1 } } });
+      navigate("/student/checkout", {
+        state: { buyNowItem: { ...product, quantity: 1 } },
+      });
     },
-    [user, navigate, location.pathname]
+    [user, navigate, location.pathname],
   );
 
   return (
@@ -102,36 +104,22 @@ export default function Products() {
             </p>
             <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
               Discover Premium{" "}
-              <span className="text-cyan-400">Digital Products</span>
+              <span className="text-cyan-400">
+                Products for Innovators & Future Engineers
+              </span>
             </h1>
             <p className="text-gray-300 text-lg leading-relaxed">
-              From digital assets to physical goods — find exactly what you need
-              to accelerate your journey.
+              From courses and real-time projects to publications and
+              certifications - find everything you need to accelerate your tech
+              career.
             </p>
           </div>
-
-          {/* Stats bar */}
-          {!isLoading && products.length > 0 && (
-            <div className="flex items-center gap-6 mt-8">
-              <div className="flex items-center gap-2 text-white/70 text-sm">
-                <LuPackage size={16} className="text-cyan-400" />
-                <span>
-                  <strong className="text-white">{pagination.total || products.length}</strong> products
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-white/70 text-sm">
-                <LuShoppingCart size={16} className="text-cyan-400" />
-                <span>Instant digital delivery</span>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
       {/* ── Filters + Grid ── */}
       <section className="py-12 bg-gray-50 min-h-screen">
         <div className="container mx-auto px-6 md:px-12 lg:px-20">
-
           {/* Filter Bar */}
           <div className="flex flex-col md:flex-row gap-3 mb-8 items-start md:items-center">
             {/* Search */}
@@ -154,7 +142,10 @@ export default function Products() {
 
             {/* Type Filter Pills */}
             <div className="flex items-center gap-2 flex-wrap">
-              <LuSlidersHorizontal size={16} className="text-gray-400 flex-shrink-0" />
+              <LuSlidersHorizontal
+                size={16}
+                className="text-gray-400 flex-shrink-0"
+              />
               {TYPE_OPTIONS.map((t) => (
                 <button
                   key={t}

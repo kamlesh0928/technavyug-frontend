@@ -80,8 +80,8 @@ export default function Blogs() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl font-medium mb-12">
-              Stay ahead with curated insights on full-stack development, cloud
-              computing, and the future of engineering.
+              Stay ahead with insights on system design, real-world projects,
+              research publications, and career growth in tech.
             </p>
 
             {/* Search Bar */}

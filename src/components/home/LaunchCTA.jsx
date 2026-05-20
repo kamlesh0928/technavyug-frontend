@@ -5,12 +5,11 @@ export default function CTA() {
     <section className="py-12 px-6">
       {/* Compact CTA container */}
       <div className="max-w-4xl mx-auto bg-[#0f2c59] rounded-[2rem] p-8 md:p-12 text-center relative overflow-hidden shadow-xl border border-white/5">
-        
         {/* Subtle background image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000" 
-            alt="Tech" 
+          <img
+            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
+            alt="Tech"
             className="w-full h-full object-cover opacity-10"
           />
         </div>
@@ -19,17 +18,24 @@ export default function CTA() {
           <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
             Ready to <span className="text-cyan-400">Upgrade</span> Your Career?
           </h2>
-          
+
           <p className="mt-3 text-blue-100/60 max-w-lg mx-auto text-xs md:text-sm font-medium">
-            Join 12,000+ students. Get access to professional courses and industry-vetted certifications.
+            Our students are building production-grade projects, earning
+            certifications, and working on research and patents.
           </p>
 
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
-            <Link to="/register" className="bg-cyan-400 text-[#0f2c59] px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all text-center">
+            <Link
+              to="/register"
+              className="bg-cyan-400 text-[#0f2c59] px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all text-center"
+            >
               Get Started
             </Link>
-            <Link to="/courses" className="bg-white/5 border border-white/10 text-white px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all text-center">
+            <Link
+              to="/courses"
+              className="bg-white/5 border border-white/10 text-white px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all text-center"
+            >
               View Courses
             </Link>
           </div>
