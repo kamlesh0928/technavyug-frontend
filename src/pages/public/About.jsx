@@ -51,7 +51,7 @@ export default function About() {
         <div className="container mx-auto px-6 md:px-12 lg:px-20">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-xs font-bold text-cyan-600 uppercase tracking-widest mb-4">
-              About Technavyug
+              About Technavyug Pvt. Ltd.
             </p>
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-6 leading-tight">
               We don’t just Teach Technology,{" "}

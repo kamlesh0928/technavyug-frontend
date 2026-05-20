@@ -84,7 +84,8 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-600">
-            &copy; {new Date().getFullYear()} Technavyug. All rights reserved.
+            &copy; {new Date().getFullYear()} Technavyug Pvt. Ltd. All rights
+            reserved.
           </p>
           <a
             href="mailto:support@technavyug.com"

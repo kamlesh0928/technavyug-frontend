@@ -1,7 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useCallback } from "react";
-import { logoutUser as logoutAction } from "@/store/Slices/authSlice";
+import {
+  logoutUser as logoutAction,
+  setUser as setUserAction,
+} from "@/store/Slices/authSlice";
+
 import { logoutUser as logoutApi } from "@/api/authApi";
+
 import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
@@ -15,11 +20,21 @@ export const useAuth = () => {
 
     // Clear state and navigate immediately
     dispatch(logoutAction());
+
     navigate("/login");
   }, [dispatch, navigate]);
 
+  // SET USER
+  const setUser = useCallback(
+    (userData) => {
+      dispatch(setUserAction(userData));
+    },
+    [dispatch],
+  );
+
   return {
     user,
+    setUser,
     isAuthenticated,
     loading,
     logout,
