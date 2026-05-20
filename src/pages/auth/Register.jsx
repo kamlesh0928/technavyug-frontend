@@ -113,11 +113,9 @@ export default function Register() {
         <div className="relative z-10">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+            className="inline-flex items-center gap-2 text-3xl font-bold tracking-tight hover:opacity-80 transition-opacity"
           >
-            <Link to="/" className="text-3xl font-bold tracking-tight">
-              Tech<span className="text-cyan-400">navyug</span>
-            </Link>
+            Tech<span className="text-cyan-400">navyug</span>
           </Link>
         </div>
 
@@ -166,7 +164,7 @@ export default function Register() {
         <div className="relative z-10">
           <div className="h-px w-full bg-gradient-to-r from-white/20 to-transparent mb-6" />
           <div className="flex justify-between items-center text-sm font-medium text-gray-500">
-            <span>&copy; 2026 Technavyug Pvt. Ltd. Education</span>
+            <span>&copy; 2026 Technavyug Education</span>
             <div className="flex gap-6">
               <a href="#" className="hover:text-white transition-colors">
                 Privacy
@@ -184,8 +182,8 @@ export default function Register() {
         <div className="w-full max-w-lg">
           {/* Logo - Mobile only */}
           <div className="lg:hidden flex justify-center mb-8">
-            <Link to="/" className="text-3xl font-extrabold tracking-tight">
-              Tech<span className="text-cyan-500">navyug</span>
+            <Link to="/" className="text-3xl font-extrabold tracking-tight text-gray-900">
+              Tech<span className="text-cyan-600">navyug</span>
             </Link>
           </div>
 

@@ -166,8 +166,8 @@ const LoginPage = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
         <div className="w-full max-w-md">
           <div className="lg:hidden mb-10">
-            <h1 className="text-3xl font-bold text-[#0f2c59] text-center">
-              Tech<span className="text-cyan-400">navyug</span>
+            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight text-center">
+              Tech<span className="text-cyan-600">navyug</span>
             </h1>
           </div>
 
