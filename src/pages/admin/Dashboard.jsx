@@ -345,6 +345,7 @@ export default function AdminDashboard() {
                 const colors = {
                   Student: "bg-blue-500",
                   Instructor: "bg-emerald-500",
+                  "Super Admin": "bg-red-600",
                   Admin: "bg-red-500",
                   "Sub Admin": "bg-orange-500",
                   Guest: "bg-gray-400",

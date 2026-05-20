@@ -7,6 +7,21 @@ export const adminService = {
     return response.data;
   },
 
+  createUser: async (data) => {
+    const response = await api.post("/admin/users", data);
+    return response.data;
+  },
+
+  updateUser: async (userId, data) => {
+    const response = await api.put(`/admin/users/${userId}`, data);
+    return response.data;
+  },
+
+  deleteUser: async (userId) => {
+    const response = await api.delete(`/admin/users/${userId}`);
+    return response.data;
+  },
+
   updateUserStatus: async (userId, status) => {
     const response = await api.patch(
       `/admin/users/${userId}/${status === "Blocked" ? "block" : "unblock"}`,
@@ -40,6 +55,21 @@ export const adminService = {
   // Courses (admin can list all)
   getAllCourses: async (params = {}) => {
     const response = await api.get("/courses", { params });
+    return response.data;
+  },
+
+  createCourse: async (data) => {
+    const response = await api.post("/courses", data);
+    return response.data;
+  },
+
+  updateCourse: async (courseId, data) => {
+    const response = await api.put(`/courses/${courseId}`, data);
+    return response.data;
+  },
+
+  deleteCourse: async (courseId) => {
+    const response = await api.delete(`/courses/${courseId}`);
     return response.data;
   },
 
