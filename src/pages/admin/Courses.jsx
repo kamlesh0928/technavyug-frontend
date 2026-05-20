@@ -56,7 +56,7 @@ export default function AdminCourses() {
   });
 
   // Queries
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["admin-courses", { search, page, status: statusFilter }],
     queryFn: () =>
       adminService.getAllCourses({
