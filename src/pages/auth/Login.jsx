@@ -102,20 +102,18 @@ const LoginPage = () => {
       dispatch(setToken(backendResponse.accessToken));
 
       toast.success("Logged in successfully with Google!");
-      if (backendResponse.isNewUser || backendResponse.user.role === "Guest") {
-        navigate("/select-role");
-      } else {
-        const redirectPath = backendResponse.user.role === "Student" 
-          ? "/student" 
-          : backendResponse.user.role === "Instructor" 
-            ? "/instructor" 
+      const redirectPath =
+        backendResponse.user.role === "Student" ||
+        backendResponse.user.role === "Guest"
+          ? "/student"
+          : backendResponse.user.role === "Instructor"
+            ? "/instructor"
             : "/admin";
-            
-        navigate(redirectPath);
-      }
+
+      navigate(redirectPath);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
-      
+
       let errorMessage = "Failed to sign in with Google.";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
@@ -125,7 +123,7 @@ const LoginPage = () => {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setIsGoogleLoading(false);

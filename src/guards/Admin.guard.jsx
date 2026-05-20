@@ -7,7 +7,9 @@ export default function AdminGuard({ children }) {
 
   return (
     <AuthGuard>
-      {user?.role === "Admin" || user?.role === "Sub Admin" ? (
+      {user?.role === "Super Admin" ||
+      user?.role === "Admin" ||
+      user?.role === "Sub Admin" ? (
         children
       ) : (
         <Navigate to="/" replace />

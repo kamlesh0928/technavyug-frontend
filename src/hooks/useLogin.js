@@ -13,7 +13,6 @@ const getRoleDashboard = (role) => {
     case "Instructor":
       return "/instructor";
     case "Guest":
-      return "/select-role";
     case "Student":
     default:
       return "/student";
@@ -47,4 +46,4 @@ export const useLogin = () => {
       toast.error(error?.userMessage || "Login failed. Please try again.");
     },
   });
-};
+};
