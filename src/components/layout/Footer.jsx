@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
-import { LuLinkedin, LuInstagram, LuMail, LuYoutube } from "react-icons/lu";
+import { LuMail } from "react-icons/lu";
+import {
+  FaYoutube,
+  FaLinkedin,
+  FaInstagram,
+  FaFacebook,
+  FaXTwitter,
+} from "react-icons/fa6";
 import logo from "@/assets/image/android-chrome-512x512.png";
 
 const footerLinks = {
   Platform: [
     { label: "Courses", to: "/courses" },
+    { label: "Products", to: "/products" },
     { label: "Blog", to: "/blog" },
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact" },
@@ -19,9 +27,31 @@ const footerLinks = {
 };
 
 const socials = [
-  { icon: LuYoutube, href: "https://www.youtube.com/@technavyugofficial" },
-  { icon: LuLinkedin, href: "https://www.linkedin.com/company/technavyug/" },
-  { icon: LuInstagram, href: "https://www.instagram.com/technavyug/" },
+  {
+    icon: FaYoutube,
+    href: "https://www.youtube.com/@technavyugofficial",
+    color: "text-[#FF0000]",
+  },
+  {
+    icon: FaLinkedin,
+    href: "https://www.linkedin.com/company/technavyug/",
+    color: "text-[#0A66C2]",
+  },
+  {
+    icon: FaInstagram,
+    href: "https://www.instagram.com/technavyug/",
+    color: "text-[#E4405F]",
+  },
+  {
+    icon: FaFacebook,
+    href: "https://www.facebook.com/technavyug/",
+    color: "text-[#1877F2]",
+  },
+  {
+    icon: FaXTwitter,
+    href: "https://twitter.com/technavyug",
+    color: "text-white",
+  },
 ];
 
 const Footer = () => {
@@ -35,7 +65,7 @@ const Footer = () => {
               <img
                 src={logo}
                 alt="Technavyug"
-                className="h-8 w-auto brightness-200"
+                className="h-8 w-8 rounded-full object-cover"
               />
               <span className="text-xl font-extrabold text-white tracking-tight">
                 Tech<span className="text-cyan-400">navyug</span>
@@ -51,7 +81,7 @@ const Footer = () => {
                   key={i}
                   href={s.href}
                   target="_blank"
-                  className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center hover:bg-cyan-600 hover:text-white transition-all text-gray-500"
+                  className={`w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center hover:scale-110 transition-all ${s.color}`}
                 >
                   <s.icon size={16} />
                 </a>

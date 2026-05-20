@@ -11,8 +11,11 @@ import {
   LuPlus,
   LuPencil,
   LuX,
+  LuToggleLeft,
+  LuToggleRight,
+  LuLayers,
 } from "react-icons/lu";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,6 +46,10 @@ export default function AdminCourses() {
     thumbnail: "",
   });
 
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
   const [editFormData, setEditFormData] = useState({
     title: "",
     shortDescription: "",
@@ -67,12 +74,6 @@ export default function AdminCourses() {
       }),
   });
 
-  // Fetch categories dynamically for dropdown selection
-  const { data: categoriesData } = useQuery({
-    queryKey: ["admin-categories"],
-    queryFn: () => adminService.getCategories(),
-  });
-
   // Fetch dashboard analytics for stats
   const { data: analytics } = useQuery({
     queryKey: ["admin-analytics"],
@@ -82,18 +83,30 @@ export default function AdminCourses() {
   const courses = data?.data || [];
   const pagination = data?.pagination || { totalPages: 1 };
   const courseStats = analytics?.data?.courses;
-  const categories = categoriesData?.data || [];
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     try {
+      let uploadedThumbnail = createFormData.thumbnail;
+      if (thumbnailFile) {
+        const formData = new FormData();
+        formData.append("image", thumbnailFile);
+        const res = await adminService.uploadProductImage(formData); // Using same upload endpoint
+        if (res?.data?.url) {
+          uploadedThumbnail = res.data.url;
+        }
+      }
+
       await adminService.createCourse({
         ...createFormData,
+        thumbnail: uploadedThumbnail,
         price: parseFloat(createFormData.price) || 0,
         categoryId: createFormData.categoryId || null,
       });
       toast.success("Course created successfully!");
       setIsCreateModalOpen(false);
+      setThumbnailFile(null);
+      setThumbnailPreview(null);
       setCreateFormData({
         title: "",
         shortDescription: "",
@@ -130,18 +143,39 @@ export default function AdminCourses() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
+      let uploadedThumbnail = editFormData.thumbnail;
+      if (thumbnailFile) {
+        const formData = new FormData();
+        formData.append("image", thumbnailFile);
+        const res = await adminService.uploadProductImage(formData);
+        if (res?.data?.url) {
+          uploadedThumbnail = res.data.url;
+        }
+      }
+
       await adminService.updateCourse(selectedCourse.id, {
         ...editFormData,
+        thumbnail: uploadedThumbnail,
         price: parseFloat(editFormData.price) || 0,
         categoryId: editFormData.categoryId || null,
       });
       toast.success("Course updated successfully!");
       setIsEditModalOpen(false);
       setSelectedCourse(null);
+      setThumbnailFile(null);
+      setThumbnailPreview(null);
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
       queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to update course");
+    }
+  };
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnailFile(file);
+      setThumbnailPreview(URL.createObjectURL(file));
     }
   };
 
@@ -161,6 +195,20 @@ export default function AdminCourses() {
           error?.response?.data?.message || "Failed to delete course",
         );
       }
+    }
+  };
+
+  const handleToggleStatus = async (course) => {
+    const newStatus = course.status === "Published" ? "Draft" : "Published";
+    try {
+      await adminService.updateCourse(course.id, { status: newStatus });
+      toast.success(
+        newStatus === "Published" ? "Course published!" : "Course set to draft",
+      );
+      queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update status");
     }
   };
 
@@ -401,6 +449,32 @@ export default function AdminCourses() {
                             >
                               <LuPencil size={18} />
                             </button>
+                            <Link
+                              to={`/instructor/courses/edit/${c.id}`}
+                              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                              title="Edit Curriculum"
+                            >
+                              <LuLayers size={18} />
+                            </Link>
+                            <button
+                              onClick={() => handleToggleStatus(c)}
+                              className={`p-2 rounded-lg transition-all ${
+                                c.status === "Published"
+                                  ? "text-yellow-600 hover:bg-yellow-50"
+                                  : "text-green-600 hover:bg-green-50"
+                              }`}
+                              title={
+                                c.status === "Published"
+                                  ? "Unpublish"
+                                  : "Publish"
+                              }
+                            >
+                              {c.status === "Published" ? (
+                                <LuToggleRight size={18} />
+                              ) : (
+                                <LuToggleLeft size={18} />
+                              )}
+                            </button>
                             <button
                               onClick={() => handleDeleteClick(c)}
                               className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
@@ -488,7 +562,6 @@ export default function AdminCourses() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
                 <div>
                   <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
                     Difficulty Level *
@@ -552,20 +625,33 @@ export default function AdminCourses() {
 
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
-                  Thumbnail URL
+                  Thumbnail Image
                 </label>
-                <input
-                  type="text"
-                  value={createFormData.thumbnail}
-                  onChange={(e) =>
-                    setCreateFormData({
-                      ...createFormData,
-                      thumbnail: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
-                  placeholder="https://images.unsplash.com/..."
-                />
+                <div className="flex items-center gap-4">
+                  {thumbnailPreview ? (
+                    <img
+                      src={thumbnailPreview}
+                      alt="Preview"
+                      className="w-20 h-20 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 text-xs">
+                      No Image
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleThumbnailChange}
+                      className="text-sm"
+                    />
+                    <span className="text-[10px] font-bold text-cyan-500 mt-1 uppercase tracking-wider">
+                      Recommended size: 1080x1080px
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -672,29 +758,6 @@ export default function AdminCourses() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
-                    Category *
-                  </label>
-                  <select
-                    required
-                    value={editFormData.categoryId}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        categoryId: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
-                  >
-                    <option value="">Select Category</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
                     Difficulty Level *
                   </label>
                   <select
@@ -757,20 +820,32 @@ export default function AdminCourses() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
-                    Thumbnail URL
+                    Thumbnail Image
                   </label>
-                  <input
-                    type="text"
-                    value={editFormData.thumbnail}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        thumbnail: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
-                    placeholder="https://images.unsplash.com/..."
-                  />
+                  <div className="flex items-center gap-4 mt-2">
+                    {thumbnailPreview || editFormData.thumbnail ? (
+                      <img
+                        src={thumbnailPreview || editFormData.thumbnail}
+                        alt="Preview"
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 text-xs">
+                        No Image
+                      </div>
+                    )}
+                    <div className="flex flex-col">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleThumbnailChange}
+                        className="text-sm w-full"
+                      />
+                      <span className="text-[10px] font-bold text-cyan-500 mt-1 uppercase tracking-wider">
+                        Recommended size: 1080x1080px
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 uppercase mb-1">

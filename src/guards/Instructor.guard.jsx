@@ -7,7 +7,11 @@ export default function InstructorGuard({ children }) {
 
   return (
     <AuthGuard>
-      {user?.role === "Instructor" ? children : <Navigate to="/" replace />}
+      {user?.role === "Instructor" || user?.role === "Super Admin" ? (
+        children
+      ) : (
+        <Navigate to="/" replace />
+      )}
     </AuthGuard>
   );
 }

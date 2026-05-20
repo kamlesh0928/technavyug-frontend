@@ -73,9 +73,9 @@ export default function Blogs() {
             <p className="text-xs font-black text-cyan-600 uppercase tracking-[0.3em] mb-6">
               Insights & Innovations
             </p>
-            <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-8 leading-[0.9]">
+            <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-8 leading-tight">
               The Technavyug{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 italic">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 italic py-1 pr-2">
                 Journal
               </span>
             </h1>

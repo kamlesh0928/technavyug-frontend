@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LuChevronDown } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -63,6 +64,18 @@ export default function FAQ() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <Link
+            to="/contact"
+            className="text-sm font-semibold text-[#0f2c59] hover:text-cyan-600 transition-colors inline-flex items-center gap-1 group"
+          >
+            Still Have Question? Contact our team
+            <span className="group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

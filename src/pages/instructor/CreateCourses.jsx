@@ -11,7 +11,6 @@ import {
   LuChevronDown,
   LuChevronUp,
   LuCheck,
-  LuFile,
   LuVideo,
   LuImage,
   LuBookOpen,
@@ -457,6 +456,9 @@ export default function CreateCourse() {
                     <span className="text-cyan-500 font-bold">browse</span>
                   </p>
                   <p className="text-[10px] mt-1">PNG, JPG, WebP up to 5 MB</p>
+                  <span className="text-[10px] font-bold text-cyan-500 mt-1 uppercase tracking-wider">
+                    Recommended size: 1080x1080px
+                  </span>
                 </div>
               )}
             </div>
@@ -840,7 +842,11 @@ export default function CreateCourse() {
                         <button
                           type="button"
                           onClick={() => {
-                            if (window.confirm("Are you sure you want to delete this lecture?")) {
+                            if (
+                              window.confirm(
+                                "Are you sure you want to delete this lecture?",
+                              )
+                            ) {
                               deleteLectureMutation.mutate(l.id);
                             }
                           }}
@@ -936,7 +942,9 @@ export default function CreateCourse() {
                             const file = e.target.files[0];
                             if (file) {
                               if (file.size > 100 * 1024 * 1024) {
-                                toast.error("Video file must be less than 100 MB");
+                                toast.error(
+                                  "Video file must be less than 100 MB",
+                                );
                                 e.target.value = "";
                                 return;
                               }
