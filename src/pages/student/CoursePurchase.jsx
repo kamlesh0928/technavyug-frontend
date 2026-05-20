@@ -44,17 +44,13 @@ export default function CoursePurchase() {
   // Pricing Calculations
   const price = course ? parseFloat(course.price) : 0;
 
-  const gstAmount =
-    Math.round(((price * GST_RATE) / 100) * 100) / 100;
+  const gstAmount = Math.round(((price * GST_RATE) / 100) * 100) / 100;
 
   const subtotalWithGST = price + gstAmount;
 
   const discountAmount = couponResult?.discountAmount || 0;
 
-  const finalAmount = Math.max(
-    0,
-    subtotalWithGST - discountAmount,
-  );
+  const finalAmount = Math.max(0, subtotalWithGST - discountAmount);
 
   const couponMutation = useMutation({
     mutationFn: (d) => studentService.validateCoupon(d),
@@ -64,11 +60,7 @@ export default function CoursePurchase() {
     },
     onError: (err) => {
       setCouponResult(null);
-      toast.error(
-        err?.data?.message ||
-          err?.userMessage ||
-          "Invalid coupon",
-      );
+      toast.error(err?.data?.message || err?.userMessage || "Invalid coupon");
     },
   });
 
@@ -102,24 +94,15 @@ export default function CoursePurchase() {
     try {
       const payload = {
         courseId,
-        couponCode: couponResult
-          ? couponCode
-          : undefined,
+        couponCode: couponResult ? couponCode : undefined,
       };
 
-      const res =
-        await studentService.initiateCoursePurchase(
-          payload,
-        );
+      const res = await studentService.initiateCoursePurchase(payload);
 
       if (res.data?.checkoutUrl) {
-        window.location.href =
-          res.data.checkoutUrl;
+        window.location.href = res.data.checkoutUrl;
       } else if (res.data?.paid === false) {
-        toast.success(
-          res.message ||
-            "Course enrolled successfully",
-        );
+        toast.success(res.message || "Course enrolled successfully");
         navigate("/student/courses");
       } else {
         toast.error("Could not get payment URL");
@@ -127,9 +110,7 @@ export default function CoursePurchase() {
       }
     } catch (err) {
       toast.error(
-        err?.data?.message ||
-          err?.userMessage ||
-          "Payment initiation failed",
+        err?.data?.message || err?.userMessage || "Payment initiation failed",
       );
       setPaying(false);
     }
@@ -138,10 +119,7 @@ export default function CoursePurchase() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <LuLoader
-          size={32}
-          className="animate-spin text-gray-400"
-        />
+        <LuLoader size={32} className="animate-spin text-gray-400" />
       </div>
     );
   }
@@ -149,9 +127,7 @@ export default function CoursePurchase() {
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">
-          Course not found.
-        </p>
+        <p className="text-gray-500 text-lg">Course not found.</p>
       </div>
     );
   }
@@ -174,10 +150,7 @@ export default function CoursePurchase() {
               />
             ) : (
               <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#0f2c59] to-blue-700 flex items-center justify-center flex-shrink-0">
-                <LuBookOpen
-                  size={32}
-                  className="text-white"
-                />
+                <LuBookOpen size={32} className="text-white" />
               </div>
             )}
 
@@ -200,10 +173,7 @@ export default function CoursePurchase() {
 
                 <span className="flex items-center gap-1">
                   <LuClock size={12} />
-                  {Math.round(
-                    (course.totalDuration || 0) / 3600,
-                  )}
-                  h
+                  {Math.round((course.totalDuration || 0) / 3600)}h
                 </span>
 
                 <span>{course.level}</span>
@@ -215,10 +185,7 @@ export default function CoursePurchase() {
         {/* Coupon */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
           <h3 className="text-base font-bold text-gray-900 flex items-center gap-2 mb-4">
-            <LuTag
-              size={16}
-              className="text-[#0f2c59]"
-            />
+            <LuTag size={16} className="text-[#0f2c59]" />
             Have a coupon?
           </h3>
 
@@ -230,10 +197,7 @@ export default function CoursePurchase() {
                 </p>
 
                 <p className="text-xs text-green-600">
-                  You save ₹
-                  {couponResult.discountAmount.toFixed(
-                    2,
-                  )}
+                  You save ₹{couponResult.discountAmount.toFixed(2)}
                 </p>
               </div>
 
@@ -250,27 +214,17 @@ export default function CoursePurchase() {
                 type="text"
                 placeholder="Enter coupon code"
                 value={couponCode}
-                onChange={(e) =>
-                  setCouponCode(
-                    e.target.value.toUpperCase(),
-                  )
-                }
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-400 outline-none uppercase tracking-wider"
               />
 
               <button
                 onClick={handleApplyCoupon}
-                disabled={
-                  couponMutation.isPending ||
-                  !couponCode.trim()
-                }
+                disabled={couponMutation.isPending || !couponCode.trim()}
                 className="px-6 py-3 rounded-xl bg-[#0f2c59] text-white text-sm font-bold hover:bg-blue-800 disabled:opacity-50 transition-all"
               >
                 {couponMutation.isPending ? (
-                  <LuLoader
-                    size={14}
-                    className="animate-spin"
-                  />
+                  <LuLoader size={14} className="animate-spin" />
                 ) : (
                   "Apply"
                 )}
@@ -282,12 +236,9 @@ export default function CoursePurchase() {
         {/* Price Summary */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
           <div className="space-y-2">
-
             {/* Base Price */}
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">
-                Course Price
-              </span>
+              <span className="text-gray-500">Course Price</span>
 
               <span className="font-bold text-gray-900">
                 ₹{price.toFixed(2)}
@@ -297,10 +248,7 @@ export default function CoursePurchase() {
             {/* GST */}
             <div className="flex justify-between text-sm">
               <span className="text-gray-500 flex items-center gap-1">
-                <LuReceipt
-                  size={12}
-                  className="text-blue-500"
-                />
+                <LuReceipt size={12} className="text-blue-500" />
                 GST ({GST_RATE}%)
               </span>
 
@@ -311,9 +259,7 @@ export default function CoursePurchase() {
 
             {/* CGST */}
             <div className="flex justify-between text-xs pl-4">
-              <span className="text-gray-400">
-                CGST (9%)
-              </span>
+              <span className="text-gray-400">CGST (9%)</span>
 
               <span className="text-gray-400">
                 ₹{(gstAmount / 2).toFixed(2)}
@@ -322,9 +268,7 @@ export default function CoursePurchase() {
 
             {/* SGST */}
             <div className="flex justify-between text-xs pl-4">
-              <span className="text-gray-400">
-                SGST (9%)
-              </span>
+              <span className="text-gray-400">SGST (9%)</span>
 
               <span className="text-gray-400">
                 ₹{(gstAmount / 2).toFixed(2)}
@@ -334,9 +278,7 @@ export default function CoursePurchase() {
             {/* Discount */}
             {discountAmount > 0 && (
               <div className="flex justify-between text-sm">
-                <span className="text-green-600">
-                  Coupon Discount
-                </span>
+                <span className="text-green-600">Coupon Discount</span>
 
                 <span className="font-bold text-green-600">
                   -₹
@@ -347,9 +289,7 @@ export default function CoursePurchase() {
 
             {/* Total */}
             <div className="flex justify-between text-base pt-3 border-t border-gray-100">
-              <span className="font-bold text-gray-900">
-                Total
-              </span>
+              <span className="font-bold text-gray-900">Total</span>
 
               <span className="font-extrabold text-gray-900 text-xl">
                 ₹{finalAmount.toFixed(2)}
@@ -370,19 +310,14 @@ export default function CoursePurchase() {
         >
           {paying ? (
             <>
-              <LuLoader
-                size={18}
-                className="animate-spin"
-              />
+              <LuLoader size={18} className="animate-spin" />
               Processing...
             </>
           ) : (
             <>
               {finalAmount <= 0
                 ? "Enroll Now (Free)"
-                : `Pay ₹${finalAmount.toFixed(
-                    2,
-                  )} with PhonePe`}
+                : `Pay ₹${finalAmount.toFixed(2)} with PhonePe`}
               <LuChevronRight size={16} />
             </>
           )}

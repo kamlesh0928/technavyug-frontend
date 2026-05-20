@@ -282,7 +282,9 @@ export default function ProductDetailModal({
                   {!isLoggedIn
                     ? "Login to Buy"
                     : product.stock > 0
-                      ? "Buy Now"
+                      ? product.type === "Service"
+                        ? "Book Now"
+                        : "Buy Now"
                       : "Out of Stock"}
                 </button>
               </div>

@@ -56,7 +56,7 @@ export const authService = {
 
   deleteAccount: async (password) => {
     const response = await api.delete("/auth/account", {
-      data: { password }
+      data: { password },
     });
     return response.data;
   },

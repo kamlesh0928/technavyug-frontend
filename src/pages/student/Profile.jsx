@@ -27,8 +27,7 @@ export default function StudentProfile() {
   const navigate = useNavigate();
 
   // SHOW ADD PASSWORD CONDITION
-  const shouldShowAddPassword =
-    (user?.authProvider === "google" || user?.googleId) && !user?.passwordSet;
+  const shouldShowAddPassword = !user?.passwordSet;
 
   const handleSave = async (e) => {
     e.preventDefault();

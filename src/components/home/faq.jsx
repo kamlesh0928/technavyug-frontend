@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LuChevronDown } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -10,20 +11,16 @@ export default function FAQ() {
       a: "Yes, every course comes with an industry-recognized certificate that you can share on your portfolio and LinkedIn profile.",
     },
     {
-      q: "Can I watch videos offline?",
-      a: "Yes, you can download videos through our mobile app and watch them offline at your convenience.",
-    },
-    {
-      q: "What is the refund policy?",
-      a: "We offer a 7-day money-back guarantee. If you are not satisfied with the course, you can request a full refund within 7 days of purchase.",
-    },
-    {
       q: "How are the courses structured?",
       a: "Each course is divided into sections and lectures with hands-on projects. You can learn at your own pace with lifetime access to all materials.",
     },
     {
       q: "Do I need prior experience to enroll?",
       a: "It depends on the course. We offer courses for all levels — from complete beginners to advanced professionals. Check the course level before enrolling.",
+    },
+    {
+      q: "How does the mentorship and support system work?",
+      a: "Every student is assigned a senior mentor who guides them through projects, and provides career advice. In addition, you get access to our elite peer community, weekly live sessions, and doubt-clearing support throughout your program.",
     },
   ];
 
@@ -67,6 +64,18 @@ export default function FAQ() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <Link
+            to="/contact"
+            className="text-sm font-semibold text-[#0f2c59] hover:text-cyan-600 transition-colors inline-flex items-center gap-1 group"
+          >
+            Still Have Question? Contact our team
+            <span className="group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

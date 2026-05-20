@@ -1,4 +1,5 @@
 import { LuCheck, LuX, LuZap } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export default function Comparison() {
   const points = [
@@ -21,7 +22,7 @@ export default function Comparison() {
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/20 mb-6">
               <LuZap className="text-cyan-400 text-xs" />
               <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
-                Technavyug Pvt. Ltd. Edge
+                Technavyug Pvt. Ltd.
               </span>
             </div>
 
@@ -37,7 +38,7 @@ export default function Comparison() {
             </p>
 
             {/* Compact Points Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               {points.map((p, i) => (
                 <div key={i} className="flex items-center gap-3 group">
                   <div className="bg-cyan-500 text-[#0f2c59] p-1 rounded-md group-hover:scale-110 transition-transform">
@@ -48,6 +49,22 @@ export default function Comparison() {
                   </span>
                 </div>
               ))}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                to="/courses"
+                className="bg-cyan-400 hover:bg-cyan-300 text-[#0f2c59] px-6 py-3 rounded-xl font-bold text-sm transition-all hover:-translate-y-1 shadow-lg shadow-cyan-400/20"
+              >
+                Enroll Now
+              </Link>
+              <Link
+                to="/demo"
+                className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all border border-white/10 hover:-translate-y-1"
+              >
+                Watch Demo
+              </Link>
             </div>
           </div>
 
@@ -86,6 +103,30 @@ export default function Comparison() {
                 <div className="flex justify-between items-center">
                   <span className="text-[11px] font-black text-[#0f2c59]">
                     Senior Mentorship
+                  </span>
+                  <LuCheck className="text-green-500 text-xl shadow-lg shadow-green-200" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-black text-[#0f2c59]">
+                    Real Project Deployment
+                  </span>
+                  <LuCheck className="text-green-500 text-xl shadow-lg shadow-green-200" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-black text-[#0f2c59]">
+                    Career Support
+                  </span>
+                  <LuCheck className="text-green-500 text-xl shadow-lg shadow-green-200" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-black text-[#0f2c59]">
+                    Project Kits and Components
+                  </span>
+                  <LuCheck className="text-green-500 text-xl shadow-lg shadow-green-200" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-black text-[#0f2c59]">
+                    R&D
                   </span>
                   <LuCheck className="text-green-500 text-xl shadow-lg shadow-green-200" />
                 </div>

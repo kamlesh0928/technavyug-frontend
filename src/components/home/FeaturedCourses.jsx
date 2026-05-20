@@ -1,35 +1,36 @@
 import React from "react";
 import { LuClock, LuCircleCheck } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export default function CoursePreview() {
   const previews = [
     {
-      title: "Frontend Engineering",
-      topics: ["Next.js 15", "TypeScript", "Tailwind"],
+      title: "Artificial Intelligence and Machine Learning",
+      topics: ["Machine Learning", "Neural Networks", "Computer Vision"],
       duration: "12 Weeks",
       level: "Advanced",
-      img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800",
     },
     {
-      title: "Backend Architecture",
-      topics: ["Node.js", "PostgreSQL", "Redis"],
+      title: "Internet of Things (IoT)",
+      topics: ["Sensors and Devices", "Connectivity", "Security"],
       duration: "10 Weeks",
       level: "Intermediate",
-      img: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800",
     },
     {
-      title: "Cloud & DevOps",
-      topics: ["Docker", "K8s", "AWS"],
+      title: "Embedded Systems",
+      topics: ["Hardware", "Software/Firmware", "Input/Output Interfaces"],
       duration: "8 Weeks",
       level: "Professional",
-      img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?q=80&w=800",
     },
     {
-      title: "System Design",
-      topics: ["Scaling", "Microservices", "Load Balancing"],
-      duration: "6 Weeks",
+      title: "Robotics",
+      topics: ["Sensors", "Controllers", "Actuators"],
+      duration: "16 Weeks",
       level: "Elite",
-      img: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800",
     },
   ];
 
@@ -46,20 +47,6 @@ export default function CoursePreview() {
               Master the <span className="text-gray-400 italic">Unspoken</span>{" "}
               Rules of Engineering
             </h3>
-          </div>
-          <div className="hidden lg:flex gap-10 border-l border-gray-100 pl-10">
-            <div>
-              <p className="text-2xl font-black text-[#0f2c59]">240+</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                Lessons
-              </p>
-            </div>
-            <div>
-              <p className="text-2xl font-black text-[#0f2c59]">12+</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                Projects
-              </p>
-            </div>
           </div>
         </div>
 
@@ -127,6 +114,19 @@ export default function CoursePreview() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Explore Courses Button */}
+        <div className="mt-12 flex justify-center">
+          <Link
+            to="/courses"
+            className="group inline-flex items-center gap-2 bg-[#0f2c59] text-white px-8 py-4 rounded-xl font-bold text-sm shadow-xl shadow-[#0f2c59]/20 hover:bg-blue-700 transition-all hover:-translate-y-1"
+          >
+            Explore Courses
+            <span className="group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

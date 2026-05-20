@@ -1,10 +1,17 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { studentService } from "@/services/student.services";
-import { LuClock, LuBookOpen, LuUsers, LuStar, LuPlay, LuChevronDown, LuChevronUp, LuGlobe, LuShield } from "react-icons/lu";
+import {
+  LuClock,
+  LuBookOpen,
+  LuUsers,
+  LuStar,
+  LuPlay,
+  LuGlobe,
+  LuShield,
+} from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 
 export default function CourseDetails() {
   const { slug } = useParams();
@@ -22,11 +29,15 @@ export default function CourseDetails() {
   const enrollMutation = useMutation({
     mutationFn: (courseId) => studentService.enrollInCourse(courseId),
     onSuccess: (res) => {
-      toast.success(res.message || "Enrolled successfully! Enjoy your learning. 🚀");
+      toast.success(
+        res.message || "Enrolled successfully! Enjoy your learning. 🚀",
+      );
       navigate("/student/courses");
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || "Failed to enroll. Please try again.");
+      toast.error(
+        err?.response?.data?.message || "Failed to enroll. Please try again.",
+      );
     },
   });
 
@@ -75,11 +86,21 @@ export default function CourseDetails() {
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
                 {course.title}
               </h1>
-              <p className="text-gray-400 leading-relaxed mb-8 max-w-xl">{course.shortDescription}</p>
+              <p className="text-gray-400 leading-relaxed mb-8 max-w-xl">
+                {course.shortDescription}
+              </p>
               <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-                <span className="flex items-center gap-2"><LuStar className="text-amber-400" /> {course.averageRating || "N/A"} ({course.totalReviews || 0} reviews)</span>
-                <span className="flex items-center gap-2"><LuUsers /> {course.totalEnrollments || 0} students</span>
-                <span className="flex items-center gap-2"><LuGlobe /> {course.language || "English"}</span>
+                <span className="flex items-center gap-2">
+                  <LuStar className="text-amber-400" />{" "}
+                  {course.averageRating || "N/A"} ({course.totalReviews || 0}{" "}
+                  reviews)
+                </span>
+                <span className="flex items-center gap-2">
+                  <LuUsers /> {course.totalEnrollments || 0} students
+                </span>
+                <span className="flex items-center gap-2">
+                  <LuGlobe /> {course.language || "English"}
+                </span>
               </div>
               {course.instructor && (
                 <div className="flex items-center gap-3 mt-8">
@@ -87,7 +108,9 @@ export default function CourseDetails() {
                     {course.instructor.name?.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">{course.instructor.name}</p>
+                    <p className="text-sm font-semibold text-white">
+                      {course.instructor.name}
+                    </p>
                     <p className="text-xs text-gray-500">Instructor</p>
                   </div>
                 </div>
@@ -114,7 +137,10 @@ export default function CourseDetails() {
               <div className="space-y-3 text-sm text-gray-500">
                 <div className="flex items-center gap-3">
                   <LuClock className="text-gray-400" size={16} />
-                  <span>{Math.round((course.totalDuration || 0) / 3600)} hours of content</span>
+                  <span>
+                    {Math.round((course.totalDuration || 0) / 3600)} hours of
+                    content
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <LuBookOpen className="text-gray-400" size={16} />
@@ -139,8 +165,12 @@ export default function CourseDetails() {
         <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-4xl">
           {course.description && (
             <div className="mb-16">
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-6">About this Course</h2>
-              <div className="text-gray-500 leading-relaxed whitespace-pre-line">{course.description}</div>
+              <h2 className="text-2xl font-extrabold text-gray-900 mb-6">
+                About this Course
+              </h2>
+              <div className="text-gray-500 leading-relaxed whitespace-pre-line">
+                {course.description}
+              </div>
             </div>
           )}
 
@@ -153,10 +183,15 @@ export default function CourseDetails() {
             </h2>
             <div className="space-y-3">
               {sections.map((section) => (
-                <div key={section.id} className="border border-gray-100 rounded-xl overflow-hidden">
+                <div
+                  key={section.id}
+                  className="border border-gray-100 rounded-xl overflow-hidden"
+                >
                   <div className="w-full flex items-center justify-between p-5 bg-white">
                     <div className="flex items-center gap-3">
-                      <span className="font-bold text-gray-800 text-sm">{section.title}</span>
+                      <span className="font-bold text-gray-800 text-sm">
+                        {section.title}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-500 font-medium bg-gray-50 px-3 py-1 rounded-full">
                       <LuPlay size={14} className="text-gray-400" />

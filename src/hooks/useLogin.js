@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 const getRoleDashboard = (role) => {
   switch (role) {
+    case "Super Admin":
     case "Admin":
     case "Sub Admin":
       return "/admin";

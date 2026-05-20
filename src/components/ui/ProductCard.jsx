@@ -195,7 +195,8 @@ export default function ProductCard({
               disabled={!inStock}
               className="flex items-center gap-1.5 bg-[#0f2c59] hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <LuZap size={12} /> Buy Now
+              <LuZap size={12} />{" "}
+              {product?.type === "Service" ? "Book Now" : "Buy Now"}
             </button>
           </div>
         </div>
