@@ -38,8 +38,8 @@ export default function StudentLayout() {
               className="flex items-center gap-2"
             >
               <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
-              <span className="text-lg font-bold text-[#0f2c59]">
-                Tech<span className="text-cyan-500">navyug</span>
+              <span className="text-xl font-extrabold tracking-tight text-gray-900">
+                Tech<span className="text-cyan-600">navyug</span>
               </span>
             </button>
           )}

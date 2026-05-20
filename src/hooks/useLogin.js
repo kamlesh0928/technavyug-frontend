@@ -12,7 +12,6 @@ const getRoleDashboard = (role) => {
       return "/admin";
     case "Instructor":
       return "/instructor";
-    case "Guest":
     case "Student":
     default:
       return "/student";

@@ -39,7 +39,7 @@ export default function StudentMyCourses() {
                 </div>
               </div>
               <Link to={`/student/learning/${e.courseId}`} className="text-sm font-bold text-cyan-600 hover:text-cyan-700">
-                Continue Learning &rarr;
+                {e.progress >= 100 ? "Completed \u2713" : "Continue Learning \u2192"}
               </Link>
             </div>
           ))}
