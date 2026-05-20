@@ -158,7 +158,7 @@ const LoginPage = () => {
           </p>
         </div>
         <div className="relative z-10 text-sm text-gray-400 font-medium">
-          &copy; 2026 Technavyug Education
+          &copy; 2026 Technavyug Pvt. Ltd. Education
         </div>
       </div>
 

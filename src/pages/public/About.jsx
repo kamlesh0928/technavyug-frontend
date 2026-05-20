@@ -38,7 +38,7 @@ export default function About() {
               </span>
             </h1>
             <p className="text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto">
-              Technavyug is a premium education platform that bridges the gap between theoretical
+              Technavyug Pvt. Ltd. is a premium education platform that bridges the gap between theoretical
               knowledge and industry-ready skills. We prepare students to thrive in the modern tech landscape.
             </p>
           </div>
@@ -96,7 +96,7 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-gray-500 leading-relaxed">
                 <p>
-                  Technavyug was born from a simple observation: there is a massive gap between
+                  Technavyug Pvt. Ltd. was born from a simple observation: there is a massive gap between
                   what traditional education teaches and what the tech industry actually needs.
                 </p>
                 <p>
@@ -105,7 +105,7 @@ export default function About() {
                   workflows.
                 </p>
                 <p>
-                  Today, thousands of students across India and beyond trust Technavyug to
+                  Today, thousands of students across India and beyond trust Technavyug Pvt. Ltd. to
                   prepare them for successful careers in technology.
                 </p>
               </div>

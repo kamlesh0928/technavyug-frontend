@@ -21,7 +21,7 @@ export default function BentoGrid() {
               Premium Learning
             </span>
             <h3 className="text-3xl font-black text-[#0f2c59] tracking-tighter">
-              Technavyug Ecosystem
+              Technavyug Pvt. Ltd. Ecosystem
             </h3>
           </div>
           <p className="text-gray-400 text-xs font-medium max-w-[250px] md:text-right leading-relaxed">

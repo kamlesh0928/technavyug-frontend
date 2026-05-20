@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+
 export default function CourseDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function CourseDetails() {
   });
 
   const course = data?.data;
+  console.log("Fetched course details:", course);
 
   const enrollMutation = useMutation({
     mutationFn: (courseId) => studentService.enrollInCourse(courseId),

@@ -31,6 +31,11 @@ export const authService = {
     return response.data;
   },
 
+  addPassword: async (data) => {
+    const response = await api.post("/auth/add-password", data);
+    return response.data;
+  },
+
   changePassword: async (data) => {
     const response = await api.put("/auth/change-password", data);
     return response.data;
