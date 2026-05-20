@@ -162,7 +162,10 @@ function App() {
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="checkout" element={<StudentCheckout />} />
-          <Route path="purchase-course/:courseId" element={<StudentCoursePurchase />} />
+          <Route
+            path="purchase-course/:courseId"
+            element={<StudentCoursePurchase />}
+          />
           <Route path="payment-status" element={<StudentPaymentStatus />} />
         </Route>
       </Routes>

@@ -30,6 +30,6 @@ export const signupSchema = yup.object().shape({
 
   role: yup
     .string()
-    .oneOf(["Student", "Instructor"], "Please select a valid role")
-    .required("Please select your role"),
+    .oneOf(["Student", "Instructor"], "Invalid role")
+    .optional(),
 });

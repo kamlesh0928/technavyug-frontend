@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   LuEye,
@@ -8,27 +8,31 @@ import {
   LuGraduationCap,
   LuLayoutDashboard,
 } from "react-icons/lu";
+import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { registerUser } from "@/api/authApi";
 import { signupSchema } from "@/utils/validation/signupSchema";
+import { auth, googleProvider } from "@/config/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "@/store/Slices/authSlice";
+import { googleLogin } from "@/api/authApi";
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm({
     resolver: yupResolver(signupSchema),
-    defaultValues: { role: "Student" },
   });
-
-  const selectedRole = useWatch({ control, name: "role" });
 
   const { mutate, isPending } = useMutation({
     mutationFn: registerUser,
@@ -48,8 +52,47 @@ export default function Register() {
       name: data.name,
       email: data.email,
       password: data.password,
-      role: data.role,
     });
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      setIsGoogleLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const backendResponse = await googleLogin(idToken); // Role is handled later
+
+      dispatch(setUser(backendResponse.user));
+      dispatch(setToken(backendResponse.accessToken));
+      toast.success("Authentication successful!");
+
+      const redirectPath =
+        backendResponse.user.role === "Student" ||
+        backendResponse.user.role === "Guest"
+          ? "/student"
+          : backendResponse.user.role === "Instructor"
+            ? "/instructor"
+            : "/admin";
+
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Google Sign-Up Error:", error);
+
+      let errorMessage = "Failed to sign up with Google.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.code) {
+        // Firebase errors
+        errorMessage = `Firebase Error: ${error.message}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
@@ -72,8 +115,9 @@ export default function Register() {
             to="/"
             className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
           >
-            <span className="text-white">Tech</span>
-            <span className="text-cyan-400">navyug</span>
+            <Link to="/" className="text-3xl font-bold tracking-tight">
+              Tech<span className="text-cyan-400">navyug</span>
+            </Link>
           </Link>
         </div>
 
@@ -122,7 +166,7 @@ export default function Register() {
         <div className="relative z-10">
           <div className="h-px w-full bg-gradient-to-r from-white/20 to-transparent mb-6" />
           <div className="flex justify-between items-center text-sm font-medium text-gray-500">
-            <span>&copy; 2026 Technavyug Education</span>
+            <span>&copy; 2026 Technavyug Pvt. Ltd. Education</span>
             <div className="flex gap-6">
               <a href="#" className="hover:text-white transition-colors">
                 Privacy
@@ -238,64 +282,6 @@ export default function Register() {
               )}
             </div>
 
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-700 block ml-1">
-                I want to join as
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="relative cursor-pointer group">
-                  <input
-                    type="radio"
-                    value="Student"
-                    {...register("role")}
-                    className="peer sr-only"
-                  />
-                  <div
-                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Student" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
-                  >
-                    <LuUser
-                      className={
-                        selectedRole === "Student"
-                          ? "text-cyan-500"
-                          : "text-slate-400"
-                      }
-                      size={22}
-                    />
-                    <span
-                      className={`text-sm font-bold ${selectedRole === "Student" ? "text-cyan-700" : "text-slate-600"}`}
-                    >
-                      Student
-                    </span>
-                  </div>
-                </label>
-                <label className="relative cursor-pointer group">
-                  <input
-                    type="radio"
-                    value="Instructor"
-                    {...register("role")}
-                    className="peer sr-only"
-                  />
-                  <div
-                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 bg-slate-50/50 group-hover:bg-slate-50 ${selectedRole === "Instructor" ? "border-cyan-500 bg-cyan-50/50" : "border-slate-100"}`}
-                  >
-                    <LuGraduationCap
-                      className={
-                        selectedRole === "Instructor"
-                          ? "text-cyan-500"
-                          : "text-slate-400"
-                      }
-                      size={22}
-                    />
-                    <span
-                      className={`text-sm font-bold ${selectedRole === "Instructor" ? "text-cyan-700" : "text-slate-600"}`}
-                    >
-                      Instructor
-                    </span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
             <button
               type="submit"
               disabled={isPending}
@@ -307,6 +293,37 @@ export default function Register() {
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
             </button>
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-slate-500 font-medium">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                disabled={isGoogleLoading}
+                onClick={handleGoogleSignUp}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all disabled:opacity-70"
+              >
+                {isGoogleLoading ? (
+                  <div className="w-6 h-6 border-2 border-slate-300 border-t-cyan-500 rounded-full animate-spin" />
+                ) : (
+                  <FcGoogle size={24} />
+                )}
+                <span>
+                  {isGoogleLoading ? "Signing up..." : "Sign up with Google"}
+                </span>
+              </button>
+            </div>
+          </div>
 
           <p className="mt-10 text-center text-slate-500 font-semibold tracking-tight">
             Already have an account?{" "}

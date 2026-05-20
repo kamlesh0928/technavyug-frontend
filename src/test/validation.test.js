@@ -13,12 +13,16 @@ describe("Validation Schemas", () => {
 
     it("should fail with invalid email", async () => {
       const data = { email: "not-an-email", password: "password123" };
-      await expect(loginSchema.validate(data)).rejects.toThrow("Please enter a valid email address");
+      await expect(loginSchema.validate(data)).rejects.toThrow(
+        "Please enter a valid email address",
+      );
     });
 
     it("should fail with short password", async () => {
       const data = { email: "user@test.com", password: "123" };
-      await expect(loginSchema.validate(data)).rejects.toThrow("Password must be at least 6 characters");
+      await expect(loginSchema.validate(data)).rejects.toThrow(
+        "Password must be at least 6 characters",
+      );
     });
 
     it("should fail with empty fields", async () => {
@@ -46,7 +50,9 @@ describe("Validation Schemas", () => {
         confirmPassword: "Different1",
         role: "Student",
       };
-      await expect(signupSchema.validate(data)).rejects.toThrow("Passwords do not match");
+      await expect(signupSchema.validate(data)).rejects.toThrow(
+        "Passwords do not match",
+      );
     });
 
     it("should fail without name", async () => {

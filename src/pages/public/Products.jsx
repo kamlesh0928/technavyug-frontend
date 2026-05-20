@@ -98,7 +98,7 @@ export default function Products() {
         <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
           <div className="max-w-2xl">
             <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <LuSparkles size={12} /> Technavyug Digital Store
+              <LuSparkles size={12} /> Technavyug Pvt. Ltd. Digital Store
             </p>
             <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
               Discover Premium{" "}

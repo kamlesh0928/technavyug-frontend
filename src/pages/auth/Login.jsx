@@ -2,17 +2,24 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { FcGoogle } from "react-icons/fc";
 import { useNavigate, Link } from "react-router-dom";
 
 import { useLogin } from "@/hooks/useLogin";
 import { loginSchema } from "@/utils/validation/loginSchema";
 import { useMutation } from "@tanstack/react-query";
-import { resendVerification } from "@/api/authApi";
+import { resendVerification, googleLogin } from "@/api/authApi";
 import { toast } from "react-toastify";
+import { auth, googleProvider } from "@/config/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "@/store/Slices/authSlice";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const {
     register,
@@ -41,7 +48,9 @@ const LoginPage = () => {
   const resendMutation = useMutation({
     mutationFn: resendVerification,
     onSuccess: (data) => {
-      toast.success(data.message || "Verification email sent! Check your inbox.");
+      toast.success(
+        data.message || "Verification email sent! Check your inbox.",
+      );
       setCountdown(60); // Start 60s cooldown
     },
     onError: (err) => {
@@ -81,6 +90,46 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsGoogleLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const backendResponse = await googleLogin(idToken);
+
+      dispatch(setUser(backendResponse.user));
+      dispatch(setToken(backendResponse.accessToken));
+
+      toast.success("Logged in successfully with Google!");
+      const redirectPath =
+        backendResponse.user.role === "Student" ||
+        backendResponse.user.role === "Guest"
+          ? "/student"
+          : backendResponse.user.role === "Instructor"
+            ? "/instructor"
+            : "/admin";
+
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+
+      let errorMessage = "Failed to sign in with Google.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.code) {
+        // Firebase errors
+        errorMessage = `Firebase Error: ${error.message}`;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-white">
       {/* Left Side */}
@@ -109,7 +158,7 @@ const LoginPage = () => {
           </p>
         </div>
         <div className="relative z-10 text-sm text-gray-400 font-medium">
-          &copy; 2026 Technavyug Education
+          &copy; 2026 Technavyug Pvt. Ltd. Education
         </div>
       </div>
 
@@ -271,6 +320,37 @@ const LoginPage = () => {
               </div>
             )}
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500 font-medium">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                disabled={isGoogleLoading}
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 text-gray-700 font-bold py-3.5 rounded-2xl shadow-sm hover:bg-gray-50 hover:border-gray-200 active:scale-[0.98] transition-all disabled:opacity-70"
+              >
+                {isGoogleLoading ? (
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-cyan-500 rounded-full animate-spin" />
+                ) : (
+                  <FcGoogle size={24} />
+                )}
+                <span>
+                  {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
+                </span>
+              </button>
+            </div>
+          </div>
 
           <p className="mt-12 text-center text-gray-500 font-medium">
             New to Technavyug?{" "}

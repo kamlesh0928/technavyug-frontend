@@ -21,7 +21,7 @@ export default function Comparison() {
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/20 mb-6">
               <LuZap className="text-cyan-400 text-xs" />
               <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
-                Technavyug Edge
+                Technavyug Pvt. Ltd. Edge
               </span>
             </div>
 
