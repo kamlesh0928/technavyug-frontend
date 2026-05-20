@@ -1,27 +1,62 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminService } from "@/services/admin.services";
-import { instructorService } from "@/services/instructor.services";
 import {
   LuSearch,
   LuEye,
   LuTrash,
   LuBookOpen,
   LuCircleCheck,
-  LuFileText,
   LuUsers,
   LuFilter,
+  LuPlus,
+  LuPencil,
+  LuX,
 } from "react-icons/lu";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminCourses() {
+  const { user: currentUser } = useAuth();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("");
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const isSuperAdmin = currentUser?.role === "Super Admin";
+
+  // Modals state
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  // Form states
+  const [createFormData, setCreateFormData] = useState({
+    title: "",
+    shortDescription: "",
+    description: "",
+    level: "Beginner",
+    price: 0,
+    language: "English",
+    categoryId: "",
+    thumbnail: "",
+  });
+
+  const [editFormData, setEditFormData] = useState({
+    title: "",
+    shortDescription: "",
+    description: "",
+    level: "Beginner",
+    price: 0,
+    language: "English",
+    categoryId: "",
+    status: "Draft",
+    thumbnail: "",
+  });
+
+  // Queries
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-courses", { search, page, status: statusFilter }],
     queryFn: () =>
       adminService.getAllCourses({
@@ -32,7 +67,13 @@ export default function AdminCourses() {
       }),
   });
 
-  // Fetch dashboard analytics for accurate aggregate stats
+  // Fetch categories dynamically for dropdown selection
+  const { data: categoriesData } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminService.getCategories(),
+  });
+
+  // Fetch dashboard analytics for stats
   const { data: analytics } = useQuery({
     queryKey: ["admin-analytics"],
     queryFn: adminService.getAnalytics,
@@ -41,25 +82,85 @@ export default function AdminCourses() {
   const courses = data?.data || [];
   const pagination = data?.pagination || { totalPages: 1 };
   const courseStats = analytics?.data?.courses;
+  const categories = categoriesData?.data || [];
 
-  // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: (id) => instructorService.deleteCourse(id),
-    onSuccess: () => {
-      toast.success("Course deleted successfully");
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await adminService.createCourse({
+        ...createFormData,
+        price: parseFloat(createFormData.price) || 0,
+        categoryId: createFormData.categoryId || null,
+      });
+      toast.success("Course created successfully!");
+      setIsCreateModalOpen(false);
+      setCreateFormData({
+        title: "",
+        shortDescription: "",
+        description: "",
+        level: "Beginner",
+        price: 0,
+        language: "English",
+        categoryId: "",
+        thumbnail: "",
+      });
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
       queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
-    },
-    onError: (e) => toast.error(e?.userMessage || "Failed to delete course"),
-  });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to create course");
+    }
+  };
 
-  const handleDelete = (course) => {
+  const handleEditClick = (course) => {
+    setSelectedCourse(course);
+    setEditFormData({
+      title: course.title || "",
+      shortDescription: course.shortDescription || "",
+      description: course.description || "",
+      level: course.level || "Beginner",
+      price: parseFloat(course.price) || 0,
+      language: course.language || "English",
+      categoryId: course.categoryId || "",
+      status: course.status || "Draft",
+      thumbnail: course.thumbnail || "",
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await adminService.updateCourse(selectedCourse.id, {
+        ...editFormData,
+        price: parseFloat(editFormData.price) || 0,
+        categoryId: editFormData.categoryId || null,
+      });
+      toast.success("Course updated successfully!");
+      setIsEditModalOpen(false);
+      setSelectedCourse(null);
+      queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update course");
+    }
+  };
+
+  const handleDeleteClick = async (course) => {
     if (
       window.confirm(
-        `Are you sure you want to delete "${course.title}"? This action cannot be undone.`,
+        `Are you absolutely sure you want to permanently delete course "${course.title}"? This action cannot be undone.`,
       )
     ) {
-      deleteMutation.mutate(course.id);
+      try {
+        await adminService.deleteCourse(course.id);
+        toast.success("Course deleted successfully!");
+        queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.message || "Failed to delete course",
+        );
+      }
     }
   };
 
@@ -91,12 +192,25 @@ export default function AdminCourses() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-gray-900">Course Management</h1>
-        <p className="text-gray-500 mt-1">
-          Review and manage all courses on the platform
-        </p>
+    <div className="space-y-8 min-h-screen pb-12">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900">
+            Course Management
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Review and manage all courses on the platform
+          </p>
+        </div>
+        {isSuperAdmin && (
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-[#0f2c59] hover:from-cyan-600 hover:to-[#091b3a] text-white font-semibold rounded-xl shadow-md shadow-cyan-500/10 hover:shadow-lg transition-all duration-200"
+          >
+            <LuPlus size={20} />
+            <span>Add Course</span>
+          </button>
+        )}
       </div>
 
       {/* Stats Grid */}
@@ -270,7 +384,7 @@ export default function AdminCourses() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1">
                         <Link
                           to={`/courses/${c.slug}`}
                           className="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 rounded-lg transition-all"
@@ -278,13 +392,28 @@ export default function AdminCourses() {
                         >
                           <LuEye size={18} />
                         </Link>
-                        <button
-                          onClick={() => handleDelete(c)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                          title="Delete Course"
-                        >
-                          <LuTrash size={18} />
-                        </button>
+                        {isSuperAdmin ? (
+                          <>
+                            <button
+                              onClick={() => handleEditClick(c)}
+                              className="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 rounded-lg transition-all"
+                              title="Edit Course"
+                            >
+                              <LuPencil size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClick(c)}
+                              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                              title="Delete Course"
+                            >
+                              <LuTrash size={18} />
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-[10px] text-gray-400 italic ml-2">
+                            Read Only
+                          </span>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -318,6 +447,410 @@ export default function AdminCourses() {
           </div>
         )}
       </div>
+
+      {/* CREATE COURSE MODAL */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100 flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+              <h2 className="text-xl font-bold text-gray-900">
+                Add New Course
+              </h2>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LuX size={20} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleCreateSubmit}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Course Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createFormData.title}
+                  onChange={(e) =>
+                    setCreateFormData({
+                      ...createFormData,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                  placeholder="Mastering React & Redux"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Difficulty Level *
+                  </label>
+                  <select
+                    value={createFormData.level}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        level: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    required
+                    value={createFormData.price}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        price: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                    placeholder="0 for Free"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Language *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={createFormData.language}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        language: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                    placeholder="English"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Thumbnail URL
+                </label>
+                <input
+                  type="text"
+                  value={createFormData.thumbnail}
+                  onChange={(e) =>
+                    setCreateFormData({
+                      ...createFormData,
+                      thumbnail: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                  placeholder="https://images.unsplash.com/..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Short Description *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createFormData.shortDescription}
+                  onChange={(e) =>
+                    setCreateFormData({
+                      ...createFormData,
+                      shortDescription: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                  placeholder="A brief overview of the course..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Full Description
+                </label>
+                <textarea
+                  value={createFormData.description}
+                  onChange={(e) =>
+                    setCreateFormData({
+                      ...createFormData,
+                      description: e.target.value,
+                    })
+                  }
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none resize-none"
+                  placeholder="Detailed course description..."
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="px-4 py-2 border border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-[#0f2c59] text-white font-semibold rounded-lg shadow-md hover:from-cyan-600 hover:to-[#091b3a] transition-all text-sm"
+                >
+                  Create Course
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT COURSE MODAL */}
+      {isEditModalOpen && selectedCourse && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100 flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Edit Course Details
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Modify parameters for course listings
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setSelectedCourse(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LuX size={20} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleEditSubmit}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Course Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.title}
+                  onChange={(e) =>
+                    setEditFormData({ ...editFormData, title: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                  placeholder="Mastering React & Redux"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Category *
+                  </label>
+                  <select
+                    required
+                    value={editFormData.categoryId}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        categoryId: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Difficulty Level *
+                  </label>
+                  <select
+                    value={editFormData.level}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        level: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    required
+                    value={editFormData.price}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        price: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                    placeholder="0 for Free"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Language *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editFormData.language}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        language: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                    placeholder="English"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Thumbnail URL
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.thumbnail}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        thumbnail: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                    placeholder="https://images.unsplash.com/..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Status *
+                  </label>
+                  <select
+                    value={editFormData.status}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        status: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Published">Published</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Short Description *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.shortDescription}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      shortDescription: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
+                  placeholder="A brief overview of the course..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Full Description
+                </label>
+                <textarea
+                  value={editFormData.description}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      description: e.target.value,
+                    })
+                  }
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none resize-none"
+                  placeholder="Detailed course description..."
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    setSelectedCourse(null);
+                  }}
+                  className="px-4 py-2 border border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-[#0f2c59] text-white font-semibold rounded-lg shadow-md hover:from-cyan-600 hover:to-[#091b3a] transition-all text-sm"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

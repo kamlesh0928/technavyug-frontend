@@ -26,7 +26,8 @@ export default function VerifyEmail() {
   const redirectToDashboard = useCallback(() => {
     if (isAuthenticated && user) {
       const role = user.role;
-      if (role === "Admin" || role === "Sub Admin") navigate("/admin");
+      if (role === "Super Admin" || role === "Admin" || role === "Sub Admin")
+        navigate("/admin");
       else if (role === "Instructor") navigate("/instructor");
       else navigate("/student");
     } else {

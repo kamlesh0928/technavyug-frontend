@@ -30,7 +30,6 @@ import Register from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
-import SelectRole from "@/pages/auth/SelectRole";
 
 // New Blog Pages
 import BlogDetail from "@/pages/public/BlogDetail";
@@ -105,7 +104,6 @@ function App() {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
         <Route path="verify-email" element={<VerifyEmail />} />
-        <Route path="select-role" element={<SelectRole />} />
 
         {/* Admin Routes */}
         <Route
@@ -164,7 +162,10 @@ function App() {
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="checkout" element={<StudentCheckout />} />
-          <Route path="purchase-course/:courseId" element={<StudentCoursePurchase />} />
+          <Route
+            path="purchase-course/:courseId"
+            element={<StudentCoursePurchase />}
+          />
           <Route path="payment-status" element={<StudentPaymentStatus />} />
         </Route>
       </Routes>
