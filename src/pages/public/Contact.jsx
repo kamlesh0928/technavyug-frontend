@@ -38,8 +38,8 @@ export default function Contact() {
     {
       icon: LuPhone,
       title: "Call Us",
-      detail: "+91 9876 543 210",
-      desc: "Monday to Friday, 9 AM - 6 PM",
+      detail: "+91 9451689037, +91 7007017009",
+      desc: "Monday to Saturday, 9 AM - 6 PM",
     },
     {
       icon: LuMapPin,

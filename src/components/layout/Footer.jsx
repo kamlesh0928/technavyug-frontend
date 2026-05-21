@@ -44,12 +44,12 @@ const socials = [
   },
   {
     icon: FaFacebook,
-    href: "https://www.facebook.com/technavyug/",
+    href: "https://www.facebook.com/people/Technavyug/61589980601965/",
     color: "text-[#1877F2]",
   },
   {
     icon: FaXTwitter,
-    href: "https://twitter.com/technavyug",
+    href: "https://x.com/Technavyug17",
     color: "text-white",
   },
 ];
