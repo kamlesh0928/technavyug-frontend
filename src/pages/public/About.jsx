@@ -90,7 +90,7 @@ export default function About() {
                   <div className="relative w-40 h-40 mb-5">
                     <div className="absolute inset-0 rounded-full border-[3px] border-cyan-500 overflow-hidden">
                       <img
-                        src="https://res.cloudinary.com/drhrgs6y5/image/upload/v1779286494/Tushant_Kumar_weusrw.png"
+                        src="https://res.cloudinary.com/dtiulkydz/image/upload/v1779349121/Tushant_Kumar_weusrw_rftes7.png"
                         alt="Tushant Kumar"
                         className="w-full h-full object-cover"
                       />
@@ -155,7 +155,7 @@ export default function About() {
                   <div className="relative w-40 h-40 mb-5">
                     <div className="absolute inset-0 rounded-full border-[3px] border-cyan-500 overflow-hidden">
                       <img
-                        src="https://res.cloudinary.com/drhrgs6y5/image/upload/v1779286486/Ashutosh_Kumar_iprasv.png"
+                        src="https://res.cloudinary.com/dtiulkydz/image/upload/v1779349120/Ashutosh_Kumar_iprasv_b5hakk.png"
                         alt="Ashutosh Kumar"
                         className="w-full h-full object-cover"
                       />
@@ -230,14 +230,14 @@ export default function About() {
                   name: "Kamlesh Prajapati",
                   role: "Software Engineer",
                   image:
-                    "https://res.cloudinary.com/drhrgs6y5/image/upload/v1779286473/My_compressed_v0qld3.png",
+                    "https://res.cloudinary.com/dtiulkydz/image/upload/v1779349118/My_compressed_v0qld3_lgiihm.png",
                   color: "border-cyan-500",
                 },
                 {
                   name: "Sanjana Kesharwani",
                   role: "Software Engineer",
                   image:
-                    "https://res.cloudinary.com/drhrgs6y5/image/upload/v1779286472/sanjana.jpg_ansk38.jpg",
+                    "https://res.cloudinary.com/dtiulkydz/image/upload/v1779349118/sanjana.jpg_ansk38_biqb38.jpg",
                   color: "border-green-500",
                 },
               ].map((member, i) => (
