@@ -5,14 +5,14 @@ import { LuShoppingCart } from "react-icons/lu";
 export default function FeaturedProducts() {
   const products = [
     {
-      title: "Raspberry Pi 4 Model B",
+      title: "Raspberry Pi 2 Model B",
       description: "8GB RAM, Broadcom BCM2711, Quad core Cortex-A72",
-      img: "https://images.unsplash.com/photo-1553406830-ef2513450d76?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1552283576-3ea3519bf12e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJhc3BiZXJyeSUyMHBpfGVufDB8fDB8fHww",
     },
     {
       title: "Arduino Uno R3",
       description: "ATmega328P microcontroller based board",
-      img: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?q=80&w=800",
+      img: "https://images.unsplash.com/photo-1553406830-ef2513450d76?q=80&w=800",
     },
     {
       title: "IoT Starter Kit",
