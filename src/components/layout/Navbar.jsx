@@ -25,11 +25,13 @@ const navLinks = [
 
 const getRoleDashboard = (role) => {
   switch (role) {
+    case "Super Admin":
     case "Admin":
     case "Sub Admin":
       return "/admin";
     case "Instructor":
       return "/instructor";
+    case "Student":
     default:
       return "/student";
   }
