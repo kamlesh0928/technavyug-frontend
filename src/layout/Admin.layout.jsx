@@ -30,6 +30,8 @@ export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  //console.log("AdminLayout - User:", user);
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}

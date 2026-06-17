@@ -2,6 +2,7 @@ import { api } from "@/services/axiosInstance";
 
 export const loginUser = async (data) => {
   const response = await api.post("/auth/login", data);
+  console.log("Login Response:", response?.data);
   return response?.data;
 };
 
@@ -43,4 +44,4 @@ export const googleLogin = async (idToken) => {
 export const updateUserRole = async (role) => {
   const response = await api.post("/auth/update-role", { role });
   return response?.data;
-};
+};
