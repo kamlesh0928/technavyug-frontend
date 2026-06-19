@@ -1,7 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { adminService } from "@/services/admin.services";
 import { useState } from "react";
-import { LuSearch, LuShield, LuBan, LuPlus, LuPencil, LuTrash2, LuX } from "react-icons/lu";
+import {
+  LuSearch,
+  LuShield,
+  LuBan,
+  LuPlus,
+  LuPencil,
+  LuTrash2,
+  LuX,
+} from "react-icons/lu";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -34,8 +42,6 @@ export default function AdminUsers() {
     bio: "",
   });
 
-  //console.log("Current User:", currentUser);
-
   const isSuperAdmin = currentUser?.role === "Super Admin";
 
   const { data, isLoading, refetch } = useQuery({
@@ -51,7 +57,11 @@ export default function AdminUsers() {
       toast.success(`Role updated to ${newRole}`);
       await refetch();
     } catch (error) {
-      toast.error(error?.response?.data?.message || error?.userMessage || "Failed to update role");
+      toast.error(
+        error?.response?.data?.message ||
+          error?.userMessage ||
+          "Failed to update role",
+      );
     }
   };
 
@@ -61,7 +71,11 @@ export default function AdminUsers() {
       toast.success(`User ${status === "Blocked" ? "blocked" : "activated"}`);
       await refetch();
     } catch (error) {
-      toast.error(error?.response?.data?.message || error?.userMessage || "Failed to update user status");
+      toast.error(
+        error?.response?.data?.message ||
+          error?.userMessage ||
+          "Failed to update user status",
+      );
     }
   };
 
@@ -112,7 +126,11 @@ export default function AdminUsers() {
   };
 
   const handleDeleteClick = async (userId, userName) => {
-    if (window.confirm(`Are you absolutely sure you want to permanently delete user "${userName}"? This action cannot be undone.`)) {
+    if (
+      window.confirm(
+        `Are you absolutely sure you want to permanently delete user "${userName}"? This action cannot be undone.`,
+      )
+    ) {
       try {
         await adminService.deleteUser(userId);
         toast.success("User deleted successfully!");
@@ -184,13 +202,19 @@ export default function AdminUsers() {
             <tbody className="divide-y divide-gray-50">
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-gray-400"
+                  >
                     Loading...
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-gray-400"
+                  >
                     No users found
                   </td>
                 </tr>
@@ -211,14 +235,21 @@ export default function AdminUsers() {
                       {user.email}
                     </td>
                     <td className="px-6 py-4">
-                      {!isSuperAdmin || user.role === "Super Admin" || (user.role === "Admin" && currentUser?.role !== "Super Admin") ? (
-                        <span className={`text-xs font-bold px-2 py-1 rounded ${user.role === "Super Admin" ? "text-red-600 bg-red-50" : "text-purple-600 bg-purple-50"}`}>
+                      {!isSuperAdmin ||
+                      user.role === "Super Admin" ||
+                      (user.role === "Admin" &&
+                        currentUser?.role !== "Super Admin") ? (
+                        <span
+                          className={`text-xs font-bold px-2 py-1 rounded ${user.role === "Super Admin" ? "text-red-600 bg-red-50" : "text-purple-600 bg-purple-50"}`}
+                        >
                           {user.role}
                         </span>
                       ) : (
                         <select
                           value={user.role}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          onChange={(e) =>
+                            handleRoleChange(user.id, e.target.value)
+                          }
                           className={`text-xs font-bold px-2 py-1 rounded cursor-pointer outline-none ${user.role === "Super Admin" ? "bg-red-50 text-red-600" : user.role === "Admin" ? "bg-purple-50 text-purple-600" : "bg-cyan-50 text-cyan-600"}`}
                         >
                           <option value="Student">Student</option>
@@ -226,12 +257,16 @@ export default function AdminUsers() {
                           <option value="Sub Admin">Sub Admin</option>
                           <option value="Guest">Guest</option>
                           <option value="Admin">Admin</option>
-                          {currentUser?.role === "Super Admin" && <option value="Super Admin">Super Admin</option>}
+                          {currentUser?.role === "Super Admin" && (
+                            <option value="Super Admin">Super Admin</option>
+                          )}
                         </select>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`text-xs font-bold px-2 py-1 rounded ${user.status === "Active" ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}>
+                      <span
+                        className={`text-xs font-bold px-2 py-1 rounded ${user.status === "Active" ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}
+                      >
                         {user.status}
                       </span>
                     </td>
@@ -245,10 +280,12 @@ export default function AdminUsers() {
                           >
                             <LuPencil size={16} />
                           </button>
-                          
+
                           {user.status === "Active" ? (
                             <button
-                              onClick={() => handleStatusChange(user.id, "Blocked")}
+                              onClick={() =>
+                                handleStatusChange(user.id, "Blocked")
+                              }
                               className="text-amber-500 hover:text-amber-700 p-1 hover:bg-amber-50 rounded transition-colors"
                               title="Block user"
                             >
@@ -256,7 +293,9 @@ export default function AdminUsers() {
                             </button>
                           ) : (
                             <button
-                              onClick={() => handleStatusChange(user.id, "Active")}
+                              onClick={() =>
+                                handleStatusChange(user.id, "Active")
+                              }
                               className="text-green-500 hover:text-green-700 p-1 hover:bg-green-50 rounded transition-colors"
                               title="Activate user"
                             >
@@ -266,7 +305,9 @@ export default function AdminUsers() {
 
                           {user.id !== currentUser.id && (
                             <button
-                              onClick={() => handleDeleteClick(user.id, user.name)}
+                              onClick={() =>
+                                handleDeleteClick(user.id, user.name)
+                              }
                               className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition-colors"
                               title="Delete user"
                             >
@@ -275,7 +316,9 @@ export default function AdminUsers() {
                           )}
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">View Only</span>
+                        <span className="text-xs text-gray-400 italic">
+                          View Only
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -300,26 +343,43 @@ export default function AdminUsers() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
+            <form
+              onSubmit={handleCreateSubmit}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Full Name *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Full Name *
+                  </label>
                   <input
                     type="text"
                     required
                     value={createFormData.name}
-                    onChange={(e) => setCreateFormData({ ...createFormData, name: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        name: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                     placeholder="John Doe"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Email Address *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Email Address *
+                  </label>
                   <input
                     type="email"
                     required
                     value={createFormData.email}
-                    onChange={(e) => setCreateFormData({ ...createFormData, email: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        email: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                     placeholder="john@example.com"
                   />
@@ -328,22 +388,36 @@ export default function AdminUsers() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Password *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Password *
+                  </label>
                   <input
                     type="password"
                     required
                     value={createFormData.password}
-                    onChange={(e) => setCreateFormData({ ...createFormData, password: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        password: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                     placeholder="••••••••"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Phone Number</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Phone Number
+                  </label>
                   <input
                     type="text"
                     value={createFormData.phone}
-                    onChange={(e) => setCreateFormData({ ...createFormData, phone: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        phone: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                     placeholder="+1 555-0199"
                   />
@@ -352,10 +426,17 @@ export default function AdminUsers() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Role *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Role *
+                  </label>
                   <select
                     value={createFormData.role}
-                    onChange={(e) => setCreateFormData({ ...createFormData, role: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        role: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
                   >
                     <option value="Student">Student</option>
@@ -367,10 +448,17 @@ export default function AdminUsers() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Status *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Status *
+                  </label>
                   <select
                     value={createFormData.status}
-                    onChange={(e) => setCreateFormData({ ...createFormData, status: e.target.value })}
+                    onChange={(e) =>
+                      setCreateFormData({
+                        ...createFormData,
+                        status: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium"
                   >
                     <option value="Active">Active</option>
@@ -380,10 +468,17 @@ export default function AdminUsers() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Bio / Profile Notes</label>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Bio / Profile Notes
+                </label>
                 <textarea
                   value={createFormData.bio}
-                  onChange={(e) => setCreateFormData({ ...createFormData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setCreateFormData({
+                      ...createFormData,
+                      bio: e.target.value,
+                    })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none resize-none"
                   placeholder="Short bio details..."
@@ -416,8 +511,12 @@ export default function AdminUsers() {
           <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100 flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Edit User Profile</h2>
-                <p className="text-xs text-gray-500 mt-0.5">{selectedUser.email}</p>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Edit User Profile
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {selectedUser.email}
+                </p>
               </div>
               <button
                 onClick={() => {
@@ -430,14 +529,21 @@ export default function AdminUsers() {
               </button>
             </div>
 
-            <form onSubmit={handleEditSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
+            <form
+              onSubmit={handleEditSubmit}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Full Name *</label>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Full Name *
+                </label>
                 <input
                   type="text"
                   required
                   value={editFormData.name}
-                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditFormData({ ...editFormData, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                   placeholder="John Doe"
                 />
@@ -445,11 +551,15 @@ export default function AdminUsers() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Role *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Role *
+                  </label>
                   <select
                     value={editFormData.role}
                     disabled={selectedUser.id === currentUser.id}
-                    onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                    onChange={(e) =>
+                      setEditFormData({ ...editFormData, role: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
                   >
                     <option value="Student">Student</option>
@@ -461,11 +571,18 @@ export default function AdminUsers() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Status *</label>
+                  <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                    Status *
+                  </label>
                   <select
                     value={editFormData.status}
                     disabled={selectedUser.id === currentUser.id}
-                    onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        status: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none bg-white font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
                   >
                     <option value="Active">Active</option>
@@ -475,21 +592,29 @@ export default function AdminUsers() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Phone Number</label>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Phone Number
+                </label>
                 <input
                   type="text"
                   value={editFormData.phone}
-                  onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                  onChange={(e) =>
+                    setEditFormData({ ...editFormData, phone: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
                   placeholder="+1 555-0199"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Bio / Profile Notes</label>
+                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">
+                  Bio / Profile Notes
+                </label>
                 <textarea
                   value={editFormData.bio}
-                  onChange={(e) => setEditFormData({ ...editFormData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setEditFormData({ ...editFormData, bio: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-cyan-400 outline-none resize-none"
                   placeholder="Short bio details..."

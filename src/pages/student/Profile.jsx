@@ -26,8 +26,6 @@ export default function StudentProfile() {
 
   const navigate = useNavigate();
 
-  //console.log("StudentProfile - User:", user);
-
   // SHOW ADD PASSWORD CONDITION
   const shouldShowAddPassword = !user?.passwordSet;
 

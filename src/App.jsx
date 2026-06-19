@@ -8,10 +8,10 @@ import InstructorLayout from "@/layout/Instructor.layout";
 import StudentLayout from "@/layout/Student.layout";
 import CartDrawer from "@/components/ui/CartDrawer";
 
-// Guards
 import AdminGuard from "@/guards/Admin.guard";
 import InstructorGuard from "@/guards/Instructor.guard";
 import StudentGuard from "@/guards/Student.guard";
+import AuthGuard from "@/guards/Auth.guard";
 
 // Public Pages
 import Home from "@/pages/public/Home";
@@ -105,6 +105,32 @@ function App() {
         <Route path="reset-password" element={<ResetPassword />} />
         <Route path="verify-email" element={<VerifyEmail />} />
 
+        {/* Purchase Routes - accessible to all authenticated users */}
+        <Route
+          path="checkout"
+          element={
+            <AuthGuard>
+              <StudentCheckout />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="purchase-course/:courseId"
+          element={
+            <AuthGuard>
+              <StudentCoursePurchase />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="payment-status"
+          element={
+            <AuthGuard>
+              <StudentPaymentStatus />
+            </AuthGuard>
+          }
+        />
+
         {/* Admin Routes */}
         <Route
           path="admin"
@@ -161,12 +187,18 @@ function App() {
           <Route path="learning/:courseId" element={<StudentLearning />} />
           <Route path="orders" element={<StudentOrders />} />
           <Route path="profile" element={<StudentProfile />} />
-          <Route path="checkout" element={<StudentCheckout />} />
+          <Route
+            path="checkout"
+            element={<Navigate to="/checkout" replace />}
+          />
           <Route
             path="purchase-course/:courseId"
             element={<StudentCoursePurchase />}
           />
-          <Route path="payment-status" element={<StudentPaymentStatus />} />
+          <Route
+            path="payment-status"
+            element={<Navigate to="/payment-status" replace />}
+          />
         </Route>
       </Routes>
     </>
