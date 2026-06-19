@@ -82,7 +82,7 @@ export default function Products() {
         });
         return;
       }
-      navigate("/student/checkout", {
+      navigate("/checkout", {
         state: { buyNowItem: { ...product, quantity: 1 } },
       });
     },

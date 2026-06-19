@@ -79,6 +79,16 @@ export const adminService = {
     return response.data;
   },
 
+  updateOrderStatus: async (orderId, status) => {
+    const response = await api.patch(`/orders/${orderId}/status`, { status });
+    return response.data;
+  },
+
+  getAllTransactions: async (params = {}) => {
+    const response = await api.get("/orders/transactions", { params });
+    return response.data;
+  },
+
   // Products
   getProducts: async (params = {}) => {
     const response = await api.get("/products", { params });

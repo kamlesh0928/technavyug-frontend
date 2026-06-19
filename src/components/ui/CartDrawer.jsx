@@ -104,7 +104,7 @@ export default function CartDrawer() {
       navigate("/login", { state: { from: "/products" } });
     } else {
       // TODO: navigate to checkout page
-      navigate("/student/checkout");
+      navigate("/checkout");
     }
   };
 

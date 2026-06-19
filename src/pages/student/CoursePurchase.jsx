@@ -83,7 +83,7 @@ export default function CoursePurchase() {
     if (!user) {
       navigate("/login", {
         state: {
-          from: `/student/purchase-course/${courseId}`,
+          from: `/purchase-course/${courseId}`,
         },
       });
       return;

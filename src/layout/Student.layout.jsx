@@ -24,8 +24,6 @@ export default function StudentLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  //console.log("StudentLayout - User:", user);
-
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}

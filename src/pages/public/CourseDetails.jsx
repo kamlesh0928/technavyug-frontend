@@ -24,13 +24,12 @@ export default function CourseDetails() {
   });
 
   const course = data?.data;
-  console.log("Fetched course details:", course);
 
   const enrollMutation = useMutation({
     mutationFn: (courseId) => studentService.enrollInCourse(courseId),
     onSuccess: (res) => {
       toast.success(
-        res.message || "Enrolled successfully! Enjoy your learning. 🚀",
+        res.message || "Enrolled successfully! Enjoy your learning.",
       );
       navigate("/student/courses");
     },
@@ -51,7 +50,7 @@ export default function CourseDetails() {
     if (parseFloat(course.price) === 0) {
       enrollMutation.mutate(course.id);
     } else {
-      navigate(`/student/purchase-course/${course.id}`);
+      navigate(`/purchase-course/${course.id}`);
     }
   };
 
