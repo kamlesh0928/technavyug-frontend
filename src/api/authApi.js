@@ -43,4 +43,4 @@ export const googleLogin = async (idToken) => {
 export const updateUserRole = async (role) => {
   const response = await api.post("/auth/update-role", { role });
   return response?.data;
-};
+};

@@ -47,6 +47,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  //console.log("Navbar - User:", user);
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 10);

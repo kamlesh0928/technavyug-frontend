@@ -14,6 +14,8 @@ export default function AdminSettings() {
   const { user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
 
+  //console.log("AdminSettings - User:", user);
+
   const handleSaveProfile = (e) => {
     e.preventDefault();
     setIsSaving(true);

@@ -34,6 +34,8 @@ export default function AdminUsers() {
     bio: "",
   });
 
+  //console.log("Current User:", currentUser);
+
   const isSuperAdmin = currentUser?.role === "Super Admin";
 
   const { data, isLoading, refetch } = useQuery({
