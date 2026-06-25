@@ -155,10 +155,6 @@ export default function Checkout() {
     ? parseFloat(buyNowItem.price) * buyNowItem.quantity
     : reduxCartTotal;
 
-  // GST Calculations
-  const gstAmount = Math.round(((cartTotal * GST_RATE) / 100) * 100) / 100;
-  const subtotalWithGST = cartTotal + gstAmount;
-
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [couponCode, setCouponCode] = useState("");
@@ -227,7 +223,7 @@ export default function Checkout() {
     if (!couponCode.trim()) return;
     couponMutation.mutate({
       code: couponCode,
-      subtotal: subtotalWithGST,
+      subtotal: cartTotal, // Validate on base subtotal without GST
       applicableTo: "product",
     });
   };
@@ -248,7 +244,9 @@ export default function Checkout() {
   };
 
   const discountAmount = couponResult?.discountAmount || 0;
-  const finalTotal = Math.max(0, subtotalWithGST - discountAmount);
+  const discountedBase = Math.max(0, cartTotal - discountAmount);
+  const gstAmount = Math.round(((discountedBase * GST_RATE) / 100) * 100) / 100;
+  const finalTotal = Math.round((discountedBase + gstAmount) * 100) / 100;
 
   const handlePay = async () => {
     if (!selectedAddressId) {

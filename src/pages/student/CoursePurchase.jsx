@@ -43,14 +43,11 @@ export default function CoursePurchase() {
 
   // Pricing Calculations
   const price = course ? parseFloat(course.price) : 0;
-
-  const gstAmount = Math.round(((price * GST_RATE) / 100) * 100) / 100;
-
-  const subtotalWithGST = price + gstAmount;
-
   const discountAmount = couponResult?.discountAmount || 0;
+  const discountedBase = Math.max(0, price - discountAmount);
 
-  const finalAmount = Math.max(0, subtotalWithGST - discountAmount);
+  const gstAmount = Math.round(((discountedBase * GST_RATE) / 100) * 100) / 100;
+  const finalAmount = Math.round((discountedBase + gstAmount) * 100) / 100;
 
   const couponMutation = useMutation({
     mutationFn: (d) => studentService.validateCoupon(d),
@@ -69,7 +66,7 @@ export default function CoursePurchase() {
 
     couponMutation.mutate({
       code: couponCode,
-      subtotal: subtotalWithGST,
+      subtotal: price, // Validate on base price without GST
       applicableTo: "course",
     });
   };
