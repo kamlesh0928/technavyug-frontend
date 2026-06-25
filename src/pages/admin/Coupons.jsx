@@ -10,17 +10,49 @@ import {
   LuSearch,
   LuX,
   LuLoader,
+  LuCalendar,
+  LuClock,
 } from "react-icons/lu";
+
+// Helper to format ISO string to YYYY-MM-DDTHH:MM for datetime-local input
+const formatForInput = (isoString) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  const mm = pad(date.getMonth() + 1);
+  const dd = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const min = pad(date.getMinutes());
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+};
+
+// Helper to format ISO string to human-readable date and time
+const formatDateTime = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 function CouponModal({ coupon, onClose, onSave, saving }) {
   const isEdit = !!coupon?.id;
   const [form, setForm] = useState({
     code: coupon?.code || "",
+    description: coupon?.description || "",
     discountType: coupon?.discountType || "percentage",
     discountValue: coupon?.discountValue || "",
     maxDiscount: coupon?.maxDiscount || "",
     minOrderAmount: coupon?.minOrderAmount || "0",
-    expiryDate: coupon?.expiryDate || "",
+    startDate: formatForInput(coupon?.startDate),
+    expiryDate: formatForInput(coupon?.expiryDate),
     usageLimit: coupon?.usageLimit || "",
     applicableTo: coupon?.applicableTo || "all",
     isActive: coupon?.isActive !== undefined ? coupon.isActive : true,
@@ -41,6 +73,8 @@ function CouponModal({ coupon, onClose, onSave, saving }) {
       discountValue: parseFloat(form.discountValue),
       maxDiscount: form.maxDiscount ? parseFloat(form.maxDiscount) : null,
       minOrderAmount: parseFloat(form.minOrderAmount || 0),
+      startDate: form.startDate ? new Date(form.startDate).toISOString() : null,
+      expiryDate: new Date(form.expiryDate).toISOString(),
       usageLimit: form.usageLimit ? parseInt(form.usageLimit) : null,
     };
     onSave(payload);
@@ -81,6 +115,19 @@ function CouponModal({ coupon, onClose, onSave, saving }) {
               required
               placeholder="SAVE20"
               className={`${inputClass} uppercase tracking-wider`}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Enter coupon description or details..."
+              rows={3}
+              className={inputClass}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -146,18 +193,33 @@ function CouponModal({ coupon, onClose, onSave, saving }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">
-                Expiry Date
+              <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-1">
+                <LuCalendar size={14} /> Start Date
+              </label>
+              <input
+                name="startDate"
+                type="datetime-local"
+                value={form.startDate}
+                onChange={handleChange}
+                placeholder="Immediately"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-1">
+                <LuClock size={14} /> Expiry Date
               </label>
               <input
                 name="expiryDate"
-                type="date"
+                type="datetime-local"
                 value={form.expiryDate}
                 onChange={handleChange}
                 required
                 className={inputClass}
               />
             </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">
                 Usage Limit
@@ -171,8 +233,6 @@ function CouponModal({ coupon, onClose, onSave, saving }) {
                 className={inputClass}
               />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">
                 Applicable To
@@ -188,18 +248,18 @@ function CouponModal({ coupon, onClose, onSave, saving }) {
                 <option value="product">Product Only</option>
               </select>
             </div>
-            <div className="flex items-end pb-1">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  name="isActive"
-                  type="checkbox"
-                  checked={form.isActive}
-                  onChange={handleChange}
-                  className="accent-[#0f2c59] w-4 h-4"
-                />
-                <span className="text-sm font-bold text-gray-700">Active</span>
-              </label>
-            </div>
+          </div>
+          <div className="flex items-end pb-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                name="isActive"
+                type="checkbox"
+                checked={form.isActive}
+                onChange={handleChange}
+                className="accent-[#0f2c59] w-4 h-4"
+              />
+              <span className="text-sm font-bold text-gray-700">Active</span>
+            </label>
           </div>
           <div className="flex gap-3 pt-2">
             <button
@@ -342,12 +402,18 @@ export default function AdminCoupons() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 text-left">
-                  <th className="px-4 py-3 font-bold text-gray-500">Code</th>
+                  <th className="px-4 py-3 font-bold text-gray-500">
+                    Code & Description
+                  </th>
                   <th className="px-4 py-3 font-bold text-gray-500">
                     Discount
                   </th>
-                  <th className="px-4 py-3 font-bold text-gray-500">Expiry</th>
-                  <th className="px-4 py-3 font-bold text-gray-500">Usage</th>
+                  <th className="px-4 py-3 font-bold text-gray-500">
+                    Validity
+                  </th>
+                  <th className="px-4 py-3 font-bold text-gray-500">
+                    Remaining Uses
+                  </th>
                   <th className="px-4 py-3 font-bold text-gray-500">Scope</th>
                   <th className="px-4 py-3 font-bold text-gray-500">Status</th>
                   <th className="px-4 py-3 font-bold text-gray-500">Actions</th>
@@ -355,15 +421,58 @@ export default function AdminCoupons() {
               </thead>
               <tbody>
                 {coupons.map((c) => {
-                  const expired =
-                    c.expiryDate < new Date().toISOString().split("T")[0];
+                  const now = new Date();
+                  const expired = new Date(c.expiryDate) < now;
+                  const notStarted = c.startDate && new Date(c.startDate) > now;
+                  const exhausted =
+                    c.usageLimit !== null && c.usedCount >= c.usageLimit;
+
+                  let statusBadge = (
+                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-700">
+                      Active
+                    </span>
+                  );
+
+                  if (!c.isActive) {
+                    statusBadge = (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-500">
+                        Inactive
+                      </span>
+                    );
+                  } else if (expired) {
+                    statusBadge = (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700">
+                        Expired
+                      </span>
+                    );
+                  } else if (notStarted) {
+                    statusBadge = (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700">
+                        Scheduled
+                      </span>
+                    );
+                  } else if (exhausted) {
+                    statusBadge = (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-orange-50 text-orange-700">
+                        Exhausted
+                      </span>
+                    );
+                  }
+
                   return (
                     <tr
                       key={c.id}
                       className="border-t border-gray-50 hover:bg-gray-50/50"
                     >
-                      <td className="px-4 py-3 font-bold text-gray-900 tracking-wider">
-                        {c.code}
+                      <td className="px-4 py-3 max-w-xs">
+                        <div className="font-bold text-gray-900 tracking-wider">
+                          {c.code}
+                        </div>
+                        {c.description && (
+                          <div className="text-xs text-gray-500 mt-0.5 break-words">
+                            {c.description}
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-gray-700">
                         {c.discountType === "percentage"
@@ -371,31 +480,50 @@ export default function AdminCoupons() {
                           : `Rs. ${c.discountValue}`}
                         {c.maxDiscount ? ` (max Rs. ${c.maxDiscount})` : ""}
                       </td>
-                      <td
-                        className={`px-4 py-3 ${expired ? "text-red-500" : "text-gray-700"}`}
-                      >
-                        {c.expiryDate}
+                      <td className="px-4 py-3 text-gray-700 text-xs space-y-0.5">
+                        <div>
+                          <span className="font-medium text-gray-400">
+                            Start:
+                          </span>{" "}
+                          {c.startDate
+                            ? formatDateTime(c.startDate)
+                            : "Immediately"}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-400">
+                            Expiry:
+                          </span>{" "}
+                          <span
+                            className={
+                              expired ? "text-red-500 font-semibold" : ""
+                            }
+                          >
+                            {formatDateTime(c.expiryDate)}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-gray-700">
-                        {c.usedCount}
-                        {c.usageLimit ? ` / ${c.usageLimit}` : ""}
+                        {c.usageLimit !== null ? (
+                          <div className="space-y-0.5">
+                            <div className="font-semibold">
+                              {Math.max(0, c.usageLimit - c.usedCount)} left
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              ({c.usedCount} / {c.usageLimit} used)
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 italic">
+                            Unlimited
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 capitalize">
                           {c.applicableTo}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-bold ${c.isActive && !expired ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}
-                        >
-                          {expired
-                            ? "Expired"
-                            : c.isActive
-                              ? "Active"
-                              : "Inactive"}
-                        </span>
-                      </td>
+                      <td className="px-4 py-3">{statusBadge}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <button

@@ -7,6 +7,7 @@ import {
   LuBookOpen,
   LuShoppingCart,
   LuBox,
+  LuTag,
   LuFileText,
   LuSettings,
   LuLogOut,
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Courses", path: "/admin/courses", icon: LuBookOpen },
   { label: "Orders", path: "/admin/orders", icon: LuShoppingCart },
   { label: "Products", path: "/admin/products", icon: LuBox },
+  { label: "Coupons", path: "/admin/coupons", icon: LuTag },
   { label: "CMS", path: "/admin/cms", icon: LuFileText },
   { label: "Settings", path: "/admin/settings", icon: LuSettings },
 ];
